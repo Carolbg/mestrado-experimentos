@@ -46,18 +46,20 @@ def prepareDataset(dataset, train_idx, test_idx, valid_idx, batch_size):
     test_sampler = Subset(dataset, test_idx)
 
     trainTransform = transforms.Compose([
-            transforms.RandomResizedCrop(size=256),
-            transforms.RandomRotation(degrees=15),
-            transforms.ColorJitter(),
-            transforms.RandomHorizontalFlip(),
-            transforms.CenterCrop(size=224),  # Image net standards
-            transforms.ToTensor()
+        transforms.RandomResizedCrop(size=256, scale=(0.8, 1.0)),
+        transforms.RandomRotation(degrees=15),
+        transforms.ColorJitter(),
+        transforms.RandomHorizontalFlip(),
+        transforms.CenterCrop(size=224),  # Image net standards
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
     ])
         
     testValidationTransform = transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor()
-        ])
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
+    ])
 
             
     trainMapDataset = CustomDataset(train_sampler, trainTransform)
@@ -94,7 +96,7 @@ def prepareDataset(dataset, train_idx, test_idx, valid_idx, batch_size):
 
     # Dataframe of categories
     cat_df = pd.DataFrame({
-                            'category': ['Cancer', 'Normal'],
+                            'category': ['Doente', 'Saudavel'],
                             'Treinamento': resultLabelsTraining,
                             'Validação': resultLabelsValidation, 
                             'Teste': resultLabelsTesting
@@ -121,4 +123,4 @@ def prepareDataset(dataset, train_idx, test_idx, valid_idx, batch_size):
 
     n_classes = len(cat_df)
     #print(f'There are {n_classes} different classes.')
-    return trainLoader, testLoader, validationLoader, n_classes
+    return trainLoader, testLoader, validationLoader, n_classes, cat_df

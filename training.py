@@ -2,6 +2,7 @@ from timeit import default_timer as timer
 import numpy as np
 import pandas as pd
 import torch
+import torch.nn.functional as F
 
 def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
         max_epochs_stop=3, n_epochs=20, print_every=2):
@@ -65,6 +66,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
             output = model(data)
             #print('output', output)
             # Loss and backpropagation of gradients
+            #loss = F.cross_entropy(outputs, labels)
             loss = criterion(output, target)
             loss.backward()
 
@@ -130,10 +132,10 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
                 # Print training and validation results
                 if (epoch) % print_every == 0:
                     print(
-                        f'\nEpoch: {epoch} \tTraining Loss: {train_loss:.4f} \tValidation Loss: {valid_loss:.4f}'
+                        f'\nEpoch: {epoch} \tTraining Loss: {train_loss:.4f} \t\tValidation Loss: {valid_loss:.4f}'
                     )
                     print(
-                        f'\t\tTraining Accuracy: {100 * train_acc:.2f}%\t Validation Accuracy: {100 * valid_acc:.2f}%'
+                        f'\t\tTraining Accuracy: {100 * train_acc:.2f}%\t Validation Accuracy: {100 * valid_acc:.2f}% \n'
                     )
 
                 # Save the model if validation loss decreases

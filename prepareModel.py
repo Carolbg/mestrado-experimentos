@@ -40,6 +40,8 @@ def prepareTrainingLoss():
     return criterion
 
 def prepareTrainingOptimizer(model):
+
+    #optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
     optimizer = optim.Adam(model.parameters())
 
     #for p in optimizer.param_groups[0]['params']:

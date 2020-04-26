@@ -7,7 +7,7 @@ def accuracy(output, target):
 
     with torch.no_grad():
         batch_size = target.size(0)
-        print('batch_size', batch_size)
+        #print('batch_size', batch_size)
         # Find the predicted classes and transpose
         _, pred = output.topk(k=1, dim=1, largest=True, sorted=True)
         #print('pred', pred)
@@ -28,7 +28,7 @@ def accuracy(output, target):
         return res
 
 
-def evaluate(model, test_loader, criterion):
+def evaluate(model, test_loader, criterion, n_classes):
     """Measure the performance of a trained PyTorch model
 
     Params
@@ -48,7 +48,7 @@ def evaluate(model, test_loader, criterion):
     # Hold accuracy results
     acc_results = np.zeros(len(test_loader.dataset))
     i = 0
-
+    test_error_count = 0.0
     model.eval()
     with torch.no_grad():
 
@@ -57,7 +57,8 @@ def evaluate(model, test_loader, criterion):
             
             # Raw model output
             out = model(data)
-            print('out = ', out)
+            test_error_count += float(torch.sum(torch.abs(targets - out.argmax(1))))
+            #print('out = ', out)
             # Iterate through each example
             for pred, true in zip(out, targets):
                 # Find topk (top 1) accuracy
@@ -79,5 +80,5 @@ def evaluate(model, test_loader, criterion):
     #results['loss'] = losses
     results = pd.DataFrame({'acuracia': acc_results, 'class':classes, 'loss': losses})
     results = results.groupby(classes).mean()
-    #print('results', results)
-    return results.reset_index().rename(columns={'index': 'class'})
+    print('results no testing', results)
+    return results.reset_index().rename(columns={'index': 'class'}), test_error_count
