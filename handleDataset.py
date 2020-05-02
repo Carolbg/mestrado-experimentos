@@ -63,6 +63,7 @@ def prepareDataset(dataset, train_idx, test_idx, valid_idx, batch_size):
 
             
     trainMapDataset = CustomDataset(train_sampler, trainTransform)
+    input()
     trainLoader = DataLoader(trainMapDataset, batch_size=batch_size, shuffle=True)
 
     testMapDataset = CustomDataset(test_sampler, testValidationTransform)

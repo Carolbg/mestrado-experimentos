@@ -87,9 +87,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
             #print('accuracy', accuracy)
 
             # Track training progress
-            print(
-                f'Epoch: {epoch}\t{100 * (ii + 1) / len(trainLoader):.2f}% complete. {timer() - start:.2f} seconds elapsed in epoch.',
-                end='\r\n' )
+            # print(
+            #     f'Epoch: {epoch}\t{100 * (ii + 1) / len(trainLoader):.2f}% complete. {timer() - start:.2f} seconds elapsed in epoch.',
+            #     end='\r\n' )
 
         # After training loops ends, start validation
         else:

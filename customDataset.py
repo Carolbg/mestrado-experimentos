@@ -7,6 +7,8 @@ class CustomDataset(Dataset):
         
     def __getitem__(self, index):
         x, y = self.subset[index]
+
+        print('transform = ',x)
         if self.transform:
             x = self.transform(x)
         return x, y
