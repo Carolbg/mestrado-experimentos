@@ -2,10 +2,10 @@ from handleTXTDataset import prepareDataFromTXT, splitDataset, prepareNumpyDatas
 from prepareModel import prepareModel, prepareTrainingLoss, prepareTrainingOptimizer, prepareVGG16ModelWithTXT
 from training import train
 from testing import evaluate
-from plots import plotLosses, plotAcc, plotTestingAcc, plotAll
+from plots import plotData, plotTestingAcc
 #from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 
-def main():
+def mainVGG():
     print('\n\nTESTES COM VGG\n\n')
     #DATASET STEPS:
     print('Load dataset')
@@ -15,7 +15,7 @@ def main():
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_size)
 
     #PREPARE MODEL STEPS:
-    print('Prepare model')
+    print('\nPrepare model')
     model = prepareVGG16ModelWithTXT(data, n_classes)
     criterion = prepareTrainingLoss()
     optimizer = prepareTrainingOptimizer(model)
@@ -23,25 +23,34 @@ def main():
     print('Train model')
     save_file_name = 'vgg16-txt-teste.pt'
     checkpoint_path = 'vgg16-txt-teste.pth'
-    model, history, train_loss, valid_loss, train_acc, valid_acc, valid_best_acc = train(model, criterion,
+
+    model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation = train(model, criterion,
         optimizer, trainLoader, validationLoader, save_file_name, max_epochs_stop=max_epochs_stop, 
         n_epochs=n_epochs, print_every=1)
 
-      #PLOT TRAINING RESULTS
-    print('Plot training results')
-    plotLosses(history, 'vgg')
-    plotAcc(history, 'vgg')
+    print('\nConfusion matrix Train\n', cmTrain)
+    print('\nConfusion matrix Validation\n', cmValidation)
+
+    #PLOT TRAINING RESULTS
+    print('\nPlot training results')
+    plotData(history, 'vgg')
 
     #TEST MODEL
     print('Test model')
-    results, test_error_count = evaluate(model, testLoader, criterion, n_classes)
+    results, test_error_count, historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes)
+    print('\nConfusion matrix Test\n', cmTest)
     #print('Results Head', results)
     #print('test_error_count = ', test_error_count)
     #print('Results Head', results.head())
     
     results2 = results.merge(cat_df, left_on='class', right_on='category').drop(columns=['category'])
     plotTestingAcc(results2, 'vgg')
-    #plotAll(results2, history)
 
-    return model, history, train_loss, valid_loss, train_acc, valid_acc, valid_best_acc, results, trainLoader, testLoader, validationLoader, n_classes, cat_df, results2
+    tn, fp, fn, tp = cmTest.ravel()
+    print('tn', tn)
+    print('fp', fp)
+    print('fn', fn)
+    print('tp', tp)
+
+    return model, history, historyTest, results, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df 
     

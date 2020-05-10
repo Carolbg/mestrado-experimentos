@@ -55,11 +55,11 @@ def prepareVGG16ModelWithTXT(dataset, n_classes):
     total_trainable_params = sum(
         p.numel() for p in model.parameters() if p.requires_grad)
     #print(f'{total_trainable_params:,} training parameters.')
-    print('model', model)
+    #print('model', model)
     #summary(model, input_size=(3, 224, 224), batch_size=batch_size, device='cuda')
     #print(model.classifier[6])
 
-    model.idx_to_class = {0: 'Doente', 1: 'Saudavel'}
+    model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
     #print('model.idx_to_class', model.idx_to_class)
     return model
 
@@ -85,8 +85,8 @@ def prepareResnetModelWithTXT(dataset, n_classes):
 
     #summary(model, input_size=(3, 224, 224), batch_size=batch_size, device='cuda')
     #print(model.classifier[6])
-    print('model', model)
-    model.idx_to_class = {0: 'Doente', 1: 'Saudavel'}
+    #print('model', model)
+    model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
     #print('model.idx_to_class', model.idx_to_class)
     return model
 
@@ -113,13 +113,14 @@ def prepareDensenetModelWithTXT(dataset, n_classes):
     #summary(model, input_size=(3, 224, 224), batch_size=batch_size, device='cuda')
     #print(model.classifier[6])
     #print('model', model)
-    model.idx_to_class = {0: 'Doente', 1: 'Saudavel'}
+    model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
     #print('model.idx_to_class', model.idx_to_class)
     return model
 
 def getFullyConnectedStructure(n_inputs, n_classes):
     #return nn.Sequential(nn.Linear(n_inputs, 256), nn.ReLU(), nn.Dropout(0.2), nn.Linear(256, n_classes), nn.LogSoftmax(dim=1))
     return nn.Sequential(nn.Linear(n_inputs, 256), nn.ReLU(), nn.Linear(256, n_classes), nn.LogSoftmax(dim=1))
+    #return nn.Sequential(nn.Linear(n_inputs, n_classes), nn.ReLU())
 
 def prepareTrainingLoss():
     criterion = nn.NLLLoss()
@@ -127,7 +128,7 @@ def prepareTrainingLoss():
 
 def prepareTrainingOptimizer(model):
 
-    optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.9)
+    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
     #optimizer = optim.Adam(model.parameters())
 
     #for p in optimizer.param_groups[0]['params']:

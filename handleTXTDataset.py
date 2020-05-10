@@ -11,8 +11,10 @@ from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 
 def getFilesName():
     print('getFilesName')
-    txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas/Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas/Doente/*.txt")
+    #txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas/0Saudavel/*.txt")
+    #txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas/1Doente/*.txt")
+    txt_saudaveis_files = glob.glob("../poucas_Imagens/0Saudavel/*.txt")
+    txt_doentes_files = glob.glob("../poucas_Imagens/1Doente/*.txt")
 
     return txt_saudaveis_files, txt_doentes_files
 
@@ -29,14 +31,14 @@ def prepareDataFromTXT():
     txt_saudaveis_files, txt_doentes_files= getFilesName()
     saudaveisData = readFiles(txt_saudaveis_files)
     doentesData = readFiles(txt_doentes_files)
-    saudaveisTarget = np.full(len(saudaveisData), 1)
-    doentesTarget = np.full(len(doentesData), 0)
+    saudaveisTarget = np.full(len(saudaveisData), 0)
+    doentesTarget = np.full(len(doentesData), 1)
     data = np.concatenate((saudaveisData,doentesData), axis=0)
     dataTarget = np.concatenate((saudaveisTarget, doentesTarget), axis=0)
     return data, dataTarget
 
 def splitDataset(dataset, shuffleSeed):
-    print('splitDataset')
+    print('splitDataset\n')
     totalDataset = len(dataset)
 
     trainTotal = math.ceil(totalDataset*0.70)
@@ -59,8 +61,17 @@ def splitDataset(dataset, shuffleSeed):
 def prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_size):
     print('prepareNumpyDataset')
 
-    trainTransform = transforms.Compose([
+    defaultTransform = transforms.Compose([
         transforms.ToPILImage(),
+        transforms.ToTensor(),
+        transforms.Lambda(lambda x: torch.cat([x, x, x], 0))  # Imagenet standards  # Imagenet standards
+    ])
+
+    customTransform = transforms.Compose([
+        transforms.ToPILImage(),
+        #transforms.RandomHorizontalFlip(),
+        transforms.RandomRotation(degrees=30, fill=(0,)),
+        transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
@@ -75,7 +86,7 @@ def prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
     ])
     
-    trainDataset = CustomDatasetFromNumpyArray(data[train_idx],dataTarget[train_idx], trainTransform)
+    trainDataset = CustomDatasetFromNumpyArray(data[train_idx],dataTarget[train_idx], defaultTransform)
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
     testDataset = CustomDatasetFromNumpyArray(data[test_idx],dataTarget[test_idx], testValidationTransform)
@@ -94,7 +105,8 @@ def prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
-        #plotTransformedImages(images, i, 'training')
+        if i<40:
+            plotTransformedImages(images, i, 'traininig_only_handleRBG')
         i = i+1
     #print('Treinamento resultLabels', resultLabelsTraining)
 
@@ -103,6 +115,7 @@ def prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_
         l = labels.numpy()
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
+
     #print('Treinamento + Teste resultLabels', resultLabelsTesting)
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -117,7 +130,7 @@ def prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_
 
     # Dataframe of categories
     cat_df = pd.DataFrame({
-        'category': ['Doente', 'Saudavel'],
+        'category': ['Saudável', 'Doente'],
         'Treinamento': resultLabelsTraining,
         'Validação': resultLabelsValidation, 
         'Teste': resultLabelsTesting
@@ -147,8 +160,9 @@ def prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_
     return trainLoader, testLoader, validationLoader, n_classes, cat_df
 
 def getCommonArgs():
-    shuffleSeed = 2
+    shuffleSeed = 3
     batch_size = 10
     max_epochs_stop = 30
     n_epochs = 30
+    print('n_epochs', n_epochs)
     return shuffleSeed, batch_size, max_epochs_stop, n_epochs
