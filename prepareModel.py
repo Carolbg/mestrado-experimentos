@@ -2,7 +2,7 @@ from torchvision import transforms, datasets, models
 import torch.nn as nn
 from torch import optim
 
-def prepareModel(dataset, n_classes):
+def prepareModelPNGVGG(dataset, n_classes):
 
     model = models.vgg16(pretrained=True)
     #print('model', model)
@@ -36,7 +36,7 @@ def prepareModel(dataset, n_classes):
     #print('model.idx_to_class', model.idx_to_class)
     return model
 
-def prepareVGG16ModelWithTXT(dataset, n_classes):
+def prepareVGG16ModelWithTXT(n_classes):
 
     model = models.vgg16(pretrained=True)
     #print('model', model)
@@ -64,7 +64,7 @@ def prepareVGG16ModelWithTXT(dataset, n_classes):
     return model
 
 
-def prepareResnetModelWithTXT(dataset, n_classes):
+def prepareResnetModelWithTXT(n_classes):
     model = models.resnet50(pretrained=True)
     #print('model', model)
 
@@ -91,7 +91,7 @@ def prepareResnetModelWithTXT(dataset, n_classes):
     return model
 
 
-def prepareDensenetModelWithTXT(dataset, n_classes):
+def prepareDensenetModelWithTXT(n_classes):
     model = models.densenet201(pretrained=True)
 
     # Freeze early layers
@@ -118,8 +118,12 @@ def prepareDensenetModelWithTXT(dataset, n_classes):
     return model
 
 def getFullyConnectedStructure(n_inputs, n_classes):
-    #return nn.Sequential(nn.Linear(n_inputs, 256), nn.ReLU(), nn.Dropout(0.2), nn.Linear(256, n_classes), nn.LogSoftmax(dim=1))
-    return nn.Sequential(nn.Linear(n_inputs, 256), nn.ReLU(), nn.Linear(256, n_classes), nn.LogSoftmax(dim=1))
+    #nn.Sequential(nn.Linear(n_inputs, 256), nn.ReLU(), nn.Dropout(0.2), nn.Linear(256, n_classes), nn.LogSoftmax(dim=1))
+    #lastLayer = nn.Sequential(nn.Linear(n_inputs, 256), nn.ReLU(), nn.Linear(256, n_classes), nn.LogSoftmax(dim=1))
+    lastLayer = nn.Sequential(nn.Linear(n_inputs, n_classes), nn.LogSoftmax(dim=1))
+    #lastLayer = nn.Sequential(nn.Linear(n_inputs, 512), nn.ReLU(), nn.Linear(512, n_classes), nn.LogSoftmax(dim=1))
+    print('lastLayer', lastLayer)
+    return lastLayer
     #return nn.Sequential(nn.Linear(n_inputs, n_classes), nn.ReLU())
 
 def prepareTrainingLoss():
@@ -128,8 +132,8 @@ def prepareTrainingLoss():
 
 def prepareTrainingOptimizer(model):
 
-    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    #optimizer = optim.Adam(model.parameters())
+    #optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    optimizer = optim.Adam(model.parameters())
 
     #for p in optimizer.param_groups[0]['params']:
     #    if p.requires_grad:

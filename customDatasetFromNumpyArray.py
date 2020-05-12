@@ -24,7 +24,7 @@ class CustomDatasetFromNumpyArray(Dataset):
         #     #plotTransformedImages(x, index, 'teste_')
         # el
         if self.transform:
-            print('self.transform', self.transform)
+            #print('self.transform', self.transform)
             #print('x', x)
             x = self.transform(x)
             
