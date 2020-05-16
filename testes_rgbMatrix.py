@@ -9,17 +9,23 @@ import pandas as pd
 from plots import plotTransformedImages
 from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray, CustomTesteDatasetFromNumpyArray
 
+from preprocessing import applyMedianFilterDataset
+
 def main():
     print('Load dataset')
     data, dataDivided, dataTarget, dataRGB, dataRGBDivided = prepareDataFromTXT()
     shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
     train_idx = splitDataset(data, shuffleSeed)
+    
+    applyMedianFilterDataset(data)
 
-    prepareNumpyDataset(data, dataTarget, train_idx, batch_size, 'data_sem_dividir_')
-    prepareNumpyDividedDataset(dataDivided, dataTarget, train_idx, batch_size, 'data_com_divisao_')
+    return data
 
-    prepareNumpyRGBDataset(dataRGB, dataTarget, train_idx, batch_size, 'data_alreadyRGB_')
-    prepareNumpyRGBDividedDataset(dataRGBDivided, dataTarget, train_idx, batch_size, 'data_alreadyRGB_divided')
+    #prepareNumpyDataset(data, dataTarget, train_idx, batch_size, 'data_sem_dividir_')
+    #prepareNumpyDividedDataset(dataDivided, dataTarget, train_idx, batch_size, 'data_com_divisao_')
+
+    #prepareNumpyRGBDataset(dataRGB, dataTarget, train_idx, batch_size, 'data_alreadyRGB_')
+    #prepareNumpyRGBDividedDataset(dataRGBDivided, dataTarget, train_idx, batch_size, 'data_alreadyRGB_divided')
 
 def getFilesName():
     print('getFilesName')
@@ -38,13 +44,13 @@ def readFiles(txt_files):
     dataRGBDivided = []
     for i in range(len(txt_files)):
         inputData = np.loadtxt(txt_files[i], dtype='f', delimiter=' ')
-        print('inputData', inputData.shape)
+        #print('inputData', inputData.shape)
         data.append(inputData)
         dataDivided.append(inputData/255)
         rgbinputData = np.stack((inputData,)*3, axis=-1)
-        print('rgbinputData1', rgbinputData.shape)
+        #print('rgbinputData1', rgbinputData.shape)
         rgbinputData = np.transpose(rgbinputData, (2, 0, 1))
-        print('rgbinputData 2', rgbinputData.shape)
+        #print('rgbinputData 2', rgbinputData.shape)
         #input()
         dataRGB.append(rgbinputData)
         dataRGBDivided.append(rgbinputData/255)
