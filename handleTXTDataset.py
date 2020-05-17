@@ -30,12 +30,19 @@ def readFiles(txt_files):
 def readFilesByPatient(txt_files):
     print('readFiles')
     data = []
+    dataAsDictionary = {}
     for i in range(len(txt_files)):
         name = txt_files[i].split('/')
         fileName = name[len(name)-1]
+        patientId = fileName.split('.')[0]
         inputData = np.loadtxt(txt_files[i], dtype='f', delimiter=' ')
+        if patientId in dataAsDictionary.keys(): 
+            dataAsDictionary[patientId].append(inputData)
+        else:
+            dataAsDictionary[patientId] = []
+            dataAsDictionary[patientId].append(inputData)
         data.append(inputData)
-    return data
+    return data, dataAsDictionary
 
 def createDataLoaders():
     shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
