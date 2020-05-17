@@ -92,16 +92,17 @@ def plotTestingAcc(results, model):
     fig.savefig('plotTestingAcc_'+model+'.png')
 
 def plotTransformedImages(images, i, typeImg):
+    print('images = ',images.shape)
     inputs = images[0]
     teste = inputs.numpy()
-    print('inputs.numpy() = ',teste )
-    print('teste = ',teste.shape)
+    #print('inputs.numpy() = ',teste )
+    #print('teste = ',teste.shape)
     inputs = inputs.permute(1, 2, 0)
     fig = plt.figure()
     plt.imshow(inputs.numpy())
     fig.savefig(typeImg + '_transformeImg_' + str(i) +'.png')
-    teste = teste.flatten()
-    savetxt(typeImg+'data_' + str(i) +'_.csv', teste, delimiter=',')
+    #teste = teste.flatten()
+    #savetxt(typeImg+'data_' + str(i) +'_.csv', teste, delimiter=',')
     plt.close()
     
 def plotConfusionMatrix(cm):
@@ -207,3 +208,23 @@ def plot_confusion_matrix(cm,
     plt.ylabel('True label')
     plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
     fig.savefig('confusion.png')
+
+def plotFilteredImage(image, filteredImage, nameFile):
+    fig = plt.figure()
+    plt.title('Median Filter')
+    ax1 = fig.add_subplot(121)  # left side
+    ax2 = fig.add_subplot(122)  # right side
+    ax1.imshow(image)
+    ax2.imshow(filteredImage)
+    fig.savefig('median_filter' + nameFile + '.png')
+    
+    plt.close()
+
+    # fig = plt.figure()
+    # plt.gray() 
+    # plt.title('Median Filter')
+    # ax1 = fig.add_subplot(121)  # left side
+    # ax2 = fig.add_subplot(122)  # right side
+    # ax1.imshow(image)
+    # ax2.imshow(filteredImage)
+    # fig.savefig('gray_median_filter' + str(index) + '.png')

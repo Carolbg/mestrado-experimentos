@@ -13,14 +13,13 @@ from preprocessing import applyMedianFilterDataset
 
 def main():
     print('Load dataset')
-    data, dataDivided, dataTarget, dataRGB, dataRGBDivided = prepareDataFromTXT()
+    data, dataTarget = prepareDataFromTXT() #dataDivided, dataTarget, dataRGB, dataRGBDivided = prepareDataFromTXT()
     shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
     train_idx = splitDataset(data, shuffleSeed)
     
-    applyMedianFilterDataset(data)
+    filteredData = applyMedianFilterDataset(data)
 
-    return data
-
+    return data,filteredData
     #prepareNumpyDataset(data, dataTarget, train_idx, batch_size, 'data_sem_dividir_')
     #prepareNumpyDividedDataset(dataDivided, dataTarget, train_idx, batch_size, 'data_com_divisao_')
 
@@ -60,15 +59,15 @@ def prepareDataFromTXT():
     print('prepareDataFromTXT')
     txt_saudaveis_files, txt_doentes_files= getFilesName()
     saudaveisData, saudaveisDataDivided, saudaveisDataRGB, saudaveisDataRGBDivided = readFiles(txt_saudaveis_files)
-    #doentesData, doentesDataDivided, doentesDataRGB, doentesDataRGBDivided = readFiles(txt_doentes_files)
+    doentesData, doentesDataDivided, doentesDataRGB, doentesDataRGBDivided = readFiles(txt_doentes_files)
     saudaveisTarget = np.full(len(saudaveisData), 0)
-    #doentesTarget = np.full(len(doentesData), 1)
-    data = np.concatenate((saudaveisData,saudaveisData), axis=0)
-    dataDivided = np.concatenate((saudaveisDataDivided,saudaveisDataDivided), axis=0)
-    dataRGB = np.concatenate((saudaveisDataRGB,saudaveisDataRGB), axis=0)
-    dataRGBDivided = np.concatenate((saudaveisDataRGBDivided,saudaveisDataRGBDivided), axis=0)
-    dataTarget = np.concatenate((saudaveisTarget, saudaveisTarget), axis=0)
-    return data, dataDivided, dataTarget, dataRGB, dataRGBDivided
+    doentesTarget = np.full(len(doentesData), 1)
+    data = np.concatenate((saudaveisData,doentesData), axis=0)
+    # dataDivided = np.concatenate((saudaveisDataDivided,saudaveisDataDivided), axis=0)
+    # dataRGB = np.concatenate((saudaveisDataRGB,saudaveisDataRGB), axis=0)
+    # dataRGBDivided = np.concatenate((saudaveisDataRGBDivided,saudaveisDataRGBDivided), axis=0)
+    dataTarget = np.concatenate((saudaveisTarget, doentesTarget), axis=0)
+    return data, dataTarget #dataDivided, dataTarget, dataRGB, dataRGBDivided
 
 def splitDataset(dataset, shuffleSeed):
     print('splitDataset\n')

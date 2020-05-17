@@ -8,13 +8,14 @@ import torch
 import pandas as pd
 from plots import plotTransformedImages
 from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray 
+from preprocessing import preprocessImage
 
 def getFilesName():
     print('getFilesName')
-    #txt_saudaveis_files = glob.glob("../poucas_Imagens/0Saudavel/*.txt")
-    #txt_doentes_files = glob.glob("../poucas_Imagens/1Doente/*.txt")
-    txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
+    txt_saudaveis_files = glob.glob("../poucas_Imagens/0Saudavel/*.txt")
+    txt_doentes_files = glob.glob("../poucas_Imagens/1Doente/*.txt")
+    #txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
+    #txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
 
     return txt_saudaveis_files, txt_doentes_files
 
@@ -26,10 +27,20 @@ def readFiles(txt_files):
         data.append(inputData)
     return data
 
+def readFilesByPatient(txt_files):
+    print('readFiles')
+    data = []
+    for i in range(len(txt_files)):
+        name = txt_files[i].split('/')
+        fileName = name[len(name)-1]
+        inputData = np.loadtxt(txt_files[i], dtype='f', delimiter=' ')
+        data.append(inputData)
+    return data
+
 def createDataLoaders():
     shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
-    trainData, trainTarget, testData, testTarget, validData, validTarget = prepareAndSplitDataFromTXT(shuffleSeed)
-    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validData, validTarget, batch_size)
+    trainData, trainTarget, testData, testTarget, validData, validTarget, topMean = prepareAndSplitDataFromTXT(shuffleSeed)
+    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validData, validTarget, batch_size, topMean)
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs
 
 def prepareAndSplitDataFromTXT(shuffleSeed):
@@ -77,7 +88,11 @@ def prepareAndSplitDataFromTXT(shuffleSeed):
     print('Quantidade de dados para teste',len(test_doentes_idx))
     print('Quantidade de dados para validacao',len(valid_doentes_idx))
 
-    trainData = np.concatenate((saudaveisData[train_saudaveis_idx], doentesData[train_doentes_idx]), axis=0)
+    filteredSaudaveisDataset, filteredDoentesDataset, topMean = preprocessImage(saudaveisData, doentesData)
+    filteredSaudaveisDataset = filteredSaudaveisDataset/topMean
+    filteredDoentesDataset = filteredDoentesDataset/topMean
+
+    trainData = np.concatenate((filteredSaudaveisDataset[train_saudaveis_idx], filteredDoentesDataset[train_doentes_idx]), axis=0)
     trainTarget = np.concatenate((saudaveisTarget[train_saudaveis_idx], doentesTarget[train_doentes_idx]), axis=0)
     indicesTrain = list(range(len(trainData)))
     np.random.seed(shuffleSeed)
@@ -85,7 +100,7 @@ def prepareAndSplitDataFromTXT(shuffleSeed):
     trainData = trainData[indicesTrain]
     trainTarget = trainTarget[indicesTrain]
 
-    testData = np.concatenate((saudaveisData[test_saudaveis_idx], doentesData[test_doentes_idx]), axis=0)
+    testData = np.concatenate((filteredSaudaveisDataset[test_saudaveis_idx], filteredDoentesDataset[test_doentes_idx]), axis=0)
     testTarget = np.concatenate((saudaveisTarget[test_saudaveis_idx], doentesTarget[test_doentes_idx]), axis=0)
     indicesTest = list(range(len(testData)))
     np.random.seed(shuffleSeed)
@@ -93,7 +108,7 @@ def prepareAndSplitDataFromTXT(shuffleSeed):
     testData = testData[indicesTest]
     testTarget = testTarget[indicesTest]
 
-    validData = np.concatenate((saudaveisData[valid_saudaveis_idx], doentesData[valid_doentes_idx]), axis=0)
+    validData = np.concatenate((filteredSaudaveisDataset[valid_saudaveis_idx], filteredDoentesDataset[valid_doentes_idx]), axis=0)
     validTarget = np.concatenate((saudaveisTarget[valid_saudaveis_idx], doentesTarget[valid_doentes_idx]), axis=0)
     indicesValid = list(range(len(validData)))
     np.random.seed(shuffleSeed)
@@ -101,10 +116,10 @@ def prepareAndSplitDataFromTXT(shuffleSeed):
     validData = validData[indicesValid]
     validTarget = validTarget[indicesValid]
 
-    return trainData, trainTarget, testData, testTarget, validData, validTarget
+    return trainData, trainTarget, testData, testTarget, validData, validTarget, topMean
 
-def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size):
-    print('prepareNumpyDatasetBalancedData')
+def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size, topMean):
+    print('prepareNumpyDatasetBalancedData, topMean=', topMean)
 
     trainTransform = transforms.Compose([
         transforms.ToPILImage(),
@@ -118,10 +133,11 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     
     testValidationTransform = transforms.Compose([
         transforms.ToPILImage(),
-        transforms.Resize((224, 224)),
+        #transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
+        #transforms.Lambda(lambda x: torch.cat([x/topMean, x/topMean, x/topMean], 0)),
+        #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
     ])
     
     trainDataset = CustomDatasetFromNumpyArray(dataTrain,dataTargetTrain, testValidationTransform)
@@ -130,7 +146,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     testDataset = CustomDatasetFromNumpyArray(dataTest,dataTargetTest, testValidationTransform)
     testLoader = DataLoader(testDataset, batch_size=batch_size, shuffle=True)
 
-    validationDataset = CustomDatasetFromNumpyArray(dataValidation,dataTargetValidation, testValidationTransform)
+    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation, testValidationTransform)
     validationLoader = DataLoader(validationDataset, batch_size=batch_size, shuffle=True)
 
     resultLabelsTraining = torch.zeros(2, dtype=torch.long)
@@ -140,13 +156,17 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
+        plotTransformedImages(images, i, 'teste3_train_')
         i = i+1
 
+    i=0
     resultLabelsTesting = torch.zeros(2, dtype=torch.long)
     for images, labels in iter(testLoader):
         l = labels.numpy()
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
+        plotTransformedImages(images, i, 'teste3_test')
+        i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
     i = 0
@@ -154,6 +174,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
+        plotTransformedImages(images, i, 'teste3_validation')
         i = i+1
 
     cat_df = pd.DataFrame({
@@ -298,7 +319,7 @@ def prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_
 
 def getCommonArgs():
     shuffleSeed = 3
-    batch_size = 10
+    batch_size = 1
     max_epochs_stop = 30
     n_epochs = 30
     print('n_epochs', n_epochs)

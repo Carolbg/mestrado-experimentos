@@ -165,7 +165,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
                 # Save the model if validation loss decreases
                 if valid_loss < valid_loss_min:
                     # Save model
-                    torch.save(model.state_dict(), save_file_name)
+                    #torch.save(model.state_dict(), save_file_name)
                     # Track improvement
                     epochs_no_improve = 0
                     valid_loss_min = valid_loss
