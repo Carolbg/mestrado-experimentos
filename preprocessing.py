@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from plots import plotFilteredImage
 
 def applyMedianFilter(image):
-    filteredImage = ndimage.median_filter(image, size=5)
+    filteredImage = ndimage.median_filter(image, size=3)
     return filteredImage
 
 def applyMedianFilterDataset(dataset, nameFile):
@@ -37,4 +37,30 @@ def preprocessImage(saudaveisDataset, doentesDataset):
     print('filteredDoentesDataset', filteredDoentesDataset.shape)
     filteredDataset = np.concatenate((filteredSaudaveisDataset, filteredDoentesDataset), axis=0)
     top10mean = getMaxValue(filteredDataset)
+    print('top10mean', top10mean)
     return filteredSaudaveisDataset, filteredDoentesDataset, top10mean
+
+def applyMedianFilterDictionaryDataset(dictionaryDataset, nameFile, allData):
+    filteredDataset = {}
+
+    for patientId in dictionaryDataset:
+        # Para cada paciente
+        values = dictionaryDataset[patientId]
+        for image in values:
+            # Para cada imagem
+            filteredImage = applyMedianFilter(image)
+            allData.append(filteredImage)
+            if patientId in filteredDataset.keys(): 
+                filteredDataset[patientId].append(filteredImage)
+            else:
+                filteredDataset[patientId] = []
+                filteredDataset[patientId].append(filteredImage)
+    return filteredDataset, allData
+
+def preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData):
+    allData = []
+    filteredSaudaveisDicData, allData = applyMedianFilterDictionaryDataset(saudaveisDictionaryData, 'saudaveis', allData)
+    filteredDoentesDicData, allData = applyMedianFilterDictionaryDataset(doentesDictionaryData, 'doentes', allData)
+    top10mean = getMaxValue(np.array(allData))
+
+    return filteredSaudaveisDicData, filteredDoentesDicData, top10mean
