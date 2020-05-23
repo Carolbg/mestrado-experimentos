@@ -1,5 +1,5 @@
-from handleTXTDataset import prepareDataFromTXT, splitDataset, prepareNumpyDataset, getCommonArgs
-from prepareModel import prepareModel, prepareTrainingLoss, prepareTrainingOptimizer, prepareVGG16ModelWithTXT
+from handleTXTDataset import createDataLoaders
+from prepareModel import prepareTrainingLoss, prepareTrainingOptimizer, prepareVGG16ModelWithTXT
 from training import train
 from testing import evaluate
 from plots import plotData, plotTestingAcc
@@ -9,14 +9,15 @@ def mainVGG():
     print('\n\nTESTES COM VGG\n\n')
     #DATASET STEPS:
     print('Load dataset')
-    data, dataTarget = prepareDataFromTXT()
-    shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
-    train_idx, test_idx, valid_idx = splitDataset(data, shuffleSeed)
-    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_size)
+    # data, dataTarget = prepareDataFromTXT()
+    # shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
+    # train_idx, test_idx, valid_idx = splitDataset(data, shuffleSeed)
+    # trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_size)
+    trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
 
     #PREPARE MODEL STEPS:
     print('\nPrepare model')
-    model = prepareVGG16ModelWithTXT(data, n_classes)
+    model = prepareVGG16ModelWithTXT(n_classes)
     criterion = prepareTrainingLoss()
     optimizer = prepareTrainingOptimizer(model)
 

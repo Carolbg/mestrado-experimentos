@@ -11,10 +11,10 @@ from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 
 def getFilesName():
     print('getFilesName')
-    #txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas/0Saudavel/*.txt")
-    #txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas/1Doente/*.txt")
-    txt_saudaveis_files = glob.glob("../poucas_Imagens/0Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../poucas_Imagens/1Doente/*.txt")
+    #txt_saudaveis_files = glob.glob("../poucas_Imagens/0Saudavel/*.txt")
+    #txt_doentes_files = glob.glob("../poucas_Imagens/1Doente/*.txt")
+    txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
+    txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
 
     return txt_saudaveis_files, txt_doentes_files
 
@@ -25,6 +25,148 @@ def readFiles(txt_files):
         inputData = np.loadtxt(txt_files[i], dtype='f', delimiter=' ')
         data.append(inputData)
     return data
+
+def createDataLoaders():
+    shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
+    trainData, trainTarget, testData, testTarget, validData, validTarget = prepareAndSplitDataFromTXT(shuffleSeed)
+    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validData, validTarget, batch_size)
+    return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs
+
+def prepareAndSplitDataFromTXT(shuffleSeed):
+    
+    print('\nprepareDataFromTXT')
+    txt_saudaveis_files, txt_doentes_files= getFilesName()
+
+    saudaveisData = readFiles(txt_saudaveis_files)
+    saudaveisData = np.array(saudaveisData) 
+    doentesData = readFiles(txt_doentes_files)
+    doentesData = np.array(doentesData) 
+    saudaveisTarget = np.full(len(saudaveisData), 0)
+    doentesTarget = np.full(len(doentesData), 1)
+    
+    print('\nSplit Healthy Dataset')
+    totalSaudaveisDataset = len(saudaveisData)
+    trainSaudaveisTotal = math.floor(totalSaudaveisDataset*0.70)
+    testSaudaveisTotal = math.floor((totalSaudaveisDataset - trainSaudaveisTotal)/2)
+    validationSaudaveisTotal = totalSaudaveisDataset - trainSaudaveisTotal - testSaudaveisTotal
+
+    indicesSaudaveis = list(range(totalSaudaveisDataset))
+    np.random.seed(shuffleSeed)
+    np.random.shuffle(indicesSaudaveis)
+
+    train_saudaveis_idx, test_saudaveis_idx, valid_saudaveis_idx = indicesSaudaveis[:trainSaudaveisTotal], indicesSaudaveis[trainSaudaveisTotal:trainSaudaveisTotal+testSaudaveisTotal], indicesSaudaveis[trainSaudaveisTotal+testSaudaveisTotal:]
+
+    print('Quantidade de dados para treinamento',len(train_saudaveis_idx))
+    print('Quantidade de dados para teste',len(test_saudaveis_idx))
+    print('Quantidade de dados para validacao',len(valid_saudaveis_idx))
+
+    print('\nSplit Cancer Dataset')
+    totalDoentesDataset = len(doentesData)
+
+    trainDoentesTotal = math.floor(totalDoentesDataset*0.70)
+    testDoentesTotal = math.floor((totalDoentesDataset - trainDoentesTotal)/2)
+    validationDoentesTotal = totalDoentesDataset - trainDoentesTotal - testDoentesTotal
+
+    indicesDoentes = list(range(totalDoentesDataset))
+    np.random.seed(shuffleSeed)
+    np.random.shuffle(indicesDoentes)
+
+    train_doentes_idx, test_doentes_idx, valid_doentes_idx = indicesDoentes[:trainDoentesTotal], indicesDoentes[trainDoentesTotal:trainDoentesTotal+testDoentesTotal], indicesDoentes[trainDoentesTotal+testDoentesTotal:]
+    
+    print('Quantidade de dados para treinamento',len(train_doentes_idx))
+    print('Quantidade de dados para teste',len(test_doentes_idx))
+    print('Quantidade de dados para validacao',len(valid_doentes_idx))
+
+    trainData = np.concatenate((saudaveisData[train_saudaveis_idx], doentesData[train_doentes_idx]), axis=0)
+    trainTarget = np.concatenate((saudaveisTarget[train_saudaveis_idx], doentesTarget[train_doentes_idx]), axis=0)
+    indicesTrain = list(range(len(trainData)))
+    np.random.seed(shuffleSeed)
+    np.random.shuffle(indicesTrain)
+    trainData = trainData[indicesTrain]
+    trainTarget = trainTarget[indicesTrain]
+
+    testData = np.concatenate((saudaveisData[test_saudaveis_idx], doentesData[test_doentes_idx]), axis=0)
+    testTarget = np.concatenate((saudaveisTarget[test_saudaveis_idx], doentesTarget[test_doentes_idx]), axis=0)
+    indicesTest = list(range(len(testData)))
+    np.random.seed(shuffleSeed)
+    np.random.shuffle(indicesTest)
+    testData = testData[indicesTest]
+    testTarget = testTarget[indicesTest]
+
+    validData = np.concatenate((saudaveisData[valid_saudaveis_idx], doentesData[valid_doentes_idx]), axis=0)
+    validTarget = np.concatenate((saudaveisTarget[valid_saudaveis_idx], doentesTarget[valid_doentes_idx]), axis=0)
+    indicesValid = list(range(len(validData)))
+    np.random.seed(shuffleSeed)
+    np.random.shuffle(indicesValid)
+    validData = validData[indicesValid]
+    validTarget = validTarget[indicesValid]
+
+    return trainData, trainTarget, testData, testTarget, validData, validTarget
+
+def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size):
+    print('prepareNumpyDatasetBalancedData')
+
+    trainTransform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.RandomRotation(degrees=30, fill=(0,)),
+        transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
+    ])
+    
+    testValidationTransform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
+    ])
+    
+    trainDataset = CustomDatasetFromNumpyArray(dataTrain,dataTargetTrain, testValidationTransform)
+    trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
+
+    testDataset = CustomDatasetFromNumpyArray(dataTest,dataTargetTest, testValidationTransform)
+    testLoader = DataLoader(testDataset, batch_size=batch_size, shuffle=True)
+
+    validationDataset = CustomDatasetFromNumpyArray(dataValidation,dataTargetValidation, testValidationTransform)
+    validationLoader = DataLoader(validationDataset, batch_size=batch_size, shuffle=True)
+
+    resultLabelsTraining = torch.zeros(2, dtype=torch.long)
+
+    i=0
+    for images, labels in iter(trainLoader):
+        l = labels.numpy()
+        resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
+        resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
+        i = i+1
+
+    resultLabelsTesting = torch.zeros(2, dtype=torch.long)
+    for images, labels in iter(testLoader):
+        l = labels.numpy()
+        resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
+        resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
+
+    resultLabelsValidation = torch.zeros(2, dtype=torch.long)
+    i = 0
+    for images, labels in iter(validationLoader):
+        l = labels.numpy()
+        resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
+        resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
+        i = i+1
+
+    cat_df = pd.DataFrame({
+        'category': ['Saudável', 'Doente'],
+        'Treinamento': resultLabelsTraining,
+        'Validação': resultLabelsValidation, 
+        'Teste': resultLabelsTesting
+    })
+    print(cat_df)
+
+    n_classes = len(cat_df)
+    return trainLoader, testLoader, validationLoader, n_classes, cat_df
+
 
 def prepareDataFromTXT():
     print('prepareDataFromTXT')
@@ -55,19 +197,14 @@ def splitDataset(dataset, shuffleSeed):
     print('Quantidade de dados para teste',len(test_idx))
     print('Quantidade de dados para validacao',len(valid_idx))
 
+    print('train_idx, test_idx, valid_idx',train_idx, test_idx, valid_idx)
     return train_idx, test_idx, valid_idx
 
 
 def prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_size):
     print('prepareNumpyDataset')
 
-    defaultTransform = transforms.Compose([
-        transforms.ToPILImage(),
-        transforms.ToTensor(),
-        transforms.Lambda(lambda x: torch.cat([x, x, x], 0))  # Imagenet standards  # Imagenet standards
-    ])
-
-    customTransform = transforms.Compose([
+    trainTransform = transforms.Compose([
         transforms.ToPILImage(),
         #transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(degrees=30, fill=(0,)),
@@ -86,7 +223,7 @@ def prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
     ])
     
-    trainDataset = CustomDatasetFromNumpyArray(data[train_idx],dataTarget[train_idx], defaultTransform)
+    trainDataset = CustomDatasetFromNumpyArray(data[train_idx],dataTarget[train_idx], testValidationTransform)
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
     testDataset = CustomDatasetFromNumpyArray(data[test_idx],dataTarget[test_idx], testValidationTransform)
@@ -105,8 +242,8 @@ def prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
-        if i<40:
-            plotTransformedImages(images, i, 'traininig_only_handleRBG')
+        # if i<40:
+        #     plotTransformedImages(images, i, 'traininig_only_handleRBG')
         i = i+1
     #print('Treinamento resultLabels', resultLabelsTraining)
 

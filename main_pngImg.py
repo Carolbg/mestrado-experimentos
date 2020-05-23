@@ -1,5 +1,5 @@
 from handleDataset import readDataset, splitDataset, prepareDataset
-from prepareModel import prepareModel, prepareTrainingLoss, prepareTrainingOptimizer
+from prepareModel import prepareModelPNGVGG, prepareTrainingLoss, prepareTrainingOptimizer
 from training import train
 from testing import evaluate
 from plots import plotLosses, plotAcc, plotTestingAcc
@@ -19,7 +19,7 @@ def main():
 
     #PREPARE MODEL STEPS:
     print('Prepare model')
-    model = prepareModel(dataset, n_classes)
+    model = prepareModelPNGVGG(dataset, n_classes)
     criterion = prepareTrainingLoss()
     optimizer = prepareTrainingOptimizer(model)
 
