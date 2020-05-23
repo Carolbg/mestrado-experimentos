@@ -4,17 +4,15 @@ from training import train
 from testing import evaluate
 from plots import plotData, plotTestingAcc
 #from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
+from prepareDataDictionary import mainPrepareDictionaryData
 
 def mainDensenet():
     print('\n\nTESTES COM DENSENET\n\n')
     #DATASET STEPS:
     print('Load dataset')
-    # data, dataTarget = prepareDataFromTXT()
-    # shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
-    # train_idx, test_idx, valid_idx = splitDataset(data, shuffleSeed)
-    # trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDataset(data, dataTarget, train_idx, test_idx, valid_idx, batch_size)
-    trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
-
+    #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
+    trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData()
+    
     #PREPARE MODEL STEPS:
     print('\nPrepare model')
     model = prepareDensenetModelWithTXT(n_classes)

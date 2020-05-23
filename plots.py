@@ -92,7 +92,7 @@ def plotTestingAcc(results, model):
     fig.savefig('plotTestingAcc_'+model+'.png')
 
 def plotTransformedImages(images, i, typeImg):
-    print('images = ',images.shape)
+    #print('images = ',images.shape)
     inputs = images[0]
     teste = inputs.numpy()
     #print('inputs.numpy() = ',teste )

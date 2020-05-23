@@ -9,6 +9,7 @@ import pandas as pd
 from plots import plotTransformedImages
 from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray 
 from preprocessing import preprocessDictionaryDataset
+from utilsParams import getCommonArgs
 
 def mainPrepareDictionaryData():
     shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
@@ -138,21 +139,24 @@ def splitPatientsFromDictionary(shuffleSeed, dictionaryData):
 
 
 def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size, topMean):
-    print('prepareNumpyDatasetBalancedData, topMean=', topMean)
+    print('prepareNumpyDatasetBalancedData')
+    dataTrain = dataTrain/topMean
+    dataTest = dataTest/topMean
+    dataValidation = dataValidation/topMean
 
     trainTransform = transforms.Compose([
         transforms.ToPILImage(),
-        transforms.RandomRotation(degrees=30, fill=(0,)),
-        transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
+        #transforms.RandomRotation(degrees=30, fill=(0,)),
+        #transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
+        #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
     ])
     
     testValidationTransform = transforms.Compose([
         transforms.ToPILImage(),
-        #transforms.Resize((224, 224)),
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
         #transforms.Lambda(lambda x: torch.cat([x/topMean, x/topMean, x/topMean], 0)),
@@ -175,7 +179,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
-        plotTransformedImages(images, i, 'teste3_train_')
+        plotTransformedImages(images, i, 'testes_balanced_train_')
         i = i+1
 
     i=0
@@ -184,7 +188,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
-        plotTransformedImages(images, i, 'teste3_test')
+        plotTransformedImages(images, i, 'testes_balanced_test_')
         i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -193,7 +197,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
-        plotTransformedImages(images, i, 'teste3_validation')
+        plotTransformedImages(images, i, 'testes_balanced_validation_')
         i = i+1
 
     cat_df = pd.DataFrame({
@@ -206,11 +210,3 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
 
     n_classes = len(cat_df)
     return trainLoader, testLoader, validationLoader, n_classes, cat_df
-
-def getCommonArgs():
-    shuffleSeed = 3
-    batch_size = 1
-    max_epochs_stop = 30
-    n_epochs = 30
-    print('n_epochs', n_epochs)
-    return shuffleSeed, batch_size, max_epochs_stop, n_epochs
