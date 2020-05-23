@@ -25,6 +25,15 @@ def getMaxValue(dataset):
     topMean = np.mean(topValues)
     print('topMean', topMean)
     
+    media = np.mean(flattenDataset)  
+    print('Media base', media)
+    
+    desvioPadrao = np.std(flattenDataset)  
+    print('Desvio padrao Base', desvioPadrao)
+    
+    variancia = np.var(flattenDataset)  
+    print('Variancia', variancia)
+    
     # indices = np.argpartition(flattenDataset, -100)[-100:] 
     # top100 = flattenDataset[indices]
     # top100mean = np.mean(top100)

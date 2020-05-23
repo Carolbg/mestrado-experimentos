@@ -3,9 +3,9 @@ from torch import optim
 
 def getCommonArgs():
     shuffleSeed = 3
-    batch_size = 1
-    max_epochs_stop = 1
-    n_epochs = 1
+    batch_size = 10
+    max_epochs_stop = 30
+    n_epochs = 30
     print('n_epochs', n_epochs)
     return shuffleSeed, batch_size, max_epochs_stop, n_epochs
 
