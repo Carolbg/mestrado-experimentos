@@ -53,15 +53,15 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     print('\nSplit Healthy Dataset')
     saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData)
     saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid)
-
     print('\nSplit Cancer Dataset')
     doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
     doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid)
-    
     trainData, trainTarget = createSplitDataset(shuffleSeed, saudaveisTrainDataset, doentesTrainDataset)
+    print('\nTotal de dados para treinamento', len(trainData))
     testData, testTarget = createSplitDataset(shuffleSeed, saudaveisTestDataset, doentesTestDataset)
+    print('\nTotal de dados para treinamento', len(testData))
     validationData, validationTarget = createSplitDataset(shuffleSeed, saudaveisValidationDataset, doentesValidationDataset)
-
+    print('\nTotal de dados para treinamento', len(validationData))
     return trainData, trainTarget, testData, testTarget, validationData, validationTarget
 
 def createSplitDataset(shuffleSeed, saudaveisDataset, doentesDataset):
@@ -91,29 +91,32 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     print('validationPatients', validationPatients) 
     
     trainDataset = []
-    for i in range(len(trainPatients)):
-        patient = trainPatients[i]
+    for patient in trainPatients:
         images = dictionaryData[patient]
-        trainDataset.append(images)
+        trainDataset.extend(images)
     print('imagens do trainDataset', len(trainDataset))
 
     testDataset = []
-    for i in range(len(testPatients)):
-        patient = testPatients[i]
+    for patient in testPatients:
         images = dictionaryData[patient]
-        testDataset.append(images)
+        testDataset.extend(images)
     print('imagens do testDataset', len(testDataset))
 
     validationDataset = []
-    for i in range(len(validationPatients)):
-        patient = validationPatients[i]
+    for patient in validationPatients:
         images = dictionaryData[patient]
-        validationDataset.append(images)
+        validationDataset.extend(images)
     print('imagens do validationDataset', len(validationDataset))
 
-    return np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
+    train, test, validation = np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
+    
+    print('train', train.shape)
+    print('test', test.shape)
+    print('validation', validation.shape)
+    return train, test, validation
 
 def splitPatientsFromDictionary(shuffleSeed, dictionaryData):
+    print('Total dados', len(dictionaryData))
     totalPatientsDataset = len(dictionaryData.keys())
     trainPatientsDataset = math.floor(totalPatientsDataset*0.70)
     testPatientsDataset = math.floor((totalPatientsDataset - trainPatientsDataset)/2)
