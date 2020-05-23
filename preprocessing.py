@@ -22,6 +22,9 @@ def getMaxValue(dataset):
     flattenDataset = dataset.flatten()
     indices = np.argpartition(flattenDataset, -100)[-100:] 
     topValues = flattenDataset[indices]
+    for i in topValues:
+        print(i)
+        
     topMean = np.mean(topValues)
     print('topMean', topMean)
     
