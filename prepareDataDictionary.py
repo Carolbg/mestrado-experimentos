@@ -29,9 +29,9 @@ def mainReadData():
 
 def getFilesName():
     print('getFilesName')
-    txt_saudaveis_files = glob.glob("../poucas_Imagens/0Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../poucas_Imagens/1Doente/*.txt")
-
+    txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
+    txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
+    
     return txt_saudaveis_files, txt_doentes_files
 
 def readFilesByPatient(txt_files):
