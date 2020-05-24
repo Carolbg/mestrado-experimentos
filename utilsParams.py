@@ -12,8 +12,8 @@ def getCommonArgs():
 def getFullyConnectedStructure(n_inputs, n_classes):
     #nn.Sequential(nn.Linear(n_inputs, 256), nn.ReLU(), nn.Dropout(0.2), nn.Linear(256, n_classes), nn.LogSoftmax(dim=1))
     #lastLayer = nn.Sequential(nn.Linear(n_inputs, 256), nn.ReLU(), nn.Linear(256, n_classes), nn.LogSoftmax(dim=1))
-    lastLayer = nn.Sequential(nn.Linear(n_inputs, 1024), nn.ReLU(), nn.Linear(1024, n_classes), nn.LogSoftmax(dim=1))
-    #lastLayer = nn.Sequential(nn.Linear(n_inputs, n_classes), nn.LogSoftmax(dim=1))
+    #lastLayer = nn.Sequential(nn.Linear(n_inputs, 1024), nn.ReLU(), nn.Linear(1024, n_classes), nn.LogSoftmax(dim=1))
+    lastLayer = nn.Sequential(nn.Linear(n_inputs, n_classes), nn.LogSoftmax(dim=1))
     #lastLayer = nn.Sequential(nn.Linear(n_inputs, 512), nn.ReLU(), nn.Linear(512, n_classes), nn.LogSoftmax(dim=1))
     print('lastLayer', lastLayer)
     return lastLayer
