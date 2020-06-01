@@ -20,6 +20,7 @@ def applyMedianFilterDataset(dataset, nameFile):
 
 def getMaxValue(dataset):
     flattenDataset = dataset.flatten()
+    print('flattenDataset', flattenDataset.shape)
     indices = np.argpartition(flattenDataset, -100)[-100:] 
     topValues = flattenDataset[indices]
     #for i in topValues:
@@ -69,10 +70,41 @@ def applyMedianFilterDictionaryDataset(dictionaryDataset, nameFile, allData):
                 filteredDataset[patientId].append(filteredImage)
     return filteredDataset, allData
 
-def preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData):
+def manualFlatten(data):
+    allDataFlatten = []
+    for item in data:
+        itemArray = np.array(item)
+        itemFlatten = itemArray.flatten()
+        allDataFlatten.extend(itemFlatten)
+    return np.array(allDataFlatten)
+
+def getMaxValueManual(dataset):
+    flattenDataset = manualFlatten(dataset)
+    indices = np.argpartition(flattenDataset, -100)[-100:] 
+    topValues = flattenDataset[indices]
+
+    topMean = np.mean(topValues)
+    print('topMean', topMean)
+    
+    media = np.mean(flattenDataset)  
+    print('Media base', media)
+    
+    desvioPadrao = np.std(flattenDataset)  
+    print('Desvio padrao Base', desvioPadrao)
+    
+    variancia = np.var(flattenDataset)  
+    print('Variancia', variancia)
+    
+    return topMean#, top100mean
+
+
+def preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData, isManualFlatten):
     allData = []
     filteredSaudaveisDicData, allData = applyMedianFilterDictionaryDataset(saudaveisDictionaryData, 'saudaveis', allData)
     filteredDoentesDicData, allData = applyMedianFilterDictionaryDataset(doentesDictionaryData, 'doentes', allData)
-    top10mean = getMaxValue(np.array(allData))
+    if(isManualFlatten):
+        top10mean = getMaxValueManual(allData)
+    else:
+        top10mean = getMaxValue(np.array(allData))
 
     return filteredSaudaveisDicData, filteredDoentesDicData, top10mean

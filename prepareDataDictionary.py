@@ -12,9 +12,9 @@ from preprocessing import preprocessDictionaryDataset
 from utilsParams import getCommonArgs
 
 def mainPrepareDictionaryData():
-    shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
+    shuffleSeed, batch_size, max_epochs_stop, n_epochs, manualFlatten = getCommonArgs()
     saudaveisDictionaryData, doentesDictionaryData = mainReadData()
-    filteredSaudaveisDicData, filteredDoentesDicData, topMean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
+    filteredSaudaveisDicData, filteredDoentesDicData, topMean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData, manualFlatten)
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, filteredSaudaveisDicData, filteredDoentesDicData)
 
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, topMean)
@@ -29,9 +29,12 @@ def mainReadData():
 
 def getFilesName():
     print('getFilesName')
-    txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
-    
+    # txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
+    # txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
+    #txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas_cortadas/0Saudavel/*.txt")
+    #txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas_cortadas/1Doente/*.txt")
+    txt_saudaveis_files = glob.glob("../poucas_Imagens/0Saudavel/*.txt")
+    txt_doentes_files = glob.glob("../poucas_Imagens/1Doente/*.txt")
     return txt_saudaveis_files, txt_doentes_files
 
 def readFilesByPatient(txt_files):
@@ -109,6 +112,8 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
         validationDataset.extend(images)
     print('imagens do validationDataset', len(validationDataset))
 
+    print('trainDataset', len(trainDataset))
+    print('trainDataset.shape', np.array(trainDataset).shape)
     train, test, validation = np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
     
     print('train', train.shape)
@@ -179,7 +184,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
-        #plotTransformedImages(images, i, 'testes_balanced_train_')
+        plotTransformedImages(images, i, 'cropped_testes_balanced_train_')
         i = i+1
 
     i=0
@@ -188,7 +193,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
-        #plotTransformedImages(images, i, 'testes_balanced_test_')
+        plotTransformedImages(images, i, 'cropped_testes_balanced_test_')
         i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -197,7 +202,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
-        #plotTransformedImages(images, i, 'testes_balanced_validation_')
+        plotTransformedImages(images, i, 'cropped_testes_balanced_validation_')
         i = i+1
 
     cat_df = pd.DataFrame({
