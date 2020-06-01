@@ -28,8 +28,6 @@ def getConfusionMatrixInfo(y_true, y_pred):
     #print('Confusion Matrix = ', cm)
     return tn, fp, fn, tp , cm
 
-
-
 def getF1Score(target, predicted):
     return f1_score(target, predicted, labels=[0,1])
 
