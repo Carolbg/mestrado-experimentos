@@ -148,15 +148,16 @@ def plotFilteredImage(image, filteredImage, nameFile):
     # ax2.imshow(filteredImage)
     # fig.savefig('gray_median_filter' + str(index) + '.png')
 
-def plotImageDataFromPatient(patientData):
+def plotImageDataFromPatient(patientData, patientId):
     fig = plt.figure()
     plt.title('Patient Filter')
     i = 0
-    for image in patientData.values:
+    values = patientData[patientId]
+    for image in values:
         fig = plt.figure()
         plt.imshow(image)
-        #plt.colorbar()
+        plt.colorbar()
         i = i+1
-        fig.savefig(patientData.keys() + str(i) + '.png')
+        fig.savefig('image_'+ patientId + '_'+ str(i) + '.png')
         
         plt.close()
