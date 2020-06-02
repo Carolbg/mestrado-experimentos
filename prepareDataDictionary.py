@@ -160,7 +160,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         transforms.ToTensor(),
         transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
         #transforms.Lambda(lambda x: torch.cat([x/topMean, x/topMean, x/topMean], 0)),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
+        #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
     ])
     
     trainDataset = CustomDatasetFromNumpyArray(dataTrain,dataTargetTrain, testValidationTransform)

@@ -100,21 +100,11 @@ def plotTransformedImages(images, i, typeImg):
     inputs = inputs.permute(1, 2, 0)
     fig = plt.figure()
     plt.imshow(inputs.numpy())
+    #plt.colorbar()
     fig.savefig(typeImg + '_transformeImg_' + str(i) +'.png')
     #teste = teste.flatten()
     #savetxt(typeImg+'data_' + str(i) +'_.csv', teste, delimiter=',')
     plt.close()
-    
-def plotConfusionMatrix(cm):
-    ax= plt.subplot()
-    sns.heatmap(cm, annot=True, ax = ax); #annot=True to annotate cells
-    # labels, title and ticks
-    ax.set_xlabel('Predicted labels')
-    ax.set_ylabel('True labels')
-    ax.set_title('Confusion Matrix')
-    ax.xaxis.set_ticklabels(['Doente', 'Saudavel'])
-    ax.yaxis.set_ticklabels(['Doente', 'Saudavel'])
-    plt.show()
 
 def prepareAllDF(test, trainValidation):
     print('trainValidation', trainValidation)
@@ -137,78 +127,6 @@ def plotAll(test, trainValidation):
     plt.title('Training and Validation Accuracy')
     fig.savefig('plotAcc.png')
 
-
-# from https://www.kaggle.com/grfiv4/plot-a-confusion-matrix
-def plot_confusion_matrix(cm,
-                          target_names,
-                          title='Confusion matrix',
-                          cmap=None,
-                          normalize=True):
-    """
-    given a sklearn confusion matrix (cm), make a nice plot
-
-    Arguments
-    ---------
-    cm:           confusion matrix from sklearn.metrics.confusion_matrix
-
-    target_names: given classification classes such as [0, 1, 2]
-                  the class names, for example: ['high', 'medium', 'low']
-
-    title:        the text to display at the top of the matrix
-
-    cmap:         the gradient of the values displayed from matplotlib.pyplot.cm
-                  see http://matplotlib.org/examples/color/colormaps_reference.html
-                  plt.get_cmap('jet') or plt.cm.Blues
-
-    normalize:    If False, plot the raw numbers
-                  If True, plot the proportions
-
-    Usage
-    -----
-    plot_confusion_matrix(cm           = cm,                  # confusion matrix created by
-                                                              # sklearn.metrics.confusion_matrix
-                          normalize    = True,                # show proportions
-                          target_names = y_labels_vals,       # list of names of the classes
-                          title        = best_estimator_name) # title of graph
-
-    Citiation
-    ---------
-    http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
-
-    """
-    accuracy = np.trace(cm) / float(np.sum(cm))
-    misclass = 1 - accuracy
-
-    if cmap is None:
-        cmap = plt.get_cmap('Blues')
-
-    fig = plt.figure(figsize=(8, 6))
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-
-    if target_names is not None:
-        tick_marks = np.arange(len(target_names))
-        plt.xticks(tick_marks, target_names, rotation=45)
-        plt.yticks(tick_marks, target_names)
-
-    thresh = cm.max() / 1.5 if normalize else cm.max() / 2
-    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        if normalize:
-            plt.text(j, i, "{:0.4f}".format(cm[i, j]),
-                     horizontalalignment="center",
-                     color="white" if cm[i, j] > thresh else "black")
-        else:
-            plt.text(j, i, "{:,}".format(cm[i, j]),
-                     horizontalalignment="center",
-                     color="white" if cm[i, j] > thresh else "black")
-
-
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
-    fig.savefig('confusion.png')
-
 def plotFilteredImage(image, filteredImage, nameFile):
     fig = plt.figure()
     plt.title('Median Filter')
@@ -216,6 +134,7 @@ def plotFilteredImage(image, filteredImage, nameFile):
     ax2 = fig.add_subplot(122)  # right side
     ax1.imshow(image)
     ax2.imshow(filteredImage)
+    #plt.colorbar()
     fig.savefig('median_filter' + nameFile + '.png')
     
     plt.close()
@@ -228,3 +147,16 @@ def plotFilteredImage(image, filteredImage, nameFile):
     # ax1.imshow(image)
     # ax2.imshow(filteredImage)
     # fig.savefig('gray_median_filter' + str(index) + '.png')
+
+def plotImageDataFromPatient(patientData):
+    fig = plt.figure()
+    plt.title('Patient Filter')
+    i = 0
+    for image in patientData.values:
+        fig = plt.figure()
+        plt.imshow(image)
+        #plt.colorbar()
+        i = i+1
+        fig.savefig(patientData.keys() + str(i) + '.png')
+        
+        plt.close()

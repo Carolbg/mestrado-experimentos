@@ -7,24 +7,6 @@ from utils import calcMetrics
 
 def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
         max_epochs_stop=3, n_epochs=20, print_every=2):
-    """Train a PyTorch Model
-    Params
-    --------
-        model (PyTorch model): cnn to train
-        criterion (PyTorch loss): objective to minimize
-        optimizer (PyTorch optimizer): optimizer to compute gradients of model parameters
-        trainLoader (PyTorch dataloader): training dataloader to iterate through
-        validLoader (PyTorch dataloader): validation dataloader used for early stopping
-        save_file_name (str ending in '.pt'): file path to save the model state dict
-        max_epochs_stop (int): maximum number of epochs with no improvement in validation loss for early stopping
-        n_epochs (int): maximum number of training epochs
-        print_every (int): frequency of epochs to print training stats
-
-    Returns
-    --------
-        model (PyTorch model): trained cnn with best weights
-        history (DataFrame): history of train and validation loss and accuracy
-    """
 
     # Early stopping intialization
     epochs_no_improve = 0
@@ -32,13 +14,6 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
 
     valid_max_acc = 0
     history = []
-
-    # Number of epochs already trained (if using loaded in model weights)
-    # try:
-    #     print(f'Model has been trained for: {model.epochs} epochs.\n')
-    # except:
-    #     model.epochs = 0
-    #     print(f'Starting Training from Scratch.\n')
 
     overall_start = timer()
     model.epochs = 0
@@ -74,7 +49,6 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
 
             # Update the parameters
             optimizer.step()
-
             # Track train loss by multiplying average loss by number of examples in batch
             train_loss += loss.item() * data.size(0)
 
@@ -123,11 +97,6 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
 
                     # Calculate validation accuracy
                     _, pred = torch.max(output, dim=1)
-                    # correct_tensor = pred.eq(target.data.view_as(pred))
-                    # accuracy = torch.mean(
-                    #     correct_tensor.type(torch.FloatTensor))
-                    # # Multiply average accuracy times the number of examples
-                    # valid_acc += accuracy.item() * data.size(0)
                     # Neste cenario, 0 eh doente e 1 saudavel
                     allValidationPredicted = np.concatenate((allValidationPredicted, pred.numpy()), axis=0)
                     allValidationTarget = np.concatenate((allValidationTarget, target.numpy()), axis=0)
@@ -137,11 +106,8 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
                 valid_loss = valid_loss / len(validLoader.dataset)
 
                 # Calculate average accuracy
-                #train_acc = train_acc / len(trainLoader.dataset)
-                #valid_acc = valid_acc / len(validLoader.dataset)
                 train_acc, train_especificidade, train_sensitividade, train_f1Score, cmTrain = calcMetrics(allTrainingTarget, allTrainingPredicted)
                 validation_acc, validation_especificidade, validation_sensitividade, validation_f1Score, cmValidation = calcMetrics(allValidationTarget, allValidationPredicted)
-                
 
                 history.append([
                     train_acc, validation_acc,
@@ -186,7 +152,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
                         )
 
                         # Load the best state dict
-                        model.load_state_dict(torch.load(save_file_name))
+                        #model.load_state_dict(torch.load(save_file_name))
                         # Attach the optimizer
                         model.optimizer = optimizer
 
