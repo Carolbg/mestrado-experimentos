@@ -53,7 +53,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
             train_loss += loss.item() * data.size(0)
 
             # Calculate accuracy by finding max log probability
-            _, pred = torch.max(output, dim=1)
+            _, pred = torch.max(output, 1)
             
             # correct_tensor = pred.eq(target.data.view_as(pred))
             # Need to convert correct tensor from int to float to average
