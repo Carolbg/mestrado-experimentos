@@ -3,9 +3,9 @@ import torch.nn as nn
 from utilsParams import *
 
 def prepareVGG16ModelWithTXT(n_classes):
-    print('model', model.classifier)
     
     model = models.vgg16(pretrained=True)
+    print('model', model.classifier)
     # Freeze early layers
     for param in model.parameters():
         param.requires_grad = False

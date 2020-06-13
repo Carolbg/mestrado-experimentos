@@ -3,22 +3,25 @@ import pandas as pd
 import torch
 from utils import calcMetrics
 
+dataClasses = ('Saudavel', 'Doente')
+
 def accuracy(output, target):
     """Compute the topk accuracy(s)"""
 
     with torch.no_grad():
         batch_size = target.size(0)
         # Find the predicted classes and transpose
-        _, pred = output.topk(k=1, dim=1, largest=True, sorted=True)
+        _, pred = torch.max(output, dim=1)
+        #_, pred = output.topk(k=1, dim=1, largest=True, sorted=True)
     
-        pred = pred.t()
+        #pred = pred.t()
         
         # Determine predictions equal to the targets
-        correct = pred.eq(target.view(1, -1).expand_as(pred))
+        correct = pred == target.data#pred.eq(target.view(1, -1).expand_as(pred))
         # Find the percentage of correct
-        correct_k = correct[:1].view(-1).float().sum(0, keepdim=True)
-        res = (correct_k.mul_(100.0 / batch_size).item())
-        return res, pred
+        #correct_k = correct[:1].view(-1).float().sum(0, keepdim=True)
+        #res = (correct_k.mul_(100.0 / batch_size).item())
+        return pred #res, pred
 
 
 def evaluate(model, test_loader, criterion, n_classes):
@@ -36,49 +39,38 @@ def evaluate(model, test_loader, criterion, n_classes):
 
     """
 
-    classes = []
-    losses = []
+    #classes = []
+    losses = 0.0
     # Hold accuracy results
     acc_results = np.zeros(len(test_loader.dataset))
     i = 0
-    test_error_count = 0.0
+    # test_error_count = 0.0
     model.eval()
     allTestingTarget = []
     allTestingPredicted = []
     with torch.no_grad():
+        for data, target in test_loader:
+            # Forward pass
+            output = model(data)
 
-        # Testing loop
-        for data, targets in test_loader:
-            
-            # Raw model output
-            out = model(data)
-            test_error_count += float(torch.sum(torch.abs(targets - out.argmax(1))))
-            #print('out = ', out)
-            # Iterate through each example
-            for pred, target in zip(out, targets):
-                # Find topk (top 1) accuracy
+            # Calculate validation accuracy
+            values, pred = torch.max(output, dim=1)
+            #print('values', values)
+            #print('pred', pred)
+            #print('target.data', target.data)
+            # Multiply average loss times the number of examples in batch
+            allTestingPredicted = np.concatenate((allTestingPredicted, pred.numpy()), axis=0)
+            allTestingTarget = np.concatenate((allTestingTarget, target.numpy()), axis=0)
+            loss = criterion(output, target)
+            losses += loss.item() * data.size(0)
 
-                acc_results[i], predictedClass = accuracy(pred.unsqueeze(0), target.unsqueeze(0))
-                classes.append(model.idx_to_class[target.item()])
-                # Calculate the loss
-                loss = criterion(pred.view(1, n_classes), target.view(1))
-                losses.append(loss.item())
-
-                predictedClass = predictedClass.numpy()[0]
-                target = [target.numpy()]
-                allTestingPredicted = np.concatenate((allTestingPredicted, predictedClass), axis=0)
-                allTestingTarget = np.concatenate((allTestingTarget, target), axis=0)
-
-                i += 1
-        #train_acc, train_especificidade, train_sensitividade, train_f1Score, cmTrain = calcMetrics(allTrainingTarget, allTrainingPredicted)
-    
     test_acc, test_especificidade, test_sensitividade, test_f1Score, cmTest = calcMetrics(allTestingTarget, allTestingPredicted)
     history = pd.DataFrame({
         'test_acc': [test_acc], 'test_especificidade': [test_especificidade],
         'test_sensitividade': [test_sensitividade], 'test_f1Score': [test_f1Score]})
     print('\nTesting result\n', history)
-    # Send results to a dataframe and calculate average across classes
-    results = pd.DataFrame({'acuracia': acc_results, 'class':classes, 'loss': losses})
-    results = results.groupby(classes).mean()
-    #print('Results', results)
-    return results.reset_index().rename(columns={'index': 'class'}), test_error_count, history, cmTest
+    
+    losses = losses / len(test_loader.dataset)
+    print('TestLoader Losses', losses)
+
+    return history, cmTest

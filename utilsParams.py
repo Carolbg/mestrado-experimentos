@@ -4,8 +4,8 @@ from torch import optim
 def getCommonArgs():
     shuffleSeed = 3
     batch_size = 10
-    max_epochs_stop = 30
-    n_epochs = 30
+    max_epochs_stop = 10#30
+    n_epochs = 10#30
     print('n_epochs', n_epochs)
     return shuffleSeed, batch_size, max_epochs_stop, n_epochs
 
@@ -27,8 +27,4 @@ def prepareTrainingOptimizer(model):
 
     #optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
     optimizer = optim.Adam(model.parameters())
-
-    #for p in optimizer.param_groups[0]['params']:
-    #    if p.requires_grad:
-    #        print(p.shape)
     return optimizer
