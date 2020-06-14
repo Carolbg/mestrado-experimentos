@@ -15,6 +15,7 @@ from skimage import transform
 def mainPrepareDictionaryData():
     shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
     saudaveisDictionaryData, doentesDictionaryData = mainReadData()
+    
     filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, filteredSaudaveisDicData, filteredDoentesDicData)
     trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
