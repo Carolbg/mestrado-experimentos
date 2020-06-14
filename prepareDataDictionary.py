@@ -15,10 +15,11 @@ from skimage import transform
 def mainPrepareDictionaryData():
     shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
     saudaveisDictionaryData, doentesDictionaryData = mainReadData()
-    filteredSaudaveisDicData, filteredDoentesDicData, deltaT = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
+    filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, filteredSaudaveisDicData, filteredDoentesDicData)
-
-    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, deltaT)
+    trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
+    
+    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size)
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs
 
 def mainReadData():
@@ -167,11 +168,14 @@ def splitPatientsFromDictionary(shuffleSeed, dictionaryData):
 
     return indicesTreinamento, indicesTeste, indicesValidacao
 
-def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size, deltaT):
+def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
+    dataTrain = (dataTrain-min10mean)/deltaT
+    dataTest = (dataTest-min10mean)/deltaT
+    dataValidation = (dataValidation-min10mean)/deltaT
+    return dataTrain, dataTest, dataValidation
+
+def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size):
     print('prepareNumpyDatasetBalancedData')
-    dataTrain = dataTrain/deltaT
-    dataTest = dataTest/deltaT
-    dataValidation = dataValidation/deltaT
 
     # trainTransform = transforms.Compose([
     #     #transforms.RandomRotation(degrees=30, fill=(0,)),
