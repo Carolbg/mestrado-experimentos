@@ -30,10 +30,10 @@ def mainReadData():
 
 def getFilesName():
     print('getFilesName')
-    # txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
-    # txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
-    txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
+    txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
+    txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
+    #txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
+    #txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
     
     return txt_saudaveis_files, txt_doentes_files
 
@@ -49,6 +49,10 @@ def readFilesByPatient(txt_files):
         #Stack the data to simulate 3d image
         inputData = np.stack((inputData,)*3, axis=2)
         inputData = np.transpose(inputData, (2, 0, 1))
+        #isso porque o tensor tem formato C, H, W
+        #conforme toTensor: 
+        # Converts a PIL Image or numpy.ndarray (H x W x C) in the range [0, 255] 
+        # to a torch.FloatTensor of shape (C x H x W) in the range [0.0, 1.0] 
         #print('depois inputData', inputData.shape)
         
         if patientId in dataAsDictionary.keys(): 
