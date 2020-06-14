@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 import seaborn as sns
 import itertools
 import numpy as np
@@ -94,8 +95,9 @@ def plotTestingAcc(results, model):
 def plotTransformedImages(images, i, typeImg):
     #print('images = ',images.shape)
     inputs = images[0]
-    teste = inputs.numpy()
-    #print('inputs.numpy() = ',teste )
+    numpyImage = inputs.numpy()
+    plotHistogram(numpyImage, i)
+    #print('inputs.numpy() = ',numpyImage )
     #print('teste = ',teste.shape)
     inputs = inputs.permute(1, 2, 0)
     fig = plt.figure()
@@ -161,3 +163,11 @@ def plotImageDataFromPatient(patientData, patientId):
         fig.savefig('image_'+ patientId + '_'+ str(i) + '.png')
         
         plt.close()
+
+def plotHistogram(image, i):
+    fig = plt.figure()
+    plt.hist(image[0], range=[0,2])
+    plt.xlabel('Valores dos pixels')
+    plt.ylabel('Quantidade')
+    plt.title('Histograma das imagens depois do pre processamento')
+    fig.savefig('histogram' + str(i) +'.png')

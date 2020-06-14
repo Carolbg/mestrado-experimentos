@@ -18,12 +18,19 @@ def applyMedianFilterDataset(dataset, nameFile):
            plotFilteredImage(dataset[i], filteredImage, nameFile+str(i))
     return np.array(filteredDataset)
 
-def getMaxValue(dataset):
+def getMaxMinValue(dataset):
     flattenDataset = dataset.flatten()
     indices = np.argpartition(flattenDataset, -100)[-100:] 
+    #print('indices', indices)
     topValues = flattenDataset[indices]
-    #for i in topValues:
-    #    print(i)
+    #print('topValues', topValues)
+
+    indices = np.argpartition(flattenDataset, 100)[:100]
+    #print('indices', indices)
+    minValuesValues = flattenDataset[indices]
+    #print('minValuesValues', minValuesValues)
+    minMean = np.mean(minValuesValues)
+    print('minMean', minMean)
         
     topMean = np.mean(topValues)
     print('topMean', topMean)
@@ -40,7 +47,7 @@ def getMaxValue(dataset):
     # indices = np.argpartition(flattenDataset, -100)[-100:] 
     # top100 = flattenDataset[indices]
     # top100mean = np.mean(top100)
-    return topMean#, top100mean
+    return topMean, minMean#, top100mean
 
 def preprocessImage(saudaveisDataset, doentesDataset):
     filteredSaudaveisDataset = applyMedianFilterDataset(saudaveisDataset, 'saudaveis')
@@ -48,8 +55,10 @@ def preprocessImage(saudaveisDataset, doentesDataset):
     filteredDoentesDataset = applyMedianFilterDataset(doentesDataset,'doentes')
     print('filteredDoentesDataset', filteredDoentesDataset.shape)
     filteredDataset = np.concatenate((filteredSaudaveisDataset, filteredDoentesDataset), axis=0)
-    top10mean = getMaxValue(filteredDataset)
+    top10mean, min10mean = getMaxMinValue(filteredDataset)
+    deltaT = top10mean-min10mean
     print('top10mean', top10mean)
+    print('deltaT', deltaT)
     return filteredSaudaveisDataset, filteredDoentesDataset, top10mean
 
 def applyMedianFilterDictionaryDataset(dictionaryDataset, nameFile, allData):
@@ -73,6 +82,7 @@ def preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData):
     allData = []
     filteredSaudaveisDicData, allData = applyMedianFilterDictionaryDataset(saudaveisDictionaryData, 'saudaveis', allData)
     filteredDoentesDicData, allData = applyMedianFilterDictionaryDataset(doentesDictionaryData, 'doentes', allData)
-    top10mean = getMaxValue(np.array(allData))
+    top10mean, min10mean = getMaxMinValue(np.array(allData))
 
-    return filteredSaudaveisDicData, filteredDoentesDicData, top10mean
+    deltaT = top10mean - min10mean
+    return filteredSaudaveisDicData, filteredDoentesDicData,top10mean #deltaT
