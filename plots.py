@@ -19,7 +19,7 @@ def plotComparative(history, item1, item2, saveName, xlabel, ylabel, title, labe
 
 def plotLosses(history, model):
     xlabel = 'Época'
-    ylabel = 'Negative Log Likelihood'
+    ylabel = 'CrossEntropyLoss'
     title = 'Losses treinamento e validação'
 
     saveName = 'plotLosses_' + model
@@ -92,21 +92,65 @@ def plotTestingAcc(results, model):
     plt.ylim(-5, 105)
     fig.savefig('plotTestingAcc_'+model+'.png')
 
-def plotTransformedImages(images, i, typeImg):
-    #print('images = ',images.shape)
+def plotTransformedImageAndHistogram(images, i, typeImg):
     inputs = images[0]
-    numpyImage = inputs.numpy()
-    plotHistogram(numpyImage, i)
-    #print('inputs.numpy() = ',numpyImage )
-    #print('teste = ',teste.shape)
     inputs = inputs.permute(1, 2, 0)
-    fig = plt.figure()
-    plt.imshow(inputs.numpy())
-    #plt.colorbar()
+    numpyImage = inputs.numpy()
+    fig, (ax1, ax2) =  plt.subplots(1, 2)
+    pos = ax1.imshow(numpyImage, cmap='gray')
+    fig.colorbar(pos, ax=ax1)
+    print('min = ', numpyImage.min())
+    print('max = ', numpyImage.max())
+    # fig = plt.figure()
+    # plt.title('Imagens e histograma')
+    # plt.subplot(1, 2, 1)
+    # plt.imshow(numpyImage)
+    # plt.colorbar(numpyImage)
+    
+    #plt.subplot(1, 2, 2)
+    pos2 = ax2.hist(numpyImage[0], range=[0,2])
+
+    ax2.set_title('Histograma imagem apos o pre-processamento')
+    ax2.set_xlabel('Valores dos pixels')
+    ax2.set_ylabel('Quantidade')
+
     fig.savefig(typeImg + '_transformeImg_' + str(i) +'.png')
     #teste = teste.flatten()
     #savetxt(typeImg+'data_' + str(i) +'_.csv', teste, delimiter=',')
     plt.close()
+
+def plotTransformedImages(images, i, typeImg):
+
+    inputs = images[0]
+    inputs = inputs.permute(1, 2, 0)
+    numpyImage = inputs.numpy()
+
+    fig = plt.figure(figsize=(10, 4))
+    fig.subplots_adjust(wspace=0.3)
+    
+    # show original image
+    fig.add_subplot(121)
+    plt.title('Imagem \npre-processada')
+    plt.set_cmap('gray')
+    pos = plt.imshow(numpyImage, cmap='gray')
+    plt.colorbar(pos)
+
+    fig.add_subplot(122)
+    plt.title('Histograma')
+    plt.xlabel('Valores dos pixels')
+    plt.ylabel('Quantidade')
+    plt.hist(numpyImage[0], range=[0,2])
+    plt.xticks(np.arange(0, 2.25, 0.25))
+
+    fig.savefig(typeImg + '_imagens_histograma_' + str(i) +'.png')
+
+def plotHistogram(image, i):
+    fig = plt.figure()
+    plt.hist(image[0], range=[0,2])
+    plt.xlabel('Valores dos pixels')
+    plt.ylabel('Quantidade')
+    plt.title('Histograma das imagens depois do pre processamento')
+    fig.savefig('histogram' + str(i) +'.png')
 
 def prepareAllDF(test, trainValidation):
     print('trainValidation', trainValidation)
@@ -140,7 +184,6 @@ def plotFilteredImage(image, filteredImage, nameFile):
     fig.savefig('median_filter' + nameFile + '.png')
     
     plt.close()
-
     # fig = plt.figure()
     # plt.gray() 
     # plt.title('Median Filter')
@@ -163,11 +206,3 @@ def plotImageDataFromPatient(patientData, patientId):
         fig.savefig('image_'+ patientId + '_'+ str(i) + '.png')
         
         plt.close()
-
-def plotHistogram(image, i):
-    fig = plt.figure()
-    plt.hist(image[0], range=[0,2])
-    plt.xlabel('Valores dos pixels')
-    plt.ylabel('Quantidade')
-    plt.title('Histograma das imagens depois do pre processamento')
-    fig.savefig('histogram' + str(i) +'.png')

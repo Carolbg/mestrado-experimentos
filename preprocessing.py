@@ -85,4 +85,5 @@ def preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData):
     top10mean, min10mean = getMaxMinValue(np.array(allData))
 
     deltaT = top10mean - min10mean
+    print('deltaT = ', deltaT)
     return filteredSaudaveisDicData, filteredDoentesDicData,top10mean #deltaT
