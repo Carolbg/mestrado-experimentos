@@ -119,11 +119,35 @@ def plotTransformedImageAndHistogram(images, i, typeImg):
     #savetxt(typeImg+'data_' + str(i) +'_.csv', teste, delimiter=',')
     plt.close()
 
+def plotTestTransformedImages(numpyImage, name):
+
+    fig = plt.figure(figsize=(10, 4))
+    fig.subplots_adjust(wspace=0.3)
+    
+    # show original image
+    fig.add_subplot(121)
+    plt.title('Imagem \npre-processada')
+    #plt.set_cmap('gray')
+    pos = plt.imshow(numpyImage)
+    plt.colorbar(pos)
+
+    fig.add_subplot(122)
+    plt.title('Histograma')
+    plt.xlabel('Valores dos pixels')
+    plt.ylabel('Quantidade')
+    #print('numpyImage aquiii', numpyImage.shape)
+    plt.hist(numpyImage)
+    #plt.xticks(np.arange(0, 2.25, 0.25))
+
+    fig.savefig(name +'.png')
+
+
 def plotTransformedImages(images, i, typeImg):
 
     inputs = images[0]
     inputs = inputs.permute(1, 2, 0)
     numpyImage = inputs.numpy()
+    #print('numpyImage shape', numpyImage.shape)
 
     fig = plt.figure(figsize=(10, 4))
     fig.subplots_adjust(wspace=0.3)
@@ -139,8 +163,19 @@ def plotTransformedImages(images, i, typeImg):
     plt.title('Histograma')
     plt.xlabel('Valores dos pixels')
     plt.ylabel('Quantidade')
-    plt.hist(numpyImage[0], range=[0,2])
+    #print('teste', numpyImage.shape)
+    teste = numpyImage[:, :, 0]
+    #print('teste', teste.shape)
+    plt.hist(teste, range=[0,2])
     plt.xticks(np.arange(0, 2.25, 0.25))
+
+    # fig.add_subplot(133)
+    # plt.title('Histograma flatten')
+    # plt.xlabel('Valores dos pixels')
+    # plt.ylabel('Quantidade')
+    # print('numpyImage.flatten()', numpyImage.flatten().shape)
+    # plt.hist(numpyImage.flatten(), range=[0,2])
+    # plt.xticks(np.arange(0, 2.25, 0.1))
 
     fig.savefig(typeImg + '_imagens_histograma_' + str(i) +'.png')
 

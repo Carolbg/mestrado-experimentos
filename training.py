@@ -45,6 +45,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
 
         # Training loop
         for i, data in enumerate(trainLoader, 0):
+            model.train()
             inputs, labels = data
 
             optimizer.zero_grad()
@@ -87,6 +88,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
             # Validation loop
             for data, target in validLoader:
                 # Forward pass
+                model.eval()
                 output = model(data)
 
                 # Validation loss

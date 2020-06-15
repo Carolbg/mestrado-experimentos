@@ -6,11 +6,12 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 import torch
 import pandas as pd
-from plots import plotTransformedImages
+from plots import plotTransformedImages, plotTestTransformedImages
 from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray 
 from preprocessing import preprocessDictionaryDataset
 from utilsParams import getCommonArgs
 from skimage import transform
+import cv2
 
 def mainPrepareDictionaryData():
     shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
@@ -32,10 +33,10 @@ def mainReadData():
 
 def getFilesName():
     print('getFilesName')
-    txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
-    #txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
-    #txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
+    #txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
+    #txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
+    txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
+    txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
     
     return txt_saudaveis_files, txt_doentes_files
 
@@ -48,6 +49,7 @@ def readFilesByPatient(txt_files):
         patientId = fileName.split('.')[0]
         inputData = np.loadtxt(txt_files[i], dtype='f', delimiter=' ')
         #print('antes inputData', inputData.shape)
+        #inputData = convertTeste(inputData, i)
         #Stack the data to simulate 3d image
         inputData = np.stack((inputData,)*3, axis=2)
         inputData = np.transpose(inputData, (2, 0, 1))
@@ -63,6 +65,23 @@ def readFilesByPatient(txt_files):
             dataAsDictionary[patientId] = []
             dataAsDictionary[patientId].append(inputData)
     return dataAsDictionary
+
+def convertTeste(image, i):
+    numpyImage = image
+    max=np.amax(numpyImage)
+    # # scale by ratio of 255/max to increase to fully dynamic range
+    numpyImage = ((255/max)*numpyImage).clip(0,255)
+    #numpyImage2 = ((255/max)*numpyImage)
+    #print('numpyImage min = ', numpyImage.min(), 'max = ', numpyImage.max())
+    #print('numpyImage2 min = ', numpyImage2.min(), 'max = ', numpyImage2.max())
+    #print('numpyImage', numpyImage.shape)
+    # print('numpyImage', numpyImage.shape)
+    # imOut = cv2.cvtColor(numpyImage, cv2.COLOR_GRAY2RGB)
+    # print('imOut', imOut)
+    numpyImage = numpyImage.astype(np.uint8)
+    plotTestTransformedImages(numpyImage, 'testecv2'+ str(i))
+    return numpyImage
+
 
 def splitData(shuffleSeed, saudaveisData, doentesData):
     print('\nSplit Healthy Dataset')
@@ -124,7 +143,7 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     print('imagens do validationDataset', len(validationDataset))
 
     train, test, validation = np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
-    resizedTrained, resizedTest, resizedValidation = train, test, validation 
+    #resizedTrained, resizedTest, resizedValidation = train, test, validation 
     resizedTrained, resizedTest, resizedValidation = resizeImages(train, test, validation)
 
     print('train', resizedTrained.shape)
@@ -170,8 +189,11 @@ def splitPatientsFromDictionary(shuffleSeed, dictionaryData):
     return indicesTreinamento, indicesTeste, indicesValidacao
 
 def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
+    #dataTrain = (dataTrain)/deltaT
     dataTrain = (dataTrain-min10mean)/deltaT
+    #dataTest = (dataTest)/deltaT
     dataTest = (dataTest-min10mean)/deltaT
+    #dataValidation = (dataValidation)/deltaT
     dataValidation = (dataValidation-min10mean)/deltaT
     return dataTrain, dataTest, dataValidation
 
