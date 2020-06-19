@@ -33,10 +33,10 @@ def mainReadData():
 
 def getFilesName():
     print('getFilesName')
-    #txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
-    #txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
-    txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
+    txt_saudaveis_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
+    txt_doentes_files = glob.glob("../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
+    #txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
+    #txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
     
     return txt_saudaveis_files, txt_doentes_files
 
@@ -238,7 +238,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
-        plotTransformedImages(images, i, 'experimentos_train')
+        #plotTransformedImages(images, i, 'experimentos_train')
         i = i+1
 
     i=0
@@ -247,7 +247,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
-        plotTransformedImages(images, i, 'experimentos_test')
+        #plotTransformedImages(images, i, 'experimentos_test')
         i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -256,7 +256,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
-        plotTransformedImages(images, i, 'experimentos_validation')
+        #plotTransformedImages(images, i, 'experimentos_validation')
         i = i+1
 
     cat_df = pd.DataFrame({
