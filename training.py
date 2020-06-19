@@ -83,12 +83,12 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
         # Don't need to keep track of gradients
         with torch.no_grad():
             # Set to evaluation mode
-            #model.eval()
+            model.eval()
 
             # Validation loop
             for data, target in validLoader:
                 # Forward pass
-                model.eval()
+                #model.eval()
                 output = model(data)
 
                 # Validation loss
