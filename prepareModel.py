@@ -10,11 +10,13 @@ def prepareVGG16ModelWithTXT(n_classes):
     for param in model.parameters():
         param.requires_grad = False
 
-    n_inputs = model.classifier[6].in_features
+    #n_inputs = model.classifier[6].in_features
+    n_inputs = model.classifier[0].in_features
 
     # Add on classifier
-    model.classifier[6] = getFullyConnectedStructure(n_inputs, n_classes)
-
+    #model.classifier[6] = getFullyConnectedStructure(n_inputs, n_classes)
+    model.classifier = getFullyConnectedStructure(n_inputs, n_classes)
+    print('custom fc', model.classifier)
     total_params = sum(p.numel() for p in model.parameters())
     total_trainable_params = sum(
         p.numel() for p in model.parameters() if p.requires_grad)
@@ -35,6 +37,7 @@ def prepareResnetModelWithTXT(n_classes):
 
     # Add on classifier
     model.fc = getFullyConnectedStructure(n_inputs, n_classes)
+    print('custom fc', model.fc)
 
     total_params = sum(p.numel() for p in model.parameters())
     total_trainable_params = sum(
@@ -54,6 +57,7 @@ def prepareDensenetModelWithTXT(n_classes):
 
     # Add on classifier
     model.classifier = getFullyConnectedStructure(n_inputs, n_classes)
+    print('custom fc', model.classifier)
 
     total_params = sum(p.numel() for p in model.parameters())
     total_trainable_params = sum(
