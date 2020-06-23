@@ -86,4 +86,4 @@ def preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData):
 
     deltaT = top10mean - min10mean
     print('deltaT = ', deltaT)
-    return filteredSaudaveisDicData, filteredDoentesDicData, top10mean, min10mean
+    return filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean

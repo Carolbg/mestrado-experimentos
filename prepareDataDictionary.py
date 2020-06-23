@@ -193,12 +193,12 @@ def splitPatientsFromDictionary(shuffleSeed, dictionaryData):
     return indicesTreinamento, indicesTeste, indicesValidacao
 
 def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
-    dataTrain = (dataTrain)/deltaT
-    #dataTrain = (dataTrain-min10mean)/deltaT
-    dataTest = (dataTest)/deltaT
-    #dataTest = (dataTest-min10mean)/deltaT
-    dataValidation = (dataValidation)/deltaT
-    #dataValidation = (dataValidation-min10mean)/deltaT
+    #dataTrain = (dataTrain)/deltaT
+    dataTrain = (dataTrain-min10mean)/deltaT
+    #dataTest = (dataTest)/deltaT
+    dataTest = (dataTest-min10mean)/deltaT
+    #dataValidation = (dataValidation)/deltaT
+    dataValidation = (dataValidation-min10mean)/deltaT
     return dataTrain, dataTest, dataValidation
 
 def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size):
@@ -221,18 +221,18 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     #     #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
     # ])
     
-    defaultTransform = transforms.Compose([
-        transforms.ToPILImage(),
-        transforms.ToTensor(),  # Imagenet standards 
-    ])
+    # defaultTransform = transforms.Compose([
+    #     transforms.ToPILImage(),
+    #     transforms.ToTensor(),  # Imagenet standards 
+    # ])
 
-    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, defaultTransform)
+    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
-    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest, defaultTransform)
+    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)
     testLoader = DataLoader(testDataset, batch_size=batch_size, shuffle=True)
 
-    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation, defaultTransform)
+    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation)
     validationLoader = DataLoader(validationDataset, batch_size=batch_size, shuffle=True)
 
     resultLabelsTraining = torch.zeros(2, dtype=torch.long)
