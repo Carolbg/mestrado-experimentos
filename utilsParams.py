@@ -26,9 +26,9 @@ def prepareTrainingLoss():
 def prepareTrainingOptimizer(model):
 
     #optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    # lr = 0.0001
-    # print('Learning Rate', lr)
-    # optimizer = optim.Adam(model.parameters(), lr)
+    lr = 0.0001
+    print('Learning Rate', lr)
+    optimizer = optim.Adam(model.parameters(), lr)
 
-    optimizer = optim.Adam(model.parameters())
+    #optimizer = optim.Adam(model.parameters())
     return optimizer

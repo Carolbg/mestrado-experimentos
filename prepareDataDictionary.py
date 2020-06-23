@@ -19,7 +19,7 @@ def mainPrepareDictionaryData():
     
     filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, filteredSaudaveisDicData, filteredDoentesDicData)
-    trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
+    #trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
     
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size)
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs
@@ -49,7 +49,7 @@ def readFilesByPatient(txt_files, patientClass):
         patientId = fileName.split('.')[0]
         inputData = np.loadtxt(txt_files[i], dtype='f', delimiter=' ')
         #print('antes inputData', inputData.shape)
-        #inputData = preProcessingWithRatio(inputData, i, patientClass)
+        inputData = preProcessingWithRatio(inputData, i, patientClass)
         #Stack the data to simulate 3d image
         inputData = np.stack((inputData,)*3, axis=2)
         inputData = np.transpose(inputData, (2, 0, 1))
@@ -221,18 +221,18 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     #     #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
     # ])
     
-    # defaultTransform = transforms.Compose([
-    #     transforms.ToPILImage(),
-    #     transforms.ToTensor(),  # Imagenet standards 
-    # ])
+    defaultTransform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.ToTensor()  # Imagenet standards
+    ])
 
-    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
+    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, defaultTransform)
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
-    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)
+    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest, defaultTransform)
     testLoader = DataLoader(testDataset, batch_size=batch_size, shuffle=True)
 
-    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation)
+    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation, defaultTransform)
     validationLoader = DataLoader(validationDataset, batch_size=batch_size, shuffle=True)
 
     resultLabelsTraining = torch.zeros(2, dtype=torch.long)
