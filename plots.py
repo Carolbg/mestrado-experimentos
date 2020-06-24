@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 import seaborn as sns
 import itertools
 import numpy as np
@@ -18,7 +19,7 @@ def plotComparative(history, item1, item2, saveName, xlabel, ylabel, title, labe
 
 def plotLosses(history, model):
     xlabel = 'Época'
-    ylabel = 'Negative Log Likelihood'
+    ylabel = 'CrossEntropyLoss'
     title = 'Losses treinamento e validação'
 
     saveName = 'plotLosses_' + model
@@ -91,30 +92,100 @@ def plotTestingAcc(results, model):
     plt.ylim(-5, 105)
     fig.savefig('plotTestingAcc_'+model+'.png')
 
-def plotTransformedImages(images, i, typeImg):
-    #print('images = ',images.shape)
+def plotTransformedImageAndHistogram(images, i, typeImg):
     inputs = images[0]
-    teste = inputs.numpy()
-    #print('inputs.numpy() = ',teste )
-    #print('teste = ',teste.shape)
     inputs = inputs.permute(1, 2, 0)
-    fig = plt.figure()
-    plt.imshow(inputs.numpy())
+    numpyImage = inputs.numpy()
+    fig, (ax1, ax2) =  plt.subplots(1, 2)
+    pos = ax1.imshow(numpyImage, cmap='gray')
+    fig.colorbar(pos, ax=ax1)
+    print('min = ', numpyImage.min())
+    print('max = ', numpyImage.max())
+    # fig = plt.figure()
+    # plt.title('Imagens e histograma')
+    # plt.subplot(1, 2, 1)
+    # plt.imshow(numpyImage)
+    # plt.colorbar(numpyImage)
+    
+    #plt.subplot(1, 2, 2)
+    pos2 = ax2.hist(numpyImage[0], range=[0,2])
+
+    ax2.set_title('Histograma imagem apos o pre-processamento')
+    ax2.set_xlabel('Valores dos pixels')
+    ax2.set_ylabel('Quantidade')
+
     fig.savefig(typeImg + '_transformeImg_' + str(i) +'.png')
     #teste = teste.flatten()
     #savetxt(typeImg+'data_' + str(i) +'_.csv', teste, delimiter=',')
     plt.close()
+
+def plotTestTransformedImages(numpyImage, name):
+
+    fig = plt.figure(figsize=(10, 4))
+    fig.subplots_adjust(wspace=0.3)
     
-def plotConfusionMatrix(cm):
-    ax= plt.subplot()
-    sns.heatmap(cm, annot=True, ax = ax); #annot=True to annotate cells
-    # labels, title and ticks
-    ax.set_xlabel('Predicted labels')
-    ax.set_ylabel('True labels')
-    ax.set_title('Confusion Matrix')
-    ax.xaxis.set_ticklabels(['Doente', 'Saudavel'])
-    ax.yaxis.set_ticklabels(['Doente', 'Saudavel'])
-    plt.show()
+    # show original image
+    fig.add_subplot(121)
+    plt.title('Imagem \npre-processada')
+    #plt.set_cmap('gray')
+    pos = plt.imshow(numpyImage)
+    plt.colorbar(pos)
+
+    fig.add_subplot(122)
+    plt.title('Histograma')
+    plt.xlabel('Valores dos pixels')
+    plt.ylabel('Quantidade')
+    #print('numpyImage aquiii', numpyImage.shape)
+    plt.hist(numpyImage)
+    #plt.xticks(np.arange(0, 2.25, 0.25))
+
+    fig.savefig(name +'.png')
+
+
+def plotTransformedImages(images, i, typeImg):
+
+    inputs = images[0]
+    inputs = inputs.permute(1, 2, 0)
+    numpyImage = inputs.numpy()
+    #print('numpyImage shape', numpyImage.shape)
+
+    fig = plt.figure(figsize=(10, 4))
+    fig.subplots_adjust(wspace=0.3)
+    
+    # show original image
+    fig.add_subplot(121)
+    plt.title('Imagem \npre-processada')
+    plt.set_cmap('gray')
+    pos = plt.imshow(numpyImage, cmap='gray')
+    plt.colorbar(pos)
+
+    fig.add_subplot(122)
+    plt.title('Histograma')
+    plt.xlabel('Valores dos pixels')
+    plt.ylabel('Quantidade')
+    #print('teste', numpyImage.shape)
+    teste = numpyImage[:, :, 0]
+    #print('teste', teste.shape)
+    plt.hist(teste, range=[0,2])
+    plt.xticks(np.arange(0, 2.25, 0.25))
+
+    # fig.add_subplot(133)
+    # plt.title('Histograma flatten')
+    # plt.xlabel('Valores dos pixels')
+    # plt.ylabel('Quantidade')
+    # print('numpyImage.flatten()', numpyImage.flatten().shape)
+    # plt.hist(numpyImage.flatten(), range=[0,2])
+    # plt.xticks(np.arange(0, 2.25, 0.1))
+
+    fig.savefig(typeImg + '_imagens_histograma_' + str(i) +'.png')
+
+def plotHistogram(image, i):
+    fig = plt.figure()
+    plt.hist(image[0], range=[0,2])
+    plt.xlabel('Valores dos pixels')
+    plt.ylabel('Quantidade')
+    plt.title('Histograma das imagens depois do pre processamento')
+    fig.savefig('histogram' + str(i) +'.png')
 
 def prepareAllDF(test, trainValidation):
     print('trainValidation', trainValidation)
@@ -137,78 +208,6 @@ def plotAll(test, trainValidation):
     plt.title('Training and Validation Accuracy')
     fig.savefig('plotAcc.png')
 
-
-# from https://www.kaggle.com/grfiv4/plot-a-confusion-matrix
-def plot_confusion_matrix(cm,
-                          target_names,
-                          title='Confusion matrix',
-                          cmap=None,
-                          normalize=True):
-    """
-    given a sklearn confusion matrix (cm), make a nice plot
-
-    Arguments
-    ---------
-    cm:           confusion matrix from sklearn.metrics.confusion_matrix
-
-    target_names: given classification classes such as [0, 1, 2]
-                  the class names, for example: ['high', 'medium', 'low']
-
-    title:        the text to display at the top of the matrix
-
-    cmap:         the gradient of the values displayed from matplotlib.pyplot.cm
-                  see http://matplotlib.org/examples/color/colormaps_reference.html
-                  plt.get_cmap('jet') or plt.cm.Blues
-
-    normalize:    If False, plot the raw numbers
-                  If True, plot the proportions
-
-    Usage
-    -----
-    plot_confusion_matrix(cm           = cm,                  # confusion matrix created by
-                                                              # sklearn.metrics.confusion_matrix
-                          normalize    = True,                # show proportions
-                          target_names = y_labels_vals,       # list of names of the classes
-                          title        = best_estimator_name) # title of graph
-
-    Citiation
-    ---------
-    http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
-
-    """
-    accuracy = np.trace(cm) / float(np.sum(cm))
-    misclass = 1 - accuracy
-
-    if cmap is None:
-        cmap = plt.get_cmap('Blues')
-
-    fig = plt.figure(figsize=(8, 6))
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-
-    if target_names is not None:
-        tick_marks = np.arange(len(target_names))
-        plt.xticks(tick_marks, target_names, rotation=45)
-        plt.yticks(tick_marks, target_names)
-
-    thresh = cm.max() / 1.5 if normalize else cm.max() / 2
-    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        if normalize:
-            plt.text(j, i, "{:0.4f}".format(cm[i, j]),
-                     horizontalalignment="center",
-                     color="white" if cm[i, j] > thresh else "black")
-        else:
-            plt.text(j, i, "{:,}".format(cm[i, j]),
-                     horizontalalignment="center",
-                     color="white" if cm[i, j] > thresh else "black")
-
-
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
-    fig.savefig('confusion.png')
-
 def plotFilteredImage(image, filteredImage, nameFile):
     fig = plt.figure()
     plt.title('Median Filter')
@@ -216,10 +215,10 @@ def plotFilteredImage(image, filteredImage, nameFile):
     ax2 = fig.add_subplot(122)  # right side
     ax1.imshow(image)
     ax2.imshow(filteredImage)
+    #plt.colorbar()
     fig.savefig('median_filter' + nameFile + '.png')
     
     plt.close()
-
     # fig = plt.figure()
     # plt.gray() 
     # plt.title('Median Filter')
@@ -228,3 +227,17 @@ def plotFilteredImage(image, filteredImage, nameFile):
     # ax1.imshow(image)
     # ax2.imshow(filteredImage)
     # fig.savefig('gray_median_filter' + str(index) + '.png')
+
+def plotImageDataFromPatient(patientData, patientId):
+    fig = plt.figure()
+    plt.title('Patient Filter')
+    i = 0
+    values = patientData[patientId]
+    for image in values:
+        fig = plt.figure()
+        plt.imshow(image)
+        plt.colorbar()
+        i = i+1
+        fig.savefig('image_'+ patientId + '_'+ str(i) + '.png')
+        
+        plt.close()

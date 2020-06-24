@@ -6,7 +6,6 @@ from sklearn.metrics import confusion_matrix, f1_score
 #     input('aqui')
 #     return confMatrix
 
-
 def calcMetrics(targetData, predictedData):
     tn, fp, fn, tp, cm = getConfusionMatrixInfo(targetData, predictedData)
     #saudavel

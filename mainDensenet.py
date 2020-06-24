@@ -35,17 +35,13 @@ def mainDensenet():
 
     #TEST MODEL
     print('Test model')
-    results, test_error_count, historyTest, cmTest  = evaluate(model, testLoader, criterion, n_classes)
+    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes)
     print('\nConfusion matrix Test\n', cmTest)
     tn, fp, fn, tp = cmTest.ravel()
     print('tn', tn)
     print('fp', fp)
     print('fn', fn)
     print('tp', tp)
-    
-    results2 = results.merge(cat_df, left_on='class', right_on='category').drop(columns=['category'])
-    plotTestingAcc(results2, 'densenet')
-    #plotAll(results2, history)
 
-    return model, history, historyTest, results, cmTrain, cmValidation,cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df
+    return model, history, historyTest, cmTrain, cmValidation,cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df
     

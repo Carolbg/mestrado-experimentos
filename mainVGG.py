@@ -36,14 +36,14 @@ def mainVGG():
 
     #TEST MODEL
     print('Test model')
-    results, test_error_count, historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes)
+    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes)
     print('\nConfusion matrix Test\n', cmTest)
     #print('Results Head', results)
     #print('test_error_count = ', test_error_count)
     #print('Results Head', results.head())
     
-    results2 = results.merge(cat_df, left_on='class', right_on='category').drop(columns=['category'])
-    plotTestingAcc(results2, 'vgg')
+    # results2 = results.merge(cat_df, left_on='class', right_on='category').drop(columns=['category'])
+    # plotTestingAcc(results2, 'vgg')
 
     tn, fp, fn, tp = cmTest.ravel()
     print('tn', tn)
@@ -51,5 +51,5 @@ def mainVGG():
     print('fn', fn)
     print('tp', tp)
 
-    return model, history, historyTest, results, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df 
+    return model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df 
     
