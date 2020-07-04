@@ -36,7 +36,7 @@ def mainVGG(resultsPlotName):
 
     #TEST MODEL
     print('Test model')
-    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes)
+    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes, resultsPlotName)
     print('\nConfusion matrix Test\n', cmTest)
     #print('Results Head', results)
     #print('test_error_count = ', test_error_count)

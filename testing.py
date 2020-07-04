@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import torch
 from utils import calcMetrics
+import csv
 
 dataClasses = ('Saudavel', 'Doente')
 
@@ -23,8 +24,7 @@ def accuracy(output, target):
         #res = (correct_k.mul_(100.0 / batch_size).item())
         return pred #res, pred
 
-
-def evaluate(model, test_loader, criterion, n_classes):
+def evaluate(model, test_loader, criterion, n_classes, resultsPlotName):
     """Measure the performance of a trained PyTorch model
 
     Params
@@ -66,9 +66,11 @@ def evaluate(model, test_loader, criterion, n_classes):
 
     test_acc, test_especificidade, test_sensitividade, test_f1Score, cmTest = calcMetrics(allTestingTarget, allTestingPredicted)
     history = pd.DataFrame({
-        'test_acc': [test_acc], 'test_especificidade': [test_especificidade],
-        'test_sensitividade': [test_sensitividade], 'test_f1Score': [test_f1Score]})
+        'test_acc': [test_acc], 'test_sensitividade': [test_sensitividade], 
+        'test_especificidade': [test_especificidade], 'test_f1Score': [test_f1Score]})
     print('\nTesting result\n', history)
+
+    history.to_csv(resultsPlotName+'.csv', index = False, header=True)
     
     losses = losses / len(test_loader.dataset)
     print('TestLoader Losses', losses)

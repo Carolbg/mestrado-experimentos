@@ -35,7 +35,7 @@ def mainDensenet(resultsPlotName):
 
     #TEST MODEL
     print('Test model')
-    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes)
+    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes, resultsPlotName)
     print('\nConfusion matrix Test\n', cmTest)
     tn, fp, fn, tp = cmTest.ravel()
     print('tn', tn)
