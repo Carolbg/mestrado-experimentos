@@ -6,7 +6,7 @@ from plots import plotData, plotTestingAcc
 #from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 from prepareDataDictionary import mainPrepareDictionaryData
 
-def mainDensenet():
+def mainDensenet(resultsPlotName):
     print('\n\nTESTES COM DENSENET\n\n')
     #DATASET STEPS:
     print('Load dataset')
@@ -31,7 +31,7 @@ def mainDensenet():
     
     #PLOT TRAINING RESULTS
     print('\nPlot training results')
-    plotData(history, 'densenet')
+    plotData(history, resultsPlotName)
 
     #TEST MODEL
     print('Test model')

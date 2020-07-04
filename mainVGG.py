@@ -6,7 +6,7 @@ from plots import plotData, plotTestingAcc
 #from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 from prepareDataDictionary import mainPrepareDictionaryData
 
-def mainVGG():
+def mainVGG(resultsPlotName):
     print('\n\nTESTES COM VGG\n\n')
     #DATASET STEPS:
     print('Load dataset')
@@ -32,7 +32,7 @@ def mainVGG():
 
     #PLOT TRAINING RESULTS
     print('\nPlot training results')
-    plotData(history, 'vgg')
+    plotData(history, resultsPlotName)
 
     #TEST MODEL
     print('Test model')

@@ -6,7 +6,7 @@ from plots import plotData, plotTestingAcc
 #from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 from prepareDataDictionary import mainPrepareDictionaryData
 
-def mainResnet():
+def mainResnet(resultsPlotName):
     print('\n\nTESTES COM RESNET\n\n')
     #DATASET STEPS:
     print('Load dataset')
@@ -31,7 +31,7 @@ def mainResnet():
 
     #PLOT TRAINING RESULTS
     print('\nPlot training results')
-    plotData(history, 'resnet')
+    plotData(history, resultsPlotName)
 
     #TEST MODEL
     print('Test model')
