@@ -114,8 +114,8 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
 
             history.append([
                 train_acc, validation_acc,
-                train_especificidade, validation_especificidade,
                 train_sensitividade, validation_sensitividade,
+                train_especificidade, validation_especificidade,
                 train_f1Score, validation_f1Score,
                 train_loss, valid_loss ])
 
@@ -157,7 +157,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
                     # Load the best state dict
                     #model.load_state_dict(torch.load(save_file_name))
                     # Attach the optimizer
-                    model.optimizer = optimizer
+                    #model.optimizer = optimizer
 
                     # Format history
                     history = pd.DataFrame(
@@ -182,9 +182,6 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
         val_running_loss_history.append(val_epoch_loss)
         val_running_corrects_history.append(val_epoch_acc)
         
-
-    # Attach the optimizer
-    model.optimizer = optimizer
     # Record overall time and print out stats
     total_time = timer() - overall_start
     print(
@@ -194,9 +191,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
         f'{total_time:.2f} total seconds elapsed. {total_time / (epoch+1):.2f} seconds per epoch.'
     )
     # Format history
-    history = pd.DataFrame(history, columns=['train_acc', 'validation_acc', 
-                                'train_especificidade', 'validation_especificidade',
+    history = pd.DataFrame(history, columns=['train_acc', 'validation_acc',
                                 'train_sensitividade', 'validation_sensitividade',
+                                'train_especificidade', 'validation_especificidade',
                                 'train_f1Score', 'validation_f1Score',
                                 'train_loss', 'valid_loss'])
     
