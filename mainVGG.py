@@ -5,6 +5,7 @@ from testing import evaluate
 from plots import plotData, plotTestingAcc
 #from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 from prepareDataDictionary import mainPrepareDictionaryData
+from utils import saveCsvConfusionMatrix
 
 def mainVGG(resultsPlotName):
     print('\n\nTESTES COM VGG\n\n')
@@ -45,11 +46,7 @@ def mainVGG(resultsPlotName):
     # results2 = results.merge(cat_df, left_on='class', right_on='category').drop(columns=['category'])
     # plotTestingAcc(results2, 'vgg')
 
-    tn, fp, fn, tp = cmTest.ravel()
-    print('tn', tn)
-    print('fp', fp)
-    print('fn', fn)
-    print('tp', tp)
+    saveCsvConfusionMatrix(cmTest, resultsPlotName)
 
     return model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df 
     

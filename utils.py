@@ -1,4 +1,6 @@
 from sklearn.metrics import confusion_matrix, f1_score
+import csv
+
 
 # def calculateConfusionMatrix(y_true,y_pred):
 #     confMatrix = confusion_matrix(y_true, y_pred, labels=[0,1])
@@ -41,3 +43,16 @@ def calcSensitividade(tp, fn):
 def calcAcc(tn, fp, fn, tp):
     acc = (tp+tn)/(tn + fp + fn + tp)
     return acc
+
+def saveCsvConfusionMatrix(confusionMatrix, resultsPlotName):
+    tn, fp, fn, tp = confusionMatrix.ravel()
+    print('tn', tn)
+    print('fp', fp)
+    print('fn', fn)
+    print('tp', tp)
+
+    with open('confusion_'+resultsPlotName+'.csv', mode='w') as cm_file:
+        cm_writer = csv.writer(cm_file, delimiter=',')
+        cm_writer.writerow(['-','0 Saudavel', '1 Doente'])
+        cm_writer.writerow(['0', tn, fn])
+        cm_writer.writerow(['1',fp, tp])

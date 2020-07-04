@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import torch
 from utils import calcMetrics
-import csv
 
 dataClasses = ('Saudavel', 'Doente')
 
@@ -70,7 +69,7 @@ def evaluate(model, test_loader, criterion, n_classes, resultsPlotName):
         'test_especificidade': [test_especificidade], 'test_f1Score': [test_f1Score]})
     print('\nTesting result\n', history)
 
-    history.to_csv(resultsPlotName+'.csv', index = False, header=True)
+    history.to_csv('results_'+resultsPlotName+'.csv', index = False, header=True)
     
     losses = losses / len(test_loader.dataset)
     print('TestLoader Losses', losses)
