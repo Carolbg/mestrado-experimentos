@@ -226,13 +226,13 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         transforms.ToTensor()  # Imagenet standards
     ])
 
-    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, defaultTransform)
+    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
-    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest, defaultTransform)
+    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)
     testLoader = DataLoader(testDataset, batch_size=batch_size, shuffle=True)
 
-    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation, defaultTransform)
+    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation)
     validationLoader = DataLoader(validationDataset, batch_size=batch_size, shuffle=True)
 
     resultLabelsTraining = torch.zeros(2, dtype=torch.long)

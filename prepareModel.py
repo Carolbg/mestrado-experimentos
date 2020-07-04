@@ -19,6 +19,7 @@ def prepareVGG16ModelWithTXT(n_classes):
     # Add on classifier
     #model.classifier[6] = getFullyConnectedStructure(1024, n_classes)
     model.classifier = getFullyConnectedStructure(n_inputs, n_classes)
+    
     print('custom fc', model.classifier)
     total_params = sum(p.numel() for p in model.parameters())
     total_trainable_params = sum(
