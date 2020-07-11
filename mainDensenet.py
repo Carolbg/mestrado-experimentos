@@ -5,8 +5,9 @@ from testing import evaluate
 from plots import plotData, plotTestingAcc
 #from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 from prepareDataDictionary import mainPrepareDictionaryData
+from utils import saveCsvConfusionMatrix
 
-def mainDensenet():
+def mainDensenet(resultsPlotName):
     print('\n\nTESTES COM DENSENET\n\n')
     #DATASET STEPS:
     print('Load dataset')
@@ -31,17 +32,13 @@ def mainDensenet():
     
     #PLOT TRAINING RESULTS
     print('\nPlot training results')
-    plotData(history, 'densenet')
+    plotData(history, resultsPlotName)
 
     #TEST MODEL
     print('Test model')
-    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes)
+    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes, resultsPlotName)
     print('\nConfusion matrix Test\n', cmTest)
-    tn, fp, fn, tp = cmTest.ravel()
-    print('tn', tn)
-    print('fp', fp)
-    print('fn', fn)
-    print('tp', tp)
+    saveCsvConfusionMatrix(cmTest, resultsPlotName)
 
     return model, history, historyTest, cmTrain, cmValidation,cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df
     

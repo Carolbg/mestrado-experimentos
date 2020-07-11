@@ -23,8 +23,7 @@ def accuracy(output, target):
         #res = (correct_k.mul_(100.0 / batch_size).item())
         return pred #res, pred
 
-
-def evaluate(model, test_loader, criterion, n_classes):
+def evaluate(model, test_loader, criterion, n_classes, resultsPlotName):
     """Measure the performance of a trained PyTorch model
 
     Params
@@ -45,30 +44,33 @@ def evaluate(model, test_loader, criterion, n_classes):
     acc_results = np.zeros(len(test_loader.dataset))
     i = 0
     # test_error_count = 0.0
-    model.eval()
+    
     allTestingTarget = []
     allTestingPredicted = []
     with torch.no_grad():
+        model.eval()
         for data, target in test_loader:
             # Forward pass
             output = model(data)
-
+            
+            loss = criterion(output, target)
             # Calculate validation accuracy
             values, pred = torch.max(output, dim=1)
             #print('values', values)
             #print('pred', pred)
             #print('target.data', target.data)
             # Multiply average loss times the number of examples in batch
+            losses += loss.item() * data.size(0)
             allTestingPredicted = np.concatenate((allTestingPredicted, pred.numpy()), axis=0)
             allTestingTarget = np.concatenate((allTestingTarget, target.numpy()), axis=0)
-            loss = criterion(output, target)
-            losses += loss.item() * data.size(0)
-
+            
     test_acc, test_especificidade, test_sensitividade, test_f1Score, cmTest = calcMetrics(allTestingTarget, allTestingPredicted)
     history = pd.DataFrame({
-        'test_acc': [test_acc], 'test_especificidade': [test_especificidade],
-        'test_sensitividade': [test_sensitividade], 'test_f1Score': [test_f1Score]})
+        'test_acc': [test_acc], 'test_sensitividade': [test_sensitividade], 
+        'test_especificidade': [test_especificidade], 'test_f1Score': [test_f1Score]})
     print('\nTesting result\n', history)
+
+    history.to_csv('results_'+resultsPlotName+'.csv', index = False, header=True)
     
     losses = losses / len(test_loader.dataset)
     print('TestLoader Losses', losses)
