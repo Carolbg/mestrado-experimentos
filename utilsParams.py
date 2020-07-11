@@ -2,7 +2,7 @@ import torch.nn as nn
 from torch import optim
 
 def getCommonArgs():
-    shuffleSeed = 3
+    shuffleSeed = 16#3
     batch_size = 10
     max_epochs_stop = 30
     n_epochs = 30
