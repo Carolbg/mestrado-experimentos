@@ -204,14 +204,23 @@ def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
 def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size):
     print('prepareNumpyDatasetBalancedData')
 
-    # trainTransform = transforms.Compose([
-    #     #transforms.RandomRotation(degrees=30, fill=(0,)),
-    #     #transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
-    #     transforms.Resize((224, 224)),
-    #     transforms.ToTensor(),
-    #     transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
-    #     #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
-    # ])
+    #The data augmentation step conveys four types of image data generation: 
+    # (i) horizontal and vertical flip; 
+    # (ii) rotation between 0-45 degrees; 
+    # (iii) 20% zoom and;
+    # (iv) normalized noises, e.g. Gaussian. 
+    trainTransform = transforms.Compose([
+        #transforms.RandomRotation(degrees=30, fill=(0,)),
+        #transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
+        #transforms.Resize((224, 224)),
+        transforms.ToPILImage(),
+        transforms.RandomRotation(degrees=45),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomVerticalFlip(),
+        #transforms.RandomAffine(0, scale=(20,20)),
+        transforms.ToTensor()
+        #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
+    ])
     
     # testValidationTransform = transforms.Compose([
     #     transforms.Resize((224, 224)),
@@ -226,7 +235,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         transforms.ToTensor()  # Imagenet standards
     ])
 
-    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
+    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
     testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)
