@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 import torch
 import pandas as pd
-from plots import plotTransformedImages, plotTestTransformedImages
+from plots import plotTransformedImages, plotTestTransformedImages, plotAllSubsetImages
 from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray 
 from preprocessing import preprocessDictionaryDataset
 from utilsParams import getCommonArgs
@@ -195,10 +195,67 @@ def splitPatientsFromDictionary(shuffleSeed, dictionaryData):
 def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
     #dataTrain = (dataTrain)/deltaT
     dataTrain = (dataTrain-min10mean)/deltaT
+    print('dataTrain', type(dataTrain))
+    #plotAllSubsetImages(dataTrain, 'train')
+
+    flattenDataset = dataTrain.flatten()
+    indices = np.argpartition(flattenDataset, -100)[-100:] 
+    topValues = flattenDataset[indices]
+    indices = np.argpartition(flattenDataset, 100)[:100]
+    minValuesValues = flattenDataset[indices]
+    minMean = np.mean(minValuesValues)
+    print('Train minMean', minMean)
+    topMean = np.mean(topValues)
+    print('topMean', topMean)
+    media = np.mean(flattenDataset)  
+    print('Media train', media)
+    desvioPadrao = np.std(flattenDataset)  
+    print('Desvio padrao train', desvioPadrao)
+    variancia = np.var(flattenDataset)  
+    print('Variancia train', variancia)
+    print('min train', dataTrain.min())
+
     #dataTest = (dataTest)/deltaT
     dataTest = (dataTest-min10mean)/deltaT
+    #plotAllSubsetImages(dataTest, 'test')
+
+    flattenDataset = dataTest.flatten()
+    indices = np.argpartition(flattenDataset, -100)[-100:] 
+    topValues = flattenDataset[indices]
+    indices = np.argpartition(flattenDataset, 100)[:100]
+    minValuesValues = flattenDataset[indices]
+    minMean = np.mean(minValuesValues)
+    print('Test minMean', minMean)
+    topMean = np.mean(topValues)
+    print('topMean', topMean)
+    media = np.mean(flattenDataset)  
+    print('Media Test', media)
+    desvioPadrao = np.std(flattenDataset)  
+    print('Desvio padrao Test', desvioPadrao)
+    variancia = np.var(flattenDataset)  
+    print('Variancia Test', variancia)
+    print('min traiTestn', dataTest.min())
+
     #dataValidation = (dataValidation)/deltaT
     dataValidation = (dataValidation-min10mean)/deltaT
+    #plotAllSubsetImages(dataValidation, 'validation')
+
+    flattenDataset = dataValidation.flatten()
+    indices = np.argpartition(flattenDataset, -100)[-100:] 
+    topValues = flattenDataset[indices]
+    indices = np.argpartition(flattenDataset, 100)[:100]
+    minValuesValues = flattenDataset[indices]
+    minMean = np.mean(minValuesValues)
+    print('Validation minMean', minMean)
+    topMean = np.mean(topValues)
+    print('topMean', topMean)
+    media = np.mean(flattenDataset)  
+    print('Media Validation', media)
+    desvioPadrao = np.std(flattenDataset)  
+    print('Desvio padrao Validation', desvioPadrao)
+    variancia = np.var(flattenDataset)  
+    print('Variancia Validation', variancia)
+    print('min validation', dataValidation.min())
     return dataTrain, dataTest, dataValidation
 
 def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size):
@@ -214,10 +271,9 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         #transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
         #transforms.Resize((224, 224)),
         transforms.ToPILImage(),
-        transforms.RandomRotation(degrees=45),
+        transforms.RandomRotation(degrees=45, fill=(60,60,60)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
-        #transforms.RandomAffine(0, scale=(20,20)),
         transforms.ToTensor()
         #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
     ])
@@ -236,6 +292,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     ])
 
     trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
+    #trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
     testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)
@@ -251,7 +308,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
-        #plotTransformedImages(images, i, 'transformed_preProcessingWithRatio_train')
+        #plotTransformedImages(images, i, 'transformed_train')
         i = i+1
 
     i=0
@@ -260,7 +317,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
-        #plotTransformedImages(images, i, 'transformed_preProcessingWithRatio_test')
+        #plotTransformedImages(images, i, 'transformed_test')
         i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -269,7 +326,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
-        #plotTransformedImages(images, i, 'transformed_preProcessingWithRatio_validation')
+        #plotTransformedImages(images, i, 'transformed_validation')
         i = i+1
 
     cat_df = pd.DataFrame({
