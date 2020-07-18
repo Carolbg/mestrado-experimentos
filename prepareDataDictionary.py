@@ -125,20 +125,31 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     testPatients = keysArray[indicesTeste]
     validationPatients = keysArray[indicesValidacao] 
     print('trainPatients', trainPatients)
-    print('testPatients', testPatients)
+    #print('testPatients', testPatients)
     print('validationPatients', validationPatients) 
     
     trainDataset = []
+    testDataset = []
+    i = 0
+    testPatientsAsTrain = []
     for patient in trainPatients:
+        # print('patient', patient)
         images = dictionaryData[patient]
         trainDataset.extend(images)
+        if i < len(testPatients):
+            testPatientsAsTrain.append(patient)
+            # print('patient', patient, 'esta no teste')
+            i = i+1
+            testDataset.extend(images)
+    print('testPatientsAsTrain', testPatientsAsTrain)
     print('imagens do trainDataset', len(trainDataset))
-
-    testDataset = []
-    for patient in testPatients:
-        images = dictionaryData[patient]
-        testDataset.extend(images)
     print('imagens do testDataset', len(testDataset))
+    
+    # testDataset = []
+    # for patient in testPatients:
+    #     images = dictionaryData[patient]
+    #     testDataset.extend(images)
+    # print('imagens do testDataset', len(testDataset))
 
     validationDataset = []
     for patient in validationPatients:
