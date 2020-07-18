@@ -142,9 +142,41 @@ def plotTestTransformedImages(numpyImage, name):
     fig.savefig(name +'.png')
 
 
+def plotAllSubsetImages(images, typeImg):
+    
+    numberImages = images.shape
+    print('shape',numberImages[0])
+    for i in range(numberImages[0]):
+        numpyImage = np.transpose(images[i], (1, 2, 0))
+        print('numpyImage', numpyImage.shape)
+
+        fig = plt.figure(figsize=(10, 4))
+        fig.subplots_adjust(wspace=0.3)
+        
+        # show original image
+        fig.add_subplot(121)
+        plt.title('Imagens depois min max')
+        plt.set_cmap('gray')
+        pos = plt.imshow(numpyImage, cmap='gray')
+        plt.colorbar(pos)
+
+        fig.add_subplot(122)
+        plt.title('Histograma')
+        plt.xlabel('Valores dos pixels')
+        plt.ylabel('Quantidade')
+        #print('teste', numpyImage.shape)
+        teste = numpyImage[:, :, 0]
+        #print('teste', teste.shape)
+        plt.hist(teste, range=[0,2])
+        plt.xticks(np.arange(0, 2.25, 0.25))
+        fig.savefig(typeImg + '_imagens_histograma_' + str(i) +'.png')
+
+
+
 def plotTransformedImages(images, i, typeImg):
 
     inputs = images[0]
+    print('images[0]', type(images[0]))
     inputs = inputs.permute(1, 2, 0)
     numpyImage = inputs.numpy()
     #print('numpyImage shape', numpyImage.shape)

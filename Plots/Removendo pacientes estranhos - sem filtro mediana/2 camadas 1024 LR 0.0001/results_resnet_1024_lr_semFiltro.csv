@@ -1,0 +1,2 @@
+test_acc,test_sensitividade,test_especificidade,test_f1Score
+0.6,0.88,0.32,0.6875
