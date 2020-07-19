@@ -254,3 +254,29 @@ def getCommonArgs():
     n_epochs = 30
     print('n_epochs', n_epochs)
     return shuffleSeed, batch_size, max_epochs_stop, n_epochs
+
+
+def plotFile(inputData, fileName):
+    text = ''
+    for row in inputData[:,:,0]:
+        for e in row:
+            text += '{:.2f} '.format(e)
+        text += '\n'
+    with open('testfile_0_'+fileName, 'w') as f:
+        f.write(text)
+
+    text = ''
+    for row in inputData[:,:,1]:
+        for e in row:
+            text += '{:.2f} '.format(e)
+        text += '\n'
+    with open('testfile_1_'+fileName, 'w') as f:
+        f.write(text)
+
+    text = ''
+    for row in inputData[:,:,2]:
+        for e in row:
+            text += '{:.2f} '.format(e)
+        text += '\n'
+    with open('testfile_2_'+fileName, 'w') as f:
+        f.write(text)

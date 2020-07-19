@@ -44,14 +44,18 @@ def readFilesByPatient(txt_files, patientClass):
     print('readFiles')
     dataAsDictionary = {}
     for i in range(len(txt_files)):
+        #print('txt_files[i]', txt_files[i])
         name = txt_files[i].split('/')
+        #print('name', name)
         fileName = name[len(name)-1]
+        #print('fileName', fileName)
         patientId = fileName.split('.')[0]
         inputData = np.loadtxt(txt_files[i], dtype='f', delimiter=' ')
         #print('antes inputData', inputData.shape)
         #inputData = preProcessingWithRatio(inputData, i, patientClass)
         #Stack the data to simulate 3d image
         inputData = np.stack((inputData,)*3, axis=2)
+        #print('inputData', inputData.shape)
         inputData = np.transpose(inputData, (2, 0, 1))
         #isso porque o tensor tem formato C, H, W
         #conforme toTensor: 
@@ -90,10 +94,10 @@ def preProcessingWithRatio(image, i, type):
 def splitData(shuffleSeed, saudaveisData, doentesData):
     print('\nSplit Healthy Dataset')
     saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData)
-    saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid)
+    saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid, 'saudaveis')
     print('\nSplit Cancer Dataset')
     doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
-    doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid)
+    doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid, 'doentes')
     trainData, trainTarget = createSplitDataset(shuffleSeed, saudaveisTrainDataset, doentesTrainDataset)
     print('\nTotal de dados para treinamento', len(trainData))
     testData, testTarget = createSplitDataset(shuffleSeed, saudaveisTestDataset, doentesTestDataset)
@@ -118,7 +122,7 @@ def createSplitDataset(shuffleSeed, saudaveisDataset, doentesDataset):
 
     return allData, allTarget
 
-def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTeste, indicesValidacao):
+def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTeste, indicesValidacao, name):
     dictKeys = dictionaryData.keys()
     keysArray = np.array(list(dictKeys))
     trainPatients = keysArray[indicesTreinamento]
@@ -160,6 +164,10 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     train, test, validation = np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
     #resizedTrained, resizedTest, resizedValidation = train, test, validation 
     resizedTrained, resizedTest, resizedValidation = resizeImages(train, test, validation)
+
+    # plotAllSubsetImages(resizedTrained, name+'train')
+    # plotAllSubsetImages(resizedTest, name+'test')
+    # plotAllSubsetImages(resizedValidation, name+'validation')
 
     print('train', resizedTrained.shape)
     print('test', resizedTest.shape)
@@ -302,8 +310,8 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         transforms.ToTensor()  # Imagenet standards
     ])
 
-    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
-    #trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
+    #trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
+    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
     testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)

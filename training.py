@@ -6,8 +6,8 @@ import torch.nn.functional as F
 from utils import calcMetrics
 import matplotlib.pyplot as plt
 
-def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
-        max_epochs_stop=3, n_epochs=20, print_every=2):
+def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName,
+    max_epochs_stop=3, n_epochs=20):
 
     # Early stopping intialization
     epochs_no_improve = 0
@@ -113,23 +113,22 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
             validation_acc, validation_especificidade, validation_sensitividade, validation_f1Score, cmValidation = calcMetrics(allValidationTarget, allValidationPredicted)
 
             history.append([
-                train_acc, validation_acc,
-                train_sensitividade, validation_sensitividade,
-                train_especificidade, validation_especificidade,
-                train_f1Score, validation_f1Score,
-                train_loss, valid_loss ])
+                train_acc, train_sensitividade, train_especificidade, train_f1Score, train_loss,
+                validation_acc, validation_sensitividade, validation_especificidade, 
+                validation_f1Score, valid_loss 
+            ])
 
             # Print training and validation results
-            if (epoch) % print_every == 0:
-                print(
-                    f'\nEpoch: {epoch} \tTraining Loss: {train_loss:.4f} \t\tValidation Loss: {valid_loss:.4f}'
-                )
-                print(
-                    f'\t\tTraining Accuracy: {100 * train_acc:.2f}%\t Validation Accuracy: {100 * validation_acc:.2f}%'
-                )
-                print(
-                    f'\t\tTraining F1-Score: {train_f1Score:.2f}\t Validation F1-Score: {validation_f1Score:.2f} \n'
-                )
+            
+            print(
+                f'\nEpoch: {epoch} \tTraining Loss: {train_loss:.4f} \t\tValidation Loss: {valid_loss:.4f}'
+            )
+            print(
+                f'\t\tTraining Accuracy: {100 * train_acc:.2f}%\t Validation Accuracy: {100 * validation_acc:.2f}%'
+            )
+            print(
+                f'\t\tTraining F1-Score: {train_f1Score:.2f}\t Validation F1-Score: {validation_f1Score:.2f} \n'
+            )
 
             # Save the model if validation loss decreases
             if valid_loss < valid_loss_min:
@@ -163,11 +162,10 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
                     history = pd.DataFrame(
                         history,
                         columns=[
-                            'train_acc', 'validation_acc', 
-                            'train_especificidade', 'validation_especificidade',
-                            'train_sensitividade', 'validation_sensitividade',
-                            'train_f1Score', 'validation_f1Score',
-                            'train_loss', 'valid_loss'
+                            'train_acc', 'train_sensitividade', 'train_especificidade', 
+                            'train_f1Score', 'train_loss',
+                            'validation_acc', 'validation_sensitividade', 'validation_especificidade', 
+                            'validation_f1Score', 'valid_loss'
                         ])
                     return model, history
 
@@ -191,28 +189,31 @@ def train(model, criterion, optimizer, trainLoader, validLoader, save_file_name,
         f'{total_time:.2f} total seconds elapsed. {total_time / (epoch+1):.2f} seconds per epoch.'
     )
     # Format history
-    history = pd.DataFrame(history, columns=['train_acc', 'validation_acc',
-                                'train_sensitividade', 'validation_sensitividade',
-                                'train_especificidade', 'validation_especificidade',
-                                'train_f1Score', 'validation_f1Score',
-                                'train_loss', 'valid_loss'])
+    history = pd.DataFrame(history, columns=[
+                            'train_acc', 'train_sensitividade', 'train_especificidade', 
+                            'train_f1Score', 'train_loss',
+                            'validation_acc', 'validation_sensitividade', 'validation_especificidade', 
+                            'validation_f1Score', 'valid_loss'])
     
     #print('Trained model', model)
-    print('\nHistorico treinamento e teste \n', history)
+    print('\nHistorico treinamento e validação \n', history)
 
-    fig = plt.figure()
-    plt.plot(running_corrects_history, label='Training accuracy')
-    plt.plot(val_running_corrects_history, label='Validation accuracy')
-    plt.legend()
-    #plt.show()
-    fig.savefig('Corrects history.png')
+    history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
+    
 
-    fig = plt.figure()
-    plt.plot(running_loss_history, label='traininig loss')
-    plt.plot(val_running_loss_history, label='validation loss')
-    plt.legend()
-    #plt.show()
-    fig.savefig('Loss history.png')
+    # fig = plt.figure()
+    # plt.plot(running_corrects_history, label='Training accuracy')
+    # plt.plot(val_running_corrects_history, label='Validation accuracy')
+    # plt.legend()
+    # #plt.show()
+    # fig.savefig('Corrects history.png')
+
+    # fig = plt.figure()
+    # plt.plot(running_loss_history, label='traininig loss')
+    # plt.plot(val_running_loss_history, label='validation loss')
+    # plt.legend()
+    # #plt.show()
+    # fig.savefig('Loss history.png')
 
     return model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation
 
