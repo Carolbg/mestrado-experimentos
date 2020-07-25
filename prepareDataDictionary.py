@@ -18,7 +18,7 @@ def mainPrepareDictionaryData():
     saudaveisDictionaryData, doentesDictionaryData = mainReadData()
     
     filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
-    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, filteredSaudaveisDicData, filteredDoentesDicData)
+    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
     trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
     
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size)
@@ -138,14 +138,23 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     print('originalmente validationPatients', validationPatients)
     
     trainDataset = []
+    testDataset = []
+    i = 0
+    testPatientsAsTrain = []
     for patient in trainPatients:
         # print('patient', patient)
         images = dictionaryData[patient]
         trainDataset.extend(images)
+        if i < len(testPatients):
+            testPatientsAsTrain.append(patient)
+            # print('patient', patient, 'esta no teste')
+            i = i+1
+            testDataset.extend(images)
+    print('testPatientsAsTrain', testPatientsAsTrain)
     print('imagens do trainDataset', len(trainDataset))
     
     # mixedTestPatients = []
-    testDataset = []
+    # testDataset = []
     validationDataset = []
 
     # i = 0
@@ -157,9 +166,9 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     #         testDataset.extend(images)
     #     i = i+1
 
-    for patient in testPatients:
-        images = dictionaryData[patient]
-        testDataset.extend(images)
+    # for patient in testPatients:
+    #     images = dictionaryData[patient]
+    #     testDataset.extend(images)
 
     for patient in validationPatients:
         images = dictionaryData[patient]
