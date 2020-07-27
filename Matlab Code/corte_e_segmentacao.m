@@ -353,11 +353,37 @@ end
 
 %% Generate Mask 1
 
-thresh = multithresh(I,2)
-seg_I = imquantize(I,thresh);
+for i = 1:size(pSaudaveis, 1)
+    I = pSaudaveis{i};
+    
+    %Conversao de tipo
+    top = mean(maxk(I(:),100));
+    I = uint8((255/top)*I);
+    imagesc(I)
+    
+    [L,Centers] = imsegkmeans(I,4, 'NormalizeInput', true);
+    B = labeloverlay(I,L);
+    fig = figure;
+    imshow(B)
+    saveas(fig, 'imsegkmeans_4', 'png')
 
-thresh = multithresh(I,2)
-seg_I = imquantize(I,thresh);
+    [L,Centers] = imsegkmeans(I,5, 'NormalizeInput', true);
+    B = labeloverlay(I,L);
+    fig = figure;
+    imshow(B)
+    saveas(fig, 'imsegkmeans_5', 'png')
+
+    [~, threshold] = edge(I, 'canny');
+    BWs = edge(I,'canny', threshold);
+    se90 = strel('line', 3, 90); 
+    se0 = strel('line', 3, 0);
+    BWsdil = imdilate(BWs, [se90 se0]);
+    BWdfill = imfill(BWsdil, 'holes'); figure, 
+    fig = imshow(BWdfill);
+    title('Preprocessed canny');
+    saveas(fig, 'canny', 'png')
+end
+
 
 M = ones(size(I,1), size(I,2));
 M(seg_I<=1) = 0;

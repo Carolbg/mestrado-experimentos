@@ -24,8 +24,8 @@ def mainResnet(resultsPlotName):
     save_file_name = 'resnet-txt-teste.pt'
     checkpoint_path = 'resnet-txt-teste.pth'
     model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation = train(model, criterion,
-        optimizer, trainLoader, testLoader, save_file_name, max_epochs_stop=max_epochs_stop, 
-        n_epochs=n_epochs, print_every=1)
+        optimizer, trainLoader, validationLoader, resultsPlotName, max_epochs_stop=max_epochs_stop, 
+        n_epochs=n_epochs)
 
     print('\nConfusion matrix Train\n', cmTrain)
     print('\nConfusion matrix Validation\n', cmValidation)
@@ -36,7 +36,7 @@ def mainResnet(resultsPlotName):
 
     #TEST MODEL
     print('Test model')
-    historyTest, cmTest = evaluate(model, validationLoader, criterion, n_classes, resultsPlotName)
+    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes, resultsPlotName)
     print('\nConfusion matrix Test\n', cmTest)
     saveCsvConfusionMatrix(cmTest, resultsPlotName)
     

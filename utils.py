@@ -1,7 +1,6 @@
 from sklearn.metrics import confusion_matrix, f1_score
 import csv
 
-
 # def calculateConfusionMatrix(y_true,y_pred):
 #     confMatrix = confusion_matrix(y_true, y_pred, labels=[0,1])
 #     plotConfusionMatrix(confMatrix)

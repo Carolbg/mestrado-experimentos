@@ -18,7 +18,7 @@ def mainPrepareDictionaryData():
     saudaveisDictionaryData, doentesDictionaryData = mainReadData()
     
     filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
-    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, filteredSaudaveisDicData, filteredDoentesDicData)
+    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
     trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
     
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size)
@@ -44,14 +44,18 @@ def readFilesByPatient(txt_files, patientClass):
     print('readFiles')
     dataAsDictionary = {}
     for i in range(len(txt_files)):
+        #print('txt_files[i]', txt_files[i])
         name = txt_files[i].split('/')
+        #print('name', name)
         fileName = name[len(name)-1]
+        #print('fileName', fileName)
         patientId = fileName.split('.')[0]
         inputData = np.loadtxt(txt_files[i], dtype='f', delimiter=' ')
         #print('antes inputData', inputData.shape)
         #inputData = preProcessingWithRatio(inputData, i, patientClass)
         #Stack the data to simulate 3d image
         inputData = np.stack((inputData,)*3, axis=2)
+        #print('inputData', inputData.shape)
         inputData = np.transpose(inputData, (2, 0, 1))
         #isso porque o tensor tem formato C, H, W
         #conforme toTensor: 
@@ -90,65 +94,145 @@ def preProcessingWithRatio(image, i, type):
 def splitData(shuffleSeed, saudaveisData, doentesData):
     print('\nSplit Healthy Dataset')
     saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData)
-    saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid)
+    saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid, 'saudaveis')
     print('\nSplit Cancer Dataset')
     doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
-    doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid)
+    doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid, 'doentes')
     trainData, trainTarget = createSplitDataset(shuffleSeed, saudaveisTrainDataset, doentesTrainDataset)
     print('\nTotal de dados para treinamento', len(trainData))
     testData, testTarget = createSplitDataset(shuffleSeed, saudaveisTestDataset, doentesTestDataset)
-    print('\nTotal de dados para treinamento', len(testData))
+    print('\nTotal de dados para teste', len(testData))
     validationData, validationTarget = createSplitDataset(shuffleSeed, saudaveisValidationDataset, doentesValidationDataset)
-    print('\nTotal de dados para treinamento', len(validationData))
+    print('\nTotal de dados para validacao', len(validationData))
+    #Trocando teste e validation
+    #print('Dados de teste e validacao foram invertidos')
+    #return trainData, trainTarget, validationData, validationTarget, testData, testTarget
     return trainData, trainTarget, testData, testTarget, validationData, validationTarget
 
 def createSplitDataset(shuffleSeed, saudaveisDataset, doentesDataset):
+    #print('len(saudaveisDataset)', len(saudaveisDataset))
+    #print('len(doentesDataset)', len(doentesDataset))
     saudaveisTarget = np.full(len(saudaveisDataset), 0)
     doentesTarget = np.full(len(doentesDataset), 1)
+    #print('saudaveisTarget', saudaveisTarget)
+    #print('doentesTarget', doentesTarget)
 
     allData = np.concatenate((saudaveisDataset, doentesDataset), axis=0)
+    #print('allData', allData)
+    #print('len(allData)', len(allData))
     allTarget = np.concatenate((saudaveisTarget, doentesTarget), axis=0)
+    #print('allTarget', allTarget)
+    #print('len(allTarget)', len(allTarget))
 
     indicesValidation = list(range(len(allTarget)))
+    #print('indicesValidation 1', indicesValidation)
     np.random.seed(shuffleSeed)
     np.random.shuffle(indicesValidation)
+    #print('indicesValidation 2', indicesValidation)
 
     allData = allData[indicesValidation]
+    #print('allData', allData)
+    #print('len(allData)', len(allData))
     allTarget = allTarget[indicesValidation]
+    #print('allTarget', allTarget)
+    #print('len(allTarget)', len(allTarget))
 
     return allData, allTarget
 
-def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTeste, indicesValidacao):
+def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTeste, indicesValidacao, name):
     dictKeys = dictionaryData.keys()
     keysArray = np.array(list(dictKeys))
     trainPatients = keysArray[indicesTreinamento]
     testPatients = keysArray[indicesTeste]
     validationPatients = keysArray[indicesValidacao] 
     print('trainPatients', trainPatients)
-    print('testPatients', testPatients)
     print('validationPatients', validationPatients) 
+    print('testPatients', testPatients)
+    # print('originalmente testPatients', testPatients)
+    # print('originalmente validationPatients', validationPatients)
     
     trainDataset = []
+    # testDataset = []
+    # i = 0
+    # testPatientsAsTrain = []
     for patient in trainPatients:
+        # print('patient', patient)
         images = dictionaryData[patient]
         trainDataset.extend(images)
+        # if i < len(testPatients):
+        #     testPatientsAsTrain.append(patient)
+        #     # print('patient', patient, 'esta no teste')
+        #     i = i+1
+        #     testDataset.extend(images)
+    # print('testPatientsAsTrain', testPatientsAsTrain)
     print('imagens do trainDataset', len(trainDataset))
-
+    
+    # mixedTestPatients = []
+    #mixedValidationPatients = []
     testDataset = []
+    validationDataset = []
+
+    # i = 0
+    # for patient in testPatients:
+    #     if i%2 == 0:
+    #         #print('paciente ', patient, ' é teste')
+    #         images = dictionaryData[patient]
+    #         mixedTestPatients.append(patient)
+    #         testDataset.extend(images)
+    #     i = i+1
+
+    # i = 0
+    # for patient in testPatients:
+    #     if i%2 == 0:
+    #         print('paciente ', patient, ' é teste')
+    #         images = dictionaryData[patient]
+    #         mixedTestPatients.append(patient)
+    #         testDataset.extend(images)
+    #     else:
+    #         print('paciente ', patient, ' é validacao')
+    #         images = dictionaryData[patient]
+    #         mixedValidationPatients.append(patient)
+    #         validationDataset.extend(images)
+    #     i = i+1
+
     for patient in testPatients:
         images = dictionaryData[patient]
         testDataset.extend(images)
-    print('imagens do testDataset', len(testDataset))
 
-    validationDataset = []
     for patient in validationPatients:
         images = dictionaryData[patient]
         validationDataset.extend(images)
+
+        # if i%2 == 0:
+        #     #print('paciente ',patient, ' é teste')
+        #     images = dictionaryData[patient]
+        #     mixedTestPatients.append(patient)
+        #     testDataset.extend(images)
+        # i = i+1
+        
+        # if i%2 == 0:
+        #     print('paciente ',patient, ' é teste')
+        #     images = dictionaryData[patient]
+        #     mixedTestPatients.append(patient)
+        #     testDataset.extend(images)
+        # else:
+        #     print('paciente ',patient, ' é validacao')
+        #     images = dictionaryData[patient]
+        #     mixedValidationPatients.append(patient)
+        #     validationDataset.extend(images)
+        # i = i+1
+
+    # print('imagens do mixedTestPatients', mixedTestPatients)
+    print('imagens do testDataset', len(testDataset))
     print('imagens do validationDataset', len(validationDataset))
 
     train, test, validation = np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
     #resizedTrained, resizedTest, resizedValidation = train, test, validation 
     resizedTrained, resizedTest, resizedValidation = resizeImages(train, test, validation)
+
+    # plotAllSubsetImages(resizedTrained, name+'train')
+    # plotAllSubsetImages(resizedTest, name+'test')
+    # plotAllSubsetImages(resizedValidation, name+'validation')
 
     print('train', resizedTrained.shape)
     print('test', resizedTest.shape)
@@ -291,8 +375,8 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         transforms.ToTensor()  # Imagenet standards
     ])
 
-    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
-    #trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
+    #trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
+    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
     testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)

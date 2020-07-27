@@ -24,8 +24,8 @@ def mainDensenet(resultsPlotName):
     save_file_name = 'densenet-txt-teste.pt'
     checkpoint_path = 'densenet-txt-teste.pth'
     model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation = train(model, criterion,
-        optimizer, trainLoader, validationLoader, save_file_name, max_epochs_stop=max_epochs_stop, 
-        n_epochs=n_epochs, print_every=1)
+        optimizer, trainLoader, validationLoader, resultsPlotName, max_epochs_stop=max_epochs_stop, 
+        n_epochs=n_epochs)
 
     print('\nConfusion matrix Train\n', cmTrain)
     print('\nConfusion matrix Validation\n', cmValidation)
