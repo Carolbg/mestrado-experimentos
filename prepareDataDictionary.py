@@ -110,18 +110,32 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     return trainData, trainTarget, testData, testTarget, validationData, validationTarget
 
 def createSplitDataset(shuffleSeed, saudaveisDataset, doentesDataset):
+    #print('len(saudaveisDataset)', len(saudaveisDataset))
+    #print('len(doentesDataset)', len(doentesDataset))
     saudaveisTarget = np.full(len(saudaveisDataset), 0)
     doentesTarget = np.full(len(doentesDataset), 1)
+    #print('saudaveisTarget', saudaveisTarget)
+    #print('doentesTarget', doentesTarget)
 
     allData = np.concatenate((saudaveisDataset, doentesDataset), axis=0)
+    #print('allData', allData)
+    #print('len(allData)', len(allData))
     allTarget = np.concatenate((saudaveisTarget, doentesTarget), axis=0)
+    #print('allTarget', allTarget)
+    #print('len(allTarget)', len(allTarget))
 
     indicesValidation = list(range(len(allTarget)))
+    #print('indicesValidation 1', indicesValidation)
     np.random.seed(shuffleSeed)
     np.random.shuffle(indicesValidation)
+    #print('indicesValidation 2', indicesValidation)
 
     allData = allData[indicesValidation]
+    #print('allData', allData)
+    #print('len(allData)', len(allData))
     allTarget = allTarget[indicesValidation]
+    #print('allTarget', allTarget)
+    #print('len(allTarget)', len(allTarget))
 
     return allData, allTarget
 
@@ -132,29 +146,30 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     testPatients = keysArray[indicesTeste]
     validationPatients = keysArray[indicesValidacao] 
     print('trainPatients', trainPatients)
-    #print('validationPatients', validationPatients) 
-    #print('testPatients', testPatients)
-    print('originalmente testPatients', testPatients)
-    print('originalmente validationPatients', validationPatients)
+    print('validationPatients', validationPatients) 
+    print('testPatients', testPatients)
+    # print('originalmente testPatients', testPatients)
+    # print('originalmente validationPatients', validationPatients)
     
     trainDataset = []
-    testDataset = []
-    i = 0
-    testPatientsAsTrain = []
+    # testDataset = []
+    # i = 0
+    # testPatientsAsTrain = []
     for patient in trainPatients:
         # print('patient', patient)
         images = dictionaryData[patient]
         trainDataset.extend(images)
-        if i < len(testPatients):
-            testPatientsAsTrain.append(patient)
-            # print('patient', patient, 'esta no teste')
-            i = i+1
-            testDataset.extend(images)
-    print('testPatientsAsTrain', testPatientsAsTrain)
+        # if i < len(testPatients):
+        #     testPatientsAsTrain.append(patient)
+        #     # print('patient', patient, 'esta no teste')
+        #     i = i+1
+        #     testDataset.extend(images)
+    # print('testPatientsAsTrain', testPatientsAsTrain)
     print('imagens do trainDataset', len(trainDataset))
     
     # mixedTestPatients = []
-    # testDataset = []
+    #mixedValidationPatients = []
+    testDataset = []
     validationDataset = []
 
     # i = 0
@@ -166,19 +181,45 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     #         testDataset.extend(images)
     #     i = i+1
 
+    # i = 0
     # for patient in testPatients:
-    #     images = dictionaryData[patient]
-    #     testDataset.extend(images)
+    #     if i%2 == 0:
+    #         print('paciente ', patient, ' é teste')
+    #         images = dictionaryData[patient]
+    #         mixedTestPatients.append(patient)
+    #         testDataset.extend(images)
+    #     else:
+    #         print('paciente ', patient, ' é validacao')
+    #         images = dictionaryData[patient]
+    #         mixedValidationPatients.append(patient)
+    #         validationDataset.extend(images)
+    #     i = i+1
+
+    for patient in testPatients:
+        images = dictionaryData[patient]
+        testDataset.extend(images)
 
     for patient in validationPatients:
         images = dictionaryData[patient]
         validationDataset.extend(images)
-        
+
         # if i%2 == 0:
         #     #print('paciente ',patient, ' é teste')
         #     images = dictionaryData[patient]
         #     mixedTestPatients.append(patient)
         #     testDataset.extend(images)
+        # i = i+1
+        
+        # if i%2 == 0:
+        #     print('paciente ',patient, ' é teste')
+        #     images = dictionaryData[patient]
+        #     mixedTestPatients.append(patient)
+        #     testDataset.extend(images)
+        # else:
+        #     print('paciente ',patient, ' é validacao')
+        #     images = dictionaryData[patient]
+        #     mixedValidationPatients.append(patient)
+        #     validationDataset.extend(images)
         # i = i+1
 
     # print('imagens do mixedTestPatients', mixedTestPatients)
