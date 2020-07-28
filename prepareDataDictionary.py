@@ -13,7 +13,7 @@ from utilsParams import getCommonArgs
 from skimage import transform
 import cv2
 
-def mainPrepareDictionaryData():
+def mainPrepareDictionaryData(dataAugmentation):
     shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
     saudaveisDictionaryData, doentesDictionaryData = mainReadData()
     
@@ -21,7 +21,7 @@ def mainPrepareDictionaryData():
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
     trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
     
-    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size)
+    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation)
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs
 
 def mainReadData():
@@ -342,7 +342,7 @@ def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
     print('min validation', dataValidation.min())
     return dataTrain, dataTest, dataValidation
 
-def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size):
+def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size, dataAugmentation):
     print('prepareNumpyDatasetBalancedData')
 
     #The data augmentation step conveys four types of image data generation: 
@@ -355,7 +355,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         #transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
         #transforms.Resize((224, 224)),
         transforms.ToPILImage(),
-        transforms.RandomRotation(degrees=45, fill=(60,60,60)),
+        transforms.RandomRotation(degrees=30, fill=(60,60,60)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
         transforms.ToTensor()
@@ -370,13 +370,13 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     #     #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
     # ])
     
-    defaultTransform = transforms.Compose([
-        transforms.ToPILImage(),
-        transforms.ToTensor()  # Imagenet standards
-    ])
-
-    #trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
-    trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
+    if dataAugmentation:
+        print('Com aumento de dados')
+        trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
+    else:
+        print('Sem aumento de dados')
+        trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
+    
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
     testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)

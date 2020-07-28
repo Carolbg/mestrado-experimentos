@@ -7,18 +7,20 @@ from plots import plotData, plotTestingAcc
 from prepareDataDictionary import mainPrepareDictionaryData
 from utils import saveCsvConfusionMatrix
 
-def mainVGG(resultsPlotName):
+def mainVGG(resultsPlotName, experimentType, dataAugmentation):
     print('\n\nTESTES COM VGG\n\n')
+
+    resultsPlotName = 'vgg_'+resultsPlotName
     #DATASET STEPS:
     print('Load dataset')
     #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
-    trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData()
+    trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData(dataAugmentation)
     
     #PREPARE MODEL STEPS:
     print('\nPrepare model')
-    model = prepareVGG16ModelWithTXT(n_classes)
+    model = prepareVGG16ModelWithTXT(experimentType)
     criterion = prepareTrainingLoss()
-    optimizer = prepareTrainingOptimizer(model)
+    optimizer = prepareTrainingOptimizer(model, typeLR)
 
     print('Train model')
     save_file_name = 'vgg16-txt-teste.pt'

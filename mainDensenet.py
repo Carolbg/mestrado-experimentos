@@ -7,22 +7,23 @@ from plots import plotData, plotTestingAcc
 from prepareDataDictionary import mainPrepareDictionaryData
 from utils import saveCsvConfusionMatrix
 
-def mainDensenet(resultsPlotName):
+def mainDensenet(resultsPlotName, experimentType, dataAugmentation):
     print('\n\nTESTES COM DENSENET\n\n')
+    
+    resultsPlotName = 'densenet_'+resultsPlotName
+
     #DATASET STEPS:
     print('Load dataset')
     #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
-    trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData()
+    trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData(dataAugmentation)
     
     #PREPARE MODEL STEPS:
     print('\nPrepare model')
-    model = prepareDensenetModelWithTXT(n_classes)
+    model = prepareDensenetModelWithTXT(experimentType)
     criterion = prepareTrainingLoss()
-    optimizer = prepareTrainingOptimizer(model)
+    optimizer = prepareTrainingOptimizer(model, typeLR)
 
     print('Train model')
-    save_file_name = 'densenet-txt-teste.pt'
-    checkpoint_path = 'densenet-txt-teste.pth'
     model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation = train(model, criterion,
         optimizer, trainLoader, validationLoader, resultsPlotName, max_epochs_stop=max_epochs_stop, 
         n_epochs=n_epochs)
