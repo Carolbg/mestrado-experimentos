@@ -7,7 +7,7 @@ from plots import plotData, plotTestingAcc
 from prepareDataDictionary import mainPrepareDictionaryData
 from utils import saveCsvConfusionMatrix
 
-def mainVGG(resultsPlotName, experimentType, dataAugmentation):
+def mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR):
     print('\n\nTESTES COM VGG\n\n')
 
     resultsPlotName = 'vgg_'+resultsPlotName

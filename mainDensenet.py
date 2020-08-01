@@ -7,7 +7,7 @@ from plots import plotData, plotTestingAcc
 from prepareDataDictionary import mainPrepareDictionaryData
 from utils import saveCsvConfusionMatrix
 
-def mainDensenet(resultsPlotName, experimentType, dataAugmentation):
+def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR):
     print('\n\nTESTES COM DENSENET\n\n')
     
     resultsPlotName = 'densenet_'+resultsPlotName
