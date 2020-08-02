@@ -37,6 +37,32 @@ def getFullyConnectedStructure(n_inputs, n_classes, experimentType):
             nn.Linear(4096, 4096), nn.ReLU(), nn.Dropout(0.5),
             nn.Linear(4096, n_classes)
         )
+    elif experimentType == 8:
+        lastLayer = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(n_inputs, 1024), nn.ReLU(),
+            nn.Linear(1024, n_classes)
+        )
+    elif experimentType == 9:
+        lastLayer = nn.Sequential(
+            nn.AdaptiveAvgPool2d((1,1)),
+            nn.Linear(n_inputs, 1024), nn.ReLU(),
+            nn.Linear(1024, n_classes)
+        )
+    elif experimentType == 10:
+        lastLayer = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(n_inputs, 1024), nn.ReLU(),
+            nn.Dropout(0.5), 
+            nn.Linear(1024, n_classes)
+        )
+    elif experimentType == 11:
+        lastLayer = nn.Sequential(
+            nn.AdaptiveAvgPool2d((1,1)),
+            nn.Linear(n_inputs, 1024), nn.ReLU(),
+            nn.Dropout(0.5), 
+            nn.Linear(1024, n_classes)
+        )
 
     print('lastLayer', lastLayer)
     return lastLayer

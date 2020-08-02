@@ -10,7 +10,7 @@ from utils import saveCsvConfusionMatrix
 def mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR):
     print('\n\nTESTES COM RESNET\n\n')
 
-    resultsPlotName = 'resnet_'+resultsPlotName
+    resultsPlotName = resultsPlotName + 'resnet_'
     #DATASET STEPS:
     print('Load dataset')
     #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()

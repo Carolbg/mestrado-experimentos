@@ -10,7 +10,7 @@ from utils import saveCsvConfusionMatrix
 def mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR):
     print('\n\nTESTES COM VGG\n\n')
 
-    resultsPlotName = 'vgg_'+resultsPlotName
+    resultsPlotName = resultsPlotName + 'vgg_'
     #DATASET STEPS:
     print('Load dataset')
     #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()

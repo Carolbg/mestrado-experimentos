@@ -7,8 +7,8 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = '1camada_lr'
-experimentType = 1
+resultsPlotName = 'as_Zuluaga_flatten'
+experimentType = 8
 dataAugmentation = False
 typeLR = 1
 

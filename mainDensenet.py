@@ -10,7 +10,7 @@ from utils import saveCsvConfusionMatrix
 def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR):
     print('\n\nTESTES COM DENSENET\n\n')
     
-    resultsPlotName = 'densenet_'+resultsPlotName
+    resultsPlotName = resultsPlotName + 'densenet_'
 
     #DATASET STEPS:
     print('Load dataset')
