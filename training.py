@@ -43,9 +43,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
         allTrainingTarget = []
         start = timer()
 
+        model.train()
         # Training loop
         for i, data in enumerate(trainLoader, 0):
-            model.train()
             inputs, labels = data
 
             optimizer.zero_grad()
@@ -69,7 +69,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             
             #curso
             running_corrects += torch.sum(pred == labels.data)
-            running_loss += loss.item()
+            #running_loss += loss.item()
             
 
             # Neste cenario, 0 eh doente e 1 saudavel
@@ -77,7 +77,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             allTrainingTarget = np.concatenate((allTrainingTarget, labels.numpy()), axis=0)
             
         # After training loops ends, start validation
-        
+        # Se quiser diminuir a LR
+        # scheduler.step()
+
         model.epochs += 1
 
         # Don't need to keep track of gradients
@@ -91,10 +93,12 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                 #model.eval()
                 output = model(data)
 
+                # Calculate validation accuracy
+                values, pred = torch.max(output, 1)
+                
                 # Validation loss
                 loss = criterion(output, target)
-                # Calculate validation accuracy
-                values, pred = torch.max(output, dim=1)
+                
                 # Multiply average loss times the number of examples in batch
                 valid_loss += loss.item() * data.size(0)
                 val_running_loss += loss.item()

@@ -1,5 +1,6 @@
 import torch.nn as nn
 from torch import optim
+from torch.optim import lr_scheduler
 
 def getCommonArgs():
     shuffleSeed = 3
@@ -37,32 +38,6 @@ def getFullyConnectedStructure(n_inputs, n_classes, experimentType):
             nn.Linear(4096, 4096), nn.ReLU(), nn.Dropout(0.5),
             nn.Linear(4096, n_classes)
         )
-    elif experimentType == 8:
-        lastLayer = nn.Sequential(
-            nn.Flatten(),
-            nn.Linear(n_inputs, 1024), nn.ReLU(),
-            nn.Linear(1024, n_classes)
-        )
-    elif experimentType == 9:
-        lastLayer = nn.Sequential(
-            nn.AdaptiveAvgPool2d((1,1)),
-            nn.Linear(n_inputs, 1024), nn.ReLU(),
-            nn.Linear(1024, n_classes)
-        )
-    elif experimentType == 10:
-        lastLayer = nn.Sequential(
-            nn.Flatten(),
-            nn.Linear(n_inputs, 1024), nn.ReLU(),
-            nn.Dropout(0.5), 
-            nn.Linear(1024, n_classes)
-        )
-    elif experimentType == 11:
-        lastLayer = nn.Sequential(
-            nn.AdaptiveAvgPool2d((1,1)),
-            nn.Linear(n_inputs, 1024), nn.ReLU(),
-            nn.Dropout(0.5), 
-            nn.Linear(1024, n_classes)
-        )
 
     print('lastLayer', lastLayer)
     return lastLayer
@@ -83,3 +58,8 @@ def prepareTrainingOptimizer(model, typeLR):
 
     print('optimizer', optimizer)
     return optimizer
+
+def decayLR():
+    # Decay LR by a factor of 0.1 every 7 epochs
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
+    return exp_lr_scheduler
