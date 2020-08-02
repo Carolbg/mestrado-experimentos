@@ -14,12 +14,14 @@ from skimage import transform
 import cv2
 
 def mainPrepareDictionaryData(dataAugmentation):
+    print('Lidando com txt data')
+    
     shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
     saudaveisDictionaryData, doentesDictionaryData = mainReadData()
     
     filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
-    trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
+    #trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
     
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation)
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs
@@ -358,8 +360,8 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         transforms.RandomRotation(degrees=30, fill=(60,60,60)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
-        transforms.ToTensor()
-        #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
     ])
     
     # testValidationTransform = transforms.Compose([

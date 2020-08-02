@@ -26,6 +26,7 @@ def prepareVGG16ModelWithTXT(experimentType, flattenPooling=0):
     #     model.avgpool = nn.AdaptiveAvgPool2d((1,1))
     
     # n_inputs = 512
+    n_inputs = model.classifier[0].in_features
 
     # Add on classifier
     #model.classifier[6] = getFullyConnectedStructure(1024, 2)
@@ -73,7 +74,7 @@ def prepareDensenetModelWithTXT(experimentType):
     n_inputs = model.classifier.in_features
 
     #print('model = ', model)
-
+    # out = F.adaptive_avg_pool2d(out, (1, 1)).view(features.size(0), -1)
     # Add on classifier
     model.classifier = getFullyConnectedStructure(n_inputs, 2, experimentType)
     print('custom fc', model.classifier)

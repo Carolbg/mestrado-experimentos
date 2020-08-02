@@ -8,6 +8,7 @@ from mainResnet import *
 from mainDensenet import *
 
 resultsPlotName = '2camadas_1024_lr'
+#resultsPlotName = '2camadas_1024_lr_epoch40'
 experimentType = 4
 dataAugmentation = False
 typeLR = 1

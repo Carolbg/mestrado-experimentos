@@ -6,8 +6,9 @@ from plots import plotData, plotTestingAcc
 #from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 from prepareDataDictionary import mainPrepareDictionaryData
 from utils import saveCsvConfusionMatrix
+from readMatlabNumpyData import mainPrepareDictionaryDataFromNumpy
 
-def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR):
+def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True):
     print('\n\nTESTES COM DENSENET\n\n')
     
     resultsPlotName = resultsPlotName + 'densenet_'
@@ -15,7 +16,10 @@ def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR):
     #DATASET STEPS:
     print('Load dataset')
     #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
-    trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData(dataAugmentation)
+    if isNumpy:
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryDataFromNumpy(dataAugmentation)
+    else:
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData(dataAugmentation)
     
     #PREPARE MODEL STEPS:
     print('\nPrepare model')
