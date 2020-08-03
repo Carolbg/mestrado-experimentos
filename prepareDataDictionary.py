@@ -20,8 +20,10 @@ def mainPrepareDictionaryData(dataAugmentation):
     saudaveisDictionaryData, doentesDictionaryData = mainReadData()
     
     filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
-    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
-    #trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
+
+    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, filteredSaudaveisDicData, filteredDoentesDicData)
+    
+    trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
     
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation)
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs
@@ -279,6 +281,7 @@ def splitPatientsFromDictionary(shuffleSeed, dictionaryData):
     return indicesTreinamento, indicesTeste, indicesValidacao
 
 def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
+    print('Aplicando min max')
     #dataTrain = (dataTrain)/deltaT
     dataTrain = (dataTrain-min10mean)/deltaT
     print('dataTrain', type(dataTrain))

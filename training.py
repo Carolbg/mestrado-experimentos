@@ -69,7 +69,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             
             #curso
             running_corrects += torch.sum(pred == labels.data)
-            #running_loss += loss.item()
+            running_loss += loss.item()
             
 
             # Neste cenario, 0 eh doente e 1 saudavel
