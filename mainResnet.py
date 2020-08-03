@@ -11,7 +11,7 @@ from readMatlabNumpyData import mainPrepareDictionaryDataFromNumpy
 def mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True):
     print('\n\nTESTES COM RESNET\n\n')
 
-    resultsPlotName = resultsPlotName + 'resnet_'
+    resultsPlotName = resultsPlotName + '_resnet'
     #DATASET STEPS:
     print('Load dataset')
     #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()

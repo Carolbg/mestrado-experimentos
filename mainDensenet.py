@@ -11,7 +11,7 @@ from readMatlabNumpyData import mainPrepareDictionaryDataFromNumpy
 def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True):
     print('\n\nTESTES COM DENSENET\n\n')
     
-    resultsPlotName = resultsPlotName + 'densenet_'
+    resultsPlotName = resultsPlotName + '_densenet'
 
     #DATASET STEPS:
     print('Load dataset')

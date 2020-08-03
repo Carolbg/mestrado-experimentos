@@ -172,16 +172,21 @@ def plotTransformedImages(images, i, typeImg):
     print('images[0]', type(images[0]))
     inputs = inputs.permute(1, 2, 0)
     numpyImage = inputs.numpy()
+    # print('1 - min', np.min(numpyImage))
+    # print('1 - max', np.max(numpyImage))
     #print('numpyImage shape', numpyImage.shape)
 
     fig = plt.figure(figsize=(10, 4))
-    fig.subplots_adjust(wspace=0.3)
+    fig.subplots_adjust(wspace=0.5)
+    # fig.subplots_adjust(wspace=0.3)
     
     # show original image
     fig.add_subplot(121)
     plt.title('Imagem \npre-processada')
-    plt.set_cmap('gray')
-    pos = plt.imshow(numpyImage, cmap='gray')
+    pos = plt.imshow(numpyImage)
+    # plt.set_cmap('gray')
+    # pos = plt.imshow(numpyImage, cmap='gray')
+    
     plt.colorbar(pos)
 
     fig.add_subplot(122)
@@ -191,8 +196,11 @@ def plotTransformedImages(images, i, typeImg):
     #print('teste', numpyImage.shape)
     teste = numpyImage[:, :, 0]
     #print('teste', teste.shape)
-    plt.hist(teste, range=[0,2])
-    plt.xticks(np.arange(0, 2.25, 0.25))
+    plt.hist(numpyImage.flatten(), range=[-3,3])
+    plt.xticks(np.arange(-3, 3, 0.5))
+    # plt.hist(teste, range=[0,2])
+    # plt.xticks(np.arange(0, 2.25, 0.25))
+
 
     # fig.add_subplot(133)
     # plt.title('Histograma flatten')

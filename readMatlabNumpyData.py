@@ -33,12 +33,12 @@ def mainReadNumpyData():
 def getFilesName():
     print('getFilesName')
     # If reading from the script
-    numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array/0Saudaveis/*.npy")
-    numpy_doentes_files = glob.glob("../../Imagens_numpy_array/1Doentes/*.npy")
+    # numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array/0Saudaveis/*.npy")
+    # numpy_doentes_files = glob.glob("../../Imagens_numpy_array/1Doentes/*.npy")
     
     #If not reading from the script
-    # numpy_saudaveis_files = glob.glob("../Imagens_numpy_array/0Saudaveis/*.npy")
-    # numpy_doentes_files = glob.glob("../Imagens_numpy_array/1Doentes/*.npy")
+    numpy_saudaveis_files = glob.glob("../Imagens_numpy_array/0Saudaveis/*.npy")
+    numpy_doentes_files = glob.glob("../Imagens_numpy_array/1Doentes/*.npy")
     
     return numpy_saudaveis_files, numpy_doentes_files
 

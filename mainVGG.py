@@ -11,7 +11,7 @@ from readMatlabNumpyData import mainPrepareDictionaryDataFromNumpy
 def mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True):
     print('\n\nTESTES COM VGG\n\n')
 
-    resultsPlotName = resultsPlotName + 'vgg_'
+    resultsPlotName = resultsPlotName + '_vgg'
     #DATASET STEPS:
     print('Load dataset')
     #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
