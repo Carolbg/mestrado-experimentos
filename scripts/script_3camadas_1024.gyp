@@ -7,10 +7,10 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = 'matlabPreprocessing_3camadas_ex6_comDropout_lr'
+resultsPlotName = 'matlabPreprocessing_3camadas_ex6_comDropout'
 experimentType = 6
 dataAugmentation = False
-typeLR = 1
+typeLR = 2
 
 #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData(dataAugmentation)
 

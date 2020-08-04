@@ -7,10 +7,10 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = 'matlabPreprocessing_3camadas_ex7_comDropout_lr'
+resultsPlotName = 'matlabPreprocessing_3camadas_ex7_comDropout'
 experimentType = 7
 dataAugmentation = False
-typeLR = 1
+typeLR = 2
 
 try:
     model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR)

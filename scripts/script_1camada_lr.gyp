@@ -7,11 +7,11 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = 'matlabPreprocessing_1camada_lr'
+resultsPlotName = 'matlabPreprocessing_1camada'
 #resultsPlotName = '1camada_lr'
 experimentType = 1
 dataAugmentation = False
-typeLR = 1
+typeLR = 2
 
 try:
     model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR)
