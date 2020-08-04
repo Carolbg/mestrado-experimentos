@@ -7,7 +7,7 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = 'addNormalizacao_matlabPreprocessing_2camadas_256_lr'
+resultsPlotName = 'dataAugmentation_matlabPreprocessing_2camadas_256_lr'
 experimentType = 2
 dataAugmentation = True
 typeLR = 1

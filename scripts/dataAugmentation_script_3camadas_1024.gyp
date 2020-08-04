@@ -7,7 +7,7 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = 'addNormalizacao_matlabPreprocessing_3camadas_ex6_comDropout_lr'
+resultsPlotName = 'dataAugmentation_matlabPreprocessing_3camadas_ex6_comDropout_lr'
 experimentType = 6
 dataAugmentation = True
 typeLR = 1

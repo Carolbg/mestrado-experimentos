@@ -355,25 +355,29 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     # (ii) rotation between 0-45 degrees; 
     # (iii) 20% zoom and;
     # (iv) normalized noises, e.g. Gaussian. 
+    f = np.array([0, 0, 0.767])
+    #print('f', f)
+    fillData = tuple(np.round(f * 255).astype(np.int64))
+    #print('fillData', fillData)
     trainTransform = transforms.Compose([
         #transforms.RandomRotation(degrees=30, fill=(0,)),
         #transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
         #transforms.Resize((224, 224)),
-        # transforms.ToPILImage(),
-        # transforms.RandomRotation(degrees=30, fill=(60,60,60)),
-        # transforms.RandomHorizontalFlip(),
-        # transforms.RandomVerticalFlip(),
-        # transforms.ToTensor(),
+        transforms.ToPILImage(),
+        transforms.RandomRotation(degrees=30, fill=(fillData)),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomVerticalFlip(),
+        transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
     ])
     
-    # testValidationTransform = transforms.Compose([
+    testValidationTransform = transforms.Compose([
     #     transforms.Resize((224, 224)),
     #     transforms.ToTensor(),
     #     transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
     #     #transforms.Lambda(lambda x: torch.cat([x/topMean, x/topMean, x/topMean], 0)),
-    #     #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
-    # ])
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
+    ])
     
     if dataAugmentation:
         print('Com aumento de dados')
@@ -384,10 +388,10 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
-    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest, trainTransform)
+    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest, testValidationTransform)
     testLoader = DataLoader(testDataset, batch_size=batch_size, shuffle=True)
 
-    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation, trainTransform)
+    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation, testValidationTransform)
     validationLoader = DataLoader(validationDataset, batch_size=batch_size, shuffle=True)
 
     resultLabelsTraining = torch.zeros(2, dtype=torch.long)
