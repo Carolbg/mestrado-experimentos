@@ -384,10 +384,10 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
-    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)
+    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest, trainTransform)
     testLoader = DataLoader(testDataset, batch_size=batch_size, shuffle=True)
 
-    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation)
+    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation, trainTransform)
     validationLoader = DataLoader(validationDataset, batch_size=batch_size, shuffle=True)
 
     resultLabelsTraining = torch.zeros(2, dtype=torch.long)
