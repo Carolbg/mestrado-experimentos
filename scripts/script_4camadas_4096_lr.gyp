@@ -7,12 +7,13 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = 'dataAugmentation_matlabPreprocessing_3camadas_ex6_comDropout_lr'
-experimentType = 6
-dataAugmentation = True
+resultsPlotName = 'matlabPreprocessing_4camadas_ex8_comDropout_lr'
+experimentType = 8
+dataAugmentation = False
 typeLR = 1
 
-#trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData(dataAugmentation)
+print('Config: ', resultsPlotName)
+print('experimentType', experimentType, ' dataAugmentation ',dataAugmentation, ' typeLR ', typeLR)
 
 try:
     model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR)

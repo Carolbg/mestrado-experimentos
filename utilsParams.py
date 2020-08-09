@@ -38,6 +38,13 @@ def getFullyConnectedStructure(n_inputs, n_classes, experimentType):
             nn.Linear(4096, 4096), nn.ReLU(), nn.Dropout(0.5),
             nn.Linear(4096, n_classes)
         )
+    elif experimentType == 8:
+        lastLayer = nn.Sequential(
+            nn.Linear(n_inputs, 4096), nn.ReLU(), nn.Dropout(0.5), 
+            nn.Linear(4096, 4096), nn.ReLU(), nn.Dropout(0.5),
+            nn.Linear(4096, 1024), nn.ReLU(), nn.Dropout(0.5),
+            nn.Linear(1024, n_classes)
+        )
 
     print('lastLayer', lastLayer)
     return lastLayer

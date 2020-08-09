@@ -12,6 +12,9 @@ experimentType = 7
 dataAugmentation = True
 typeLR = 1
 
+print('Config: ', resultsPlotName)
+print('experimentType', experimentType, ' dataAugmentation ',dataAugmentation, ' typeLR ', typeLR)
+
 try:
     model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR)
 except Exception as e:

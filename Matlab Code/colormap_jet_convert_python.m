@@ -33,7 +33,7 @@ title('test')
 
 subplot(1,2,2)
 histogram(RGB);
-saveas(gcf,'testing.png')
+% saveas(gcf,'testing.png')
 % numpyRGB = py.numpy.array(RGB);
 % py.numpy.save('numpyTesting', numpyRGB);
 

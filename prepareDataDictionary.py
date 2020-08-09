@@ -380,7 +380,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     ])
     
     if dataAugmentation:
-        print('Com aumento de dados')
+        print('Com aumento de dados', trainTransform)
         trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
     else:
         print('Sem aumento de dados')
@@ -388,10 +388,10 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
-    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)
+    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest, testValidationTransform)
     testLoader = DataLoader(testDataset, batch_size=batch_size, shuffle=True)
 
-    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation)
+    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation, testValidationTransform)
     validationLoader = DataLoader(validationDataset, batch_size=batch_size, shuffle=True)
 
     resultLabelsTraining = torch.zeros(2, dtype=torch.long)
