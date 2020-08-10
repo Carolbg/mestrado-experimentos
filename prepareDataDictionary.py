@@ -363,11 +363,11 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         #transforms.RandomRotation(degrees=30, fill=(0,)),
         #transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5),
         #transforms.Resize((224, 224)),
-        transforms.ToPILImage(),
-        transforms.RandomRotation(degrees=30, fill=(fillData)),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(),
-        transforms.ToTensor(),
+        # transforms.ToPILImage(),
+        # transforms.RandomRotation(degrees=30, fill=(fillData)),
+        # transforms.RandomHorizontalFlip(),
+        # transforms.RandomVerticalFlip(),
+        # transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
     ])
     
@@ -388,10 +388,10 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
-    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest, testValidationTransform)
+    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)
     testLoader = DataLoader(testDataset, batch_size=batch_size, shuffle=True)
 
-    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation, testValidationTransform)
+    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation)
     validationLoader = DataLoader(validationDataset, batch_size=batch_size, shuffle=True)
 
     resultLabelsTraining = torch.zeros(2, dtype=torch.long)

@@ -7,10 +7,11 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = 'matlabPreprocessing_3camadas_ex6_comDropout'
+resultsPlotName = 'matlabPreprocessing_3camadas_ex6_comDropout_10epocas_lr'
+# resultsPlotName = 'matlabPreprocessing_3camadas_ex6_comDropout'
 experimentType = 6
 dataAugmentation = False
-typeLR = 2
+typeLR = 1
 
 print('Config: ', resultsPlotName)
 print('experimentType', experimentType, ' dataAugmentation ',dataAugmentation, ' typeLR ', typeLR)

@@ -7,7 +7,8 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = 'matlabPreprocessing_4camadas_ex8_comDropout_lr'
+resultsPlotName = 'matlabPreprocessing_4camadas_ex8_comDropout_10epocas_lr'
+# resultsPlotName = 'matlabPreprocessing_4camadas_ex8_comDropout'
 experimentType = 8
 dataAugmentation = False
 typeLR = 1

@@ -7,11 +7,11 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = 'matlabPreprocessing_2camadas_1024'
-#resultsPlotName = '2camadas_1024_lr_epoch40'
+resultsPlotName = 'matlabPreprocessing_2camadas_1024_10epocas_lr'
+# resultsPlotName = 'matlabPreprocessing_2camadas_1024'
 experimentType = 4
 dataAugmentation = False
-typeLR = 2
+typeLR = 1
 
 print('Config: ', resultsPlotName)
 print('experimentType', experimentType, ' dataAugmentation ',dataAugmentation, ' typeLR ', typeLR)
