@@ -7,10 +7,11 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-resultsPlotName = 'dataAugmentation_matlabPreprocessing_2camadas_256_lr'
+# resultsPlotName = 'dataAugmentation_matlabPreprocessing_2camadas_256_lr'
+resultsPlotName = 'dataAugmentation_matlabPreprocessing_2camadas_256'
 experimentType = 2
 dataAugmentation = True
-typeLR = 1
+typeLR = 2
 
 print('Config: ', resultsPlotName)
 print('experimentType', experimentType, ' dataAugmentation ',dataAugmentation, ' typeLR ', typeLR)
