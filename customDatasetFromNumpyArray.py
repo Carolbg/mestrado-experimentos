@@ -6,7 +6,7 @@ import numpy as np
 from plots import plotTransformedImages
 
 class CustomDatasetFromNumpyArray(Dataset):
-    def __init__(self, data, target, transform=None, teste=None):
+    def __init__(self, data, target, transform=None):
         
         #print('data',data)
         self.data = torch.from_numpy(data).float()

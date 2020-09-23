@@ -52,10 +52,10 @@ def evaluate(model, test_loader, criterion, n_classes, resultsPlotName):
         for data, target in test_loader:
             # Forward pass
             output = model(data)
-            
-            loss = criterion(output, target)
             # Calculate validation accuracy
-            values, pred = torch.max(output, dim=1)
+            values, pred = torch.max(output, 1)
+            loss = criterion(output, target)
+            
             #print('values', values)
             #print('pred', pred)
             #print('target.data', target.data)

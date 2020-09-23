@@ -148,7 +148,6 @@ def plotAllSubsetImages(images, typeImg):
     print('shape',numberImages[0])
     for i in range(numberImages[0]):
         numpyImage = np.transpose(images[i], (1, 2, 0))
-        print('numpyImage', numpyImage.shape)
 
         fig = plt.figure(figsize=(10, 4))
         fig.subplots_adjust(wspace=0.3)
@@ -156,39 +155,45 @@ def plotAllSubsetImages(images, typeImg):
         # show original image
         fig.add_subplot(121)
         plt.title('Imagens depois min max')
-        plt.set_cmap('gray')
-        pos = plt.imshow(numpyImage, cmap='gray')
+        pos = plt.imshow(numpyImage)
         plt.colorbar(pos)
 
         fig.add_subplot(122)
         plt.title('Histograma')
         plt.xlabel('Valores dos pixels')
         plt.ylabel('Quantidade')
-        #print('teste', numpyImage.shape)
-        teste = numpyImage[:, :, 0]
-        #print('teste', teste.shape)
-        plt.hist(teste, range=[0,2])
+        plt.hist(numpyImage.flatten())
         plt.xticks(np.arange(0, 2.25, 0.25))
         fig.savefig(typeImg + '_imagens_histograma_' + str(i) +'.png')
-
-
 
 def plotTransformedImages(images, i, typeImg):
 
     inputs = images[0]
+
     print('images[0]', type(images[0]))
     inputs = inputs.permute(1, 2, 0)
     numpyImage = inputs.numpy()
-    #print('numpyImage shape', numpyImage.shape)
+    #Removendo a normalização
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
+    numpyImage = std * numpyImage + mean
+    numpyImage = np.clip(numpyImage, 0, 1)
+
+    print('1 - min', np.min(numpyImage))
+    print('1 - max', np.max(numpyImage))
+    print('numpyImage shape', numpyImage.shape)
 
     fig = plt.figure(figsize=(10, 4))
-    fig.subplots_adjust(wspace=0.3)
+    fig.subplots_adjust(wspace=0.5)
+    # fig.subplots_adjust(wspace=0.3)
     
     # show original image
     fig.add_subplot(121)
     plt.title('Imagem \npre-processada')
-    plt.set_cmap('gray')
-    pos = plt.imshow(numpyImage, cmap='gray')
+    pos = plt.imshow(numpyImage)
+    # plt.set_cmap('gray')
+    # pos = plt.imshow(numpyImage, cmap='gray')
+    
     plt.colorbar(pos)
 
     fig.add_subplot(122)
@@ -198,8 +203,11 @@ def plotTransformedImages(images, i, typeImg):
     #print('teste', numpyImage.shape)
     teste = numpyImage[:, :, 0]
     #print('teste', teste.shape)
-    plt.hist(teste, range=[0,2])
-    plt.xticks(np.arange(0, 2.25, 0.25))
+    plt.hist(numpyImage.flatten(), range=[-3,3])
+    plt.xticks(np.arange(-3, 3, 0.5))
+    # plt.hist(teste, range=[0,2])
+    # plt.xticks(np.arange(0, 2.25, 0.25))
+
 
     # fig.add_subplot(133)
     # plt.title('Histograma flatten')
