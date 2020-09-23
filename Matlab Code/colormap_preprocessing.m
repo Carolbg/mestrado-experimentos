@@ -1,3 +1,5 @@
+%% SCRIPT 1: GERAR IMAGENS COM JET COLORMAP E SALVAR COMO NUMPY ARRAY
+
 %% Images definitions
 nomeSaudaveis=[
     'T0174.1.1.S.2013-03-20.00',
@@ -362,12 +364,12 @@ for i = 1:sizeSaudaveis
     subplot(1,2,2)
     histogram(RGB);
   
-    folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '.png');
-    saveas(gcf, folderSaudaveis)
+%     folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '.png');
+%     saveas(gcf, folderSaudaveis)
     
     numpyRGB = py.numpy.array(RGB);
-    folderSaudaveis = strcat('../../Imagens_numpy_array/0Saudaveis/', nomeSaudaveis(i, :));
-    py.numpy.save(folderSaudaveis, numpyRGB);
+%     folderSaudaveis = strcat('../../Imagens_numpy_array/0Saudaveis/', nomeSaudaveis(i, :));
+%     py.numpy.save(folderSaudaveis, numpyRGB);
     
     close all
 end

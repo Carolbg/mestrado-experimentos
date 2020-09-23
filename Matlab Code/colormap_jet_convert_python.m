@@ -1,3 +1,5 @@
+%% Script para testes apenas e alinhamento antes de rodar pra todos os dados
+
 %% a
 A = load('../../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/T0275.1.1.S.2015-03-13.00.txt') ; 
 I = A;
@@ -38,3 +40,17 @@ histogram(RGB);
 % py.numpy.save('numpyTesting', numpyRGB);
 
 %No python: x = np.load('numpyTesting.npy')
+
+%% utilizando imageDataAugmenter
+augmenter = imageDataAugmenter('RandRotation',[0 360], ...
+    'RandXReflection',true, ...
+    'RandYReflection', true, ...
+    'RandRotation',[-45, 45] ...
+);
+outCellArray = augment(augmenter,{RGB});
+outImg = imtile(outCellArray);
+figure; imshow(outImg);
+
+%%
+imJittered = jitterColorHSV(RGB,'Saturation',[-0.4 -0.1]); 
+montage({RGB,imJittered})
