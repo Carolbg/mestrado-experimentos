@@ -7,7 +7,7 @@ from utils import calcMetrics
 import matplotlib.pyplot as plt
 
 def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName,
-    max_epochs_stop=3, n_epochs=20, device="cpu"):
+    max_epochs_stop=3, n_epochs=20, device="cpu", deltaError=0.001):
 
     # Early stopping intialization
     epochs_no_improve = 0
@@ -141,22 +141,12 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             )
 
             # Save the model if validation loss decreases
-            if valid_loss < valid_loss_min:
-                # Save model
-                #torch.save(model.state_dict(), save_file_name)
-                # Track improvement
-                epochs_no_improve = 0
-                valid_loss_min = valid_loss
-                valid_best_acc = validation_acc
-                best_epoch = epoch
-
-            # Otherwise increment count of epochs with no improvement
-            else:
+            if valid_loss < valid_loss_min + deltaError:
                 epochs_no_improve += 1
                 # Trigger early stopping
                 if epochs_no_improve >= max_epochs_stop:
                     print(
-                        f'\nEarly Stopping! Total epochs: {epoch}. Best epoch: {best_epoch} with loss: {valid_loss_min:.2f} and acc: {100 * validation_acc:.2f}%'
+                        f'\nEarly Stopping! Total epochs: {epoch}.'
                     )
                     total_time = timer() - overall_start
                     print(
