@@ -401,7 +401,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
-        #plotTransformedImages(images, i, 'transformed_train')
+        # plotTransformedImages(images, i, 'transformed_train')
         i = i+1
 
     i=0
@@ -410,7 +410,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
-        #plotTransformedImages(images, i, 'transformed_test')
+        # plotTransformedImages(images, i, 'transformed_test')
         i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -419,7 +419,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
-        #plotTransformedImages(images, i, 'transformed_validation')
+        # plotTransformedImages(images, i, 'transformed_validation')
         i = i+1
 
     cat_df = pd.DataFrame({
