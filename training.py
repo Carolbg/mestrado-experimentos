@@ -141,8 +141,10 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             )
 
             # Save the model if validation loss decreases
-            if valid_loss < valid_loss_min + deltaError:
+            if valid_loss > valid_loss_min + deltaError:
+                # print('valid_loss > valid_loss_min + deltaError', valid_loss > valid_loss_min + deltaError)
                 epochs_no_improve += 1
+                # print('epochs_no_improve', epochs_no_improve)
                 # Trigger early stopping
                 if epochs_no_improve >= max_epochs_stop:
                     print(
@@ -167,7 +169,12 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                             'validation_acc', 'validation_sensitividade', 'validation_especificidade', 
                             'validation_f1Score', 'valid_loss'
                         ])
-                    return model, history
+                    break
+            elif valid_loss < valid_loss_min:
+                best_epoch = epoch
+                epochs_no_improve = 0
+                valid_loss_min = valid_loss
+                valid_best_acc = validation_acc
 
         epoch_loss = running_loss/len(trainLoader.dataset)
         epoch_acc = running_corrects.float()/len(trainLoader.dataset)
