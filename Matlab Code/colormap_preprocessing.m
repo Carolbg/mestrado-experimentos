@@ -451,7 +451,8 @@ for i = 1:sizeSaudaveis
     img = load(fullPath);
     pSaudaveis{i} = img;
     
-    % 
+    % Essa parte aqui que trata a conversao pra RBG, das linhas 455 ate a
+    % 468
     f = figure;
     cmap = colormap(f,jet);
     h = imagesc(img);
@@ -463,9 +464,10 @@ for i = 1:sizeSaudaveis
     cmax = max(Cdata(:));
     m = length(cmap);
     
-    index = fix((Cdata-cmin)/(cmax-cmin)*m)+1; %A
+    index = fix((Cdata-cmin)/(cmax-cmin)*m)+1;
     % Then to RGB
     RGB = ind2rgb(index, cmap);
+    
     minSaudaveis(i) = min(RGB(:));
     maxSaudaveis(i) = max(RGB(:));
     pSaudaveisRGB{i} = RGB;
@@ -483,7 +485,7 @@ for i = 1:sizeSaudaveis
     
     %Saving original image
     numpyRGB = py.numpy.array(RGB);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData/0Saudaveis/', nomeSaudaveis(i, :));
+    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores/0Saudaveis/', nomeSaudaveis(i, :));
     py.numpy.save(folderSaudaveis, numpyRGB);
     
     %getting mean
@@ -505,14 +507,15 @@ for i = 1:sizeSaudaveis
     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
     outputView = affineOutputView(size(imOriginal),tform);
     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-    imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-%     figure;
-%     imagesc(imAlteradaCor);
+%     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
+    imAlteradaCor=imAlterada;
+    figure;
+    imagesc(imAlteradaCor);
     folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '_alt1.png');
     saveas(gcf, folderSaudaveis)
     
     numpyRGB = py.numpy.array(imAlteradaCor);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData/0Saudaveis/', nomeSaudaveis(i, :), '_alt_1');
+    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores/0Saudaveis/', nomeSaudaveis(i, :), '_alt_1');
     py.numpy.save(folderSaudaveis, numpyRGB);
     
     
@@ -520,14 +523,15 @@ for i = 1:sizeSaudaveis
     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
     outputView = affineOutputView(size(imOriginal),tform);
     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-    imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-%     figure;
-%     imagesc(imAlteradaCor);
+%     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
+    figure;
+    imAlteradaCor=imAlterada;
+    imagesc(imAlteradaCor);
     folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '_alt2.png');
     saveas(gcf, folderSaudaveis)
     
     numpyRGB = py.numpy.array(imAlteradaCor);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData/0Saudaveis/', nomeSaudaveis(i, :), '_alt_2');
+    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores/0Saudaveis/', nomeSaudaveis(i, :), '_alt_2');
     py.numpy.save(folderSaudaveis, numpyRGB);
    
     close all
@@ -559,8 +563,8 @@ for i = 1:sizeDoentes
     cmin = min(Cdata(:));
     cmax = max(Cdata(:));
     m = length(cmap);
-
-    index = fix((Cdata-cmin)/(cmax-cmin)*m)+1; %A
+    index = fix((Cdata-cmin)/(cmax-cmin)*m)+1;
+    
     % Then to RGB
     RGB = ind2rgb(index, cmap);
     
@@ -580,7 +584,7 @@ for i = 1:sizeDoentes
     saveas(gcf, folderDoentes)
     
     numpyRGB = py.numpy.array(RGB);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData/1Doentes/', nomeDoentes(i, :));
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores/1Doentes/', nomeDoentes(i, :));
     py.numpy.save(folderDoentes, numpyRGB);
     
     %getting mean
@@ -601,27 +605,29 @@ for i = 1:sizeDoentes
     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
     outputView = affineOutputView(size(imOriginal),tform);
     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-    imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-%     figure;
-%     imagesc(imAlteradaCor);
+%     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
+    imAlteradaCor = imAlterada;
+    figure;
+    imagesc(imAlteradaCor);
     folderDoentes = strcat('doentes/', nomeDoentes(i, :), '_alt1.png');
     saveas(gcf, folderDoentes)
     numpyRGB = py.numpy.array(imAlteradaCor);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData/1Doentes/', nomeDoentes(i, :), '_alt_1');
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores/1Doentes/', nomeDoentes(i, :), '_alt_1');
     py.numpy.save(folderDoentes, numpyRGB);
     
     %Generating and saving other altered image
     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
     outputView = affineOutputView(size(imOriginal),tform);
     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-    imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-%     figure;
-%     imagesc(imAlteradaCor);
+%     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
+    imAlteradaCor = imAlterada;
+    figure;
+    imagesc(imAlteradaCor);
     folderDoentes = strcat('doentes/', nomeDoentes(i, :), '_alt2.png');
     saveas(gcf, folderDoentes)
     
     numpyRGB = py.numpy.array(imAlteradaCor);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData/1Doentes/', nomeDoentes(i, :), '_alt_2');
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores/1Doentes/', nomeDoentes(i, :), '_alt_2');
     py.numpy.save(folderDoentes, numpyRGB);
     
     close all

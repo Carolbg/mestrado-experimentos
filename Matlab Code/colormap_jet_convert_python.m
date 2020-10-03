@@ -145,8 +145,8 @@ figure
 imagesc(imAlterada)
 title('sem cores')
 
-imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
+% imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
 
-figure;
-imagesc(imAlteradaCor)
-title('com cores')
+% figure;
+% imagesc(imAlterada)
+% title('com cores')
