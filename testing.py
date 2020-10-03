@@ -23,7 +23,7 @@ def accuracy(output, target):
         #res = (correct_k.mul_(100.0 / batch_size).item())
         return pred #res, pred
 
-def evaluate(model, test_loader, criterion, n_classes, resultsPlotName):
+def evaluate(model, test_loader, criterion, n_classes, resultsPlotName, device):
     """Measure the performance of a trained PyTorch model
 
     Params
@@ -51,6 +51,9 @@ def evaluate(model, test_loader, criterion, n_classes, resultsPlotName):
         model.eval()
         for data, target in test_loader:
             # Forward pass
+            data = data.to(device)
+            target = target.to(device)
+                
             output = model(data)
             # Calculate validation accuracy
             values, pred = torch.max(output, 1)

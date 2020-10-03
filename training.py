@@ -7,7 +7,7 @@ from utils import calcMetrics
 import matplotlib.pyplot as plt
 
 def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName,
-    max_epochs_stop=3, n_epochs=20):
+    max_epochs_stop=3, n_epochs=20, device="cpu"):
 
     # Early stopping intialization
     epochs_no_improve = 0
@@ -47,6 +47,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
         # Training loop
         for i, data in enumerate(trainLoader, 0):
             inputs, labels = data
+            
+            inputs = inputs.to(device)
+            labels = labels.to(device)
 
             optimizer.zero_grad()
 
@@ -91,6 +94,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             for data, target in validLoader:
                 # Forward pass
                 #model.eval()
+                data = data.to(device)
+                target = target.to(device)
+                
                 output = model(data)
 
                 # Calculate validation accuracy

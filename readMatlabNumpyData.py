@@ -15,13 +15,13 @@ from prepareDataDictionary import prepareNumpyDatasetBalancedData, splitData
 
 def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
     print('Lidando com numpy data')
-    shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
+    shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
     saudaveisDictionaryData, doentesDictionaryData = mainReadNumpyData()
     
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
 
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation)
-    return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs
+    return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device
 
 def mainReadNumpyData():
     print('\nPrepareDataFromNumpy arrays')
