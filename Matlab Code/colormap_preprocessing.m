@@ -485,54 +485,55 @@ for i = 1:sizeSaudaveis
     
     %Saving original image
     numpyRGB = py.numpy.array(RGB);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores/0Saudaveis/', nomeSaudaveis(i, :));
+    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores_4/0Saudaveis/', nomeSaudaveis(i, :));
     py.numpy.save(folderSaudaveis, numpyRGB);
     
-    %getting mean
-    I = img;
-    RGBParsed = RGB;
-    thresh = multithresh(I);
-    seg_I = imquantize(I,thresh);
-    %figure; imagesc(seg_I);
-    
-    RGBParsed1 = RGBParsed(:,:,1);
-    RGBParsed2 = RGBParsed(:,:,2);
-    RGBParsed3 = RGBParsed(:,:,3);
-    meanValue1 = mean(RGBParsed1(seg_I == 1));
-    meanValue2 = mean(RGBParsed2(seg_I == 1));
-    meanValue3 = mean(RGBParsed3(seg_I == 1));
-    
-    %Generating and saving one altered image
-    imOriginal = RGB;
-    tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
-    outputView = affineOutputView(size(imOriginal),tform);
-    imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-%     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-    imAlteradaCor=imAlterada;
-    figure;
-    imagesc(imAlteradaCor);
-    folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '_alt1.png');
-    saveas(gcf, folderSaudaveis)
-    
-    numpyRGB = py.numpy.array(imAlteradaCor);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores/0Saudaveis/', nomeSaudaveis(i, :), '_alt_1');
-    py.numpy.save(folderSaudaveis, numpyRGB);
-    
+    dataAugment(img, RGB, nomeSaudaveis, i, 4, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_semCores_4')
+%     %getting mean
+%     I = img;
+%     RGBParsed = RGB;
+%     thresh = multithresh(I);
+%     seg_I = imquantize(I,thresh);
+%     %figure; imagesc(seg_I);
+%     
+%     RGBParsed1 = RGBParsed(:,:,1);
+%     RGBParsed2 = RGBParsed(:,:,2);
+%     RGBParsed3 = RGBParsed(:,:,3);
+%     meanValue1 = mean(RGBParsed1(seg_I == 1));
+%     meanValue2 = mean(RGBParsed2(seg_I == 1));
+%     meanValue3 = mean(RGBParsed3(seg_I == 1));
+%     
+%     %Generating and saving one altered image
+%     imOriginal = RGB;
+%     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
+%     outputView = affineOutputView(size(imOriginal),tform);
+%     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
+% %     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
+%     imAlteradaCor=imAlterada;
+%     figure;
+%     imagesc(imAlteradaCor);
+%     folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '_alt1.png');
+%     saveas(gcf, folderSaudaveis)
+%     
+%     numpyRGB = py.numpy.array(imAlteradaCor);
+%     folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores_3/0Saudaveis/', nomeSaudaveis(i, :), '_alt_1');
+%     py.numpy.save(folderSaudaveis, numpyRGB);
+%     
     
     %Generating and saving other altered image
-    tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
-    outputView = affineOutputView(size(imOriginal),tform);
-    imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-%     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-    figure;
-    imAlteradaCor=imAlterada;
-    imagesc(imAlteradaCor);
-    folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '_alt2.png');
-    saveas(gcf, folderSaudaveis)
-    
-    numpyRGB = py.numpy.array(imAlteradaCor);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores/0Saudaveis/', nomeSaudaveis(i, :), '_alt_2');
-    py.numpy.save(folderSaudaveis, numpyRGB);
+%     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
+%     outputView = affineOutputView(size(imOriginal),tform);
+%     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
+% %     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
+%     figure;
+%     imAlteradaCor=imAlterada;
+%     imagesc(imAlteradaCor);
+%     folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '_alt2.png');
+%     saveas(gcf, folderSaudaveis)
+%     
+%     numpyRGB = py.numpy.array(imAlteradaCor);
+%     folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores_3/0Saudaveis/', nomeSaudaveis(i, :), '_alt_2');
+%     py.numpy.save(folderSaudaveis, numpyRGB);
    
     close all
 end
@@ -584,106 +585,108 @@ for i = 1:sizeDoentes
     saveas(gcf, folderDoentes)
     
     numpyRGB = py.numpy.array(RGB);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores/1Doentes/', nomeDoentes(i, :));
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores_4/1Doentes/', nomeDoentes(i, :));
     py.numpy.save(folderDoentes, numpyRGB);
     
-    %getting mean
-    I = img;
-    RGBParsed = RGB;
-    thresh = multithresh(I);
-    seg_I = imquantize(I,thresh);
-    %figure; imagesc(seg_I);
+    dataAugment(img, RGB, nomeSaudaveis, i, 4, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_semCores_4')
     
-    RGBParsed1 = RGBParsed(:,:,1);
-    RGBParsed2 = RGBParsed(:,:,2);
-    RGBParsed3 = RGBParsed(:,:,3);
-    meanValue1 = mean(RGBParsed1(seg_I == 1));
-    meanValue2 = mean(RGBParsed2(seg_I == 1));
-    meanValue3 = mean(RGBParsed3(seg_I == 1));
-    
-    imOriginal = RGB;
-    tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
-    outputView = affineOutputView(size(imOriginal),tform);
-    imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-%     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-    imAlteradaCor = imAlterada;
-    figure;
-    imagesc(imAlteradaCor);
-    folderDoentes = strcat('doentes/', nomeDoentes(i, :), '_alt1.png');
-    saveas(gcf, folderDoentes)
-    numpyRGB = py.numpy.array(imAlteradaCor);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores/1Doentes/', nomeDoentes(i, :), '_alt_1');
-    py.numpy.save(folderDoentes, numpyRGB);
-    
-    %Generating and saving other altered image
-    tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
-    outputView = affineOutputView(size(imOriginal),tform);
-    imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-%     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-    imAlteradaCor = imAlterada;
-    figure;
-    imagesc(imAlteradaCor);
-    folderDoentes = strcat('doentes/', nomeDoentes(i, :), '_alt2.png');
-    saveas(gcf, folderDoentes)
-    
-    numpyRGB = py.numpy.array(imAlteradaCor);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores/1Doentes/', nomeDoentes(i, :), '_alt_2');
-    py.numpy.save(folderDoentes, numpyRGB);
+%     %getting mean
+%     I = img;
+%     RGBParsed = RGB;
+%     thresh = multithresh(I);
+%     seg_I = imquantize(I,thresh);
+%     %figure; imagesc(seg_I);
+%     
+%     RGBParsed1 = RGBParsed(:,:,1);
+%     RGBParsed2 = RGBParsed(:,:,2);
+%     RGBParsed3 = RGBParsed(:,:,3);
+%     meanValue1 = mean(RGBParsed1(seg_I == 1));
+%     meanValue2 = mean(RGBParsed2(seg_I == 1));
+%     meanValue3 = mean(RGBParsed3(seg_I == 1));
+%     
+%     imOriginal = RGB;
+%     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
+%     outputView = affineOutputView(size(imOriginal),tform);
+%     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
+% %     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
+%     imAlteradaCor = imAlterada;
+%     figure;
+%     imagesc(imAlteradaCor);
+%     folderDoentes = strcat('doentes/', nomeDoentes(i, :), '_alt1.png');
+%     saveas(gcf, folderDoentes)
+%     numpyRGB = py.numpy.array(imAlteradaCor);
+%     folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores_3/1Doentes/', nomeDoentes(i, :), '_alt_1');
+%     py.numpy.save(folderDoentes, numpyRGB);
+%     
+%     %Generating and saving other altered image
+%     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
+%     outputView = affineOutputView(size(imOriginal),tform);
+%     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
+% %     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
+%     imAlteradaCor = imAlterada;
+%     figure;
+%     imagesc(imAlteradaCor);
+%     folderDoentes = strcat('doentes/', nomeDoentes(i, :), '_alt2.png');
+%     saveas(gcf, folderDoentes)
+%     
+%     numpyRGB = py.numpy.array(imAlteradaCor);
+%     folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores_3/1Doentes/', nomeDoentes(i, :), '_alt_2');
+%     py.numpy.save(folderDoentes, numpyRGB);
     
     close all
 end
 
 %% Generate Mask 1
-
-for i = 1:size(pSaudaveis, 1)
-    I = pSaudaveis{i};
-    
-    %Conversao de tipo
-    top = mean(maxk(I(:),100));
-    I = uint8((255/top)*I);
-    imagesc(I)
-    
-    [L,Centers] = imsegkmeans(I,4, 'NormalizeInput', true);
-    B = labeloverlay(I,L);
-    fig = figure;
-    imshow(B)
-    saveas(fig, 'imsegkmeans_4', 'png')
-
-    [L,Centers] = imsegkmeans(I,5, 'NormalizeInput', true);
-    B = labeloverlay(I,L);
-    fig = figure;
-    imshow(B)
-    saveas(fig, 'imsegkmeans_5', 'png')
-
-    [~, threshold] = edge(I, 'canny');
-    BWs = edge(I,'canny', threshold);
-    se90 = strel('line', 3, 90); 
-    se0 = strel('line', 3, 0);
-    BWsdil = imdilate(BWs, [se90 se0]);
-    BWdfill = imfill(BWsdil, 'holes'); figure, 
-    fig = imshow(BWdfill);
-    title('Preprocessed canny');
-    saveas(fig, 'canny', 'png')
-end
-
-
-M = ones(size(I,1), size(I,2));
-M(seg_I<=1) = 0;
-imagesc(M*I)
-
-% t1 = size(M,1);
-% t2 = size(M,2);
-% for k = 1:t1
-%     for j = 1:t2
-%         if((x1(k,j) <=2 || x1(k,j) ==6))
-%             M(k,j) = 0;
-%         end
-%     end
+% 
+% for i = 1:size(pSaudaveis, 1)
+%     I = pSaudaveis{i};
+%     
+%     %Conversao de tipo
+%     top = mean(maxk(I(:),100));
+%     I = uint8((255/top)*I);
+%     imagesc(I)
+%     
+%     [L,Centers] = imsegkmeans(I,4, 'NormalizeInput', true);
+%     B = labeloverlay(I,L);
+%     fig = figure;
+%     imshow(B)
+%     saveas(fig, 'imsegkmeans_4', 'png')
+% 
+%     [L,Centers] = imsegkmeans(I,5, 'NormalizeInput', true);
+%     B = labeloverlay(I,L);
+%     fig = figure;
+%     imshow(B)
+%     saveas(fig, 'imsegkmeans_5', 'png')
+% 
+%     [~, threshold] = edge(I, 'canny');
+%     BWs = edge(I,'canny', threshold);
+%     se90 = strel('line', 3, 90); 
+%     se0 = strel('line', 3, 0);
+%     BWsdil = imdilate(BWs, [se90 se0]);
+%     BWdfill = imfill(BWsdil, 'holes'); figure, 
+%     fig = imshow(BWdfill);
+%     title('Preprocessed canny');
+%     saveas(fig, 'canny', 'png')
 % end
-
-%%
-for i = 1:sizeSaudaveis
-    fullPath = strcat(saudaveis, nomeSaudaveis(i, :));
-    img = load(fullPath); 
-    pSaudaveis{i} = img;
-end
+% 
+% 
+% M = ones(size(I,1), size(I,2));
+% M(seg_I<=1) = 0;
+% imagesc(M*I)
+% 
+% % t1 = size(M,1);
+% % t2 = size(M,2);
+% % for k = 1:t1
+% %     for j = 1:t2
+% %         if((x1(k,j) <=2 || x1(k,j) ==6))
+% %             M(k,j) = 0;
+% %         end
+% %     end
+% % end
+% 
+% %%
+% for i = 1:sizeSaudaveis
+%     fullPath = strcat(saudaveis, nomeSaudaveis(i, :));
+%     img = load(fullPath); 
+%     pSaudaveis{i} = img;
+% end
