@@ -13,6 +13,7 @@ def mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNump
 
     resultsPlotName = resultsPlotName + '_resnet'
     #DATASET STEPS:
+    print('isNumpy', isNumpy)
     print('Load dataset')
     #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
     if isNumpy:

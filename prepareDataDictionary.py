@@ -21,7 +21,7 @@ def mainPrepareDictionaryData(dataAugmentation):
     
     filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
 
-    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, filteredSaudaveisDicData, filteredDoentesDicData)
+    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
     
     trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
     
@@ -37,8 +37,8 @@ def mainReadData():
 
 def getFilesName():
     print('getFilesName')
-    txt_saudaveis_files = glob.glob("../../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../../Imagens_TXT_Estaticas_Balanceadas/1Doente/*.txt")
+    txt_saudaveis_files = glob.glob("../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/*.txt")
+    txt_doentes_files = glob.glob("../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/*.txt")
     #txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
     #txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
     
@@ -231,7 +231,7 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     print('imagens do validationDataset', len(validationDataset))
 
     train, test, validation = np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
-    #resizedTrained, resizedTest, resizedValidation = train, test, validation 
+    # resizedTrained, resizedTest, resizedValidation = train, test, validation 
     resizedTrained, resizedTest, resizedValidation = resizeImages(train, test, validation)
 
     # plotAllSubsetImages(resizedTrained, name+'train')
@@ -293,16 +293,16 @@ def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
     indices = np.argpartition(flattenDataset, 100)[:100]
     minValuesValues = flattenDataset[indices]
     minMean = np.mean(minValuesValues)
-    print('Train minMean', minMean)
+    # print('Train minMean', minMean)
     topMean = np.mean(topValues)
-    print('topMean', topMean)
+    # print('topMean', topMean)
     media = np.mean(flattenDataset)  
-    print('Media train', media)
+    # print('Media train', media)
     desvioPadrao = np.std(flattenDataset)  
-    print('Desvio padrao train', desvioPadrao)
+    # print('Desvio padrao train', desvioPadrao)
     variancia = np.var(flattenDataset)  
-    print('Variancia train', variancia)
-    print('min train', dataTrain.min())
+    # print('Variancia train', variancia)
+    # print('min train', dataTrain.min())
 
     #dataTest = (dataTest)/deltaT
     dataTest = (dataTest-min10mean)/deltaT
@@ -314,16 +314,16 @@ def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
     indices = np.argpartition(flattenDataset, 100)[:100]
     minValuesValues = flattenDataset[indices]
     minMean = np.mean(minValuesValues)
-    print('Test minMean', minMean)
+    # print('Test minMean', minMean)
     topMean = np.mean(topValues)
-    print('topMean', topMean)
+    # print('topMean', topMean)
     media = np.mean(flattenDataset)  
-    print('Media Test', media)
+    # print('Media Test', media)
     desvioPadrao = np.std(flattenDataset)  
-    print('Desvio padrao Test', desvioPadrao)
+    # print('Desvio padrao Test', desvioPadrao)
     variancia = np.var(flattenDataset)  
-    print('Variancia Test', variancia)
-    print('min traiTestn', dataTest.min())
+    # print('Variancia Test', variancia)
+    # print('min traiTestn', dataTest.min())
 
     #dataValidation = (dataValidation)/deltaT
     dataValidation = (dataValidation-min10mean)/deltaT
@@ -335,16 +335,16 @@ def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
     indices = np.argpartition(flattenDataset, 100)[:100]
     minValuesValues = flattenDataset[indices]
     minMean = np.mean(minValuesValues)
-    print('Validation minMean', minMean)
+    # print('Validation minMean', minMean)
     topMean = np.mean(topValues)
-    print('topMean', topMean)
+    # print('topMean', topMean)
     media = np.mean(flattenDataset)  
-    print('Media Validation', media)
+    # print('Media Validation', media)
     desvioPadrao = np.std(flattenDataset)  
-    print('Desvio padrao Validation', desvioPadrao)
+    # print('Desvio padrao Validation', desvioPadrao)
     variancia = np.var(flattenDataset)  
-    print('Variancia Validation', variancia)
-    print('min validation', dataValidation.min())
+    # print('Variancia Validation', variancia)
+    # print('min validation', dataValidation.min())
     return dataTrain, dataTest, dataValidation
 
 def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size, dataAugmentation):
@@ -402,6 +402,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
         # plotTransformedImages(images, i, 'transformed_train')
+        # plotAllSubsetImages(images, 'transformed_train'+str(i))
         i = i+1
 
     i=0
@@ -411,6 +412,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
         # plotTransformedImages(images, i, 'transformed_test')
+        # plotAllSubsetImages(images, 'transformed_test'+str(i))
         i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -420,6 +422,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
         # plotTransformedImages(images, i, 'transformed_validation')
+        # plotAllSubsetImages(images, 'transformed_validation'+str(i))
         i = i+1
 
     cat_df = pd.DataFrame({

@@ -12,7 +12,8 @@ def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNu
     print('\n\nTESTES COM DENSENET\n\n')
     
     resultsPlotName = resultsPlotName + '_densenet'
-
+    print('isNumpy', isNumpy)
+    
     #DATASET STEPS:
     print('Load dataset')
     #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()

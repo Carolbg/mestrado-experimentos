@@ -62,7 +62,7 @@ def preprocessImage(saudaveisDataset, doentesDataset):
     return filteredSaudaveisDataset, filteredDoentesDataset, top10mean
 
 def applyMedianFilterDictionaryDataset(dictionaryDataset, nameFile, allData):
-    print('teste')
+    # print('teste')
     filteredDataset = {}
 
     for patientId in dictionaryDataset:
