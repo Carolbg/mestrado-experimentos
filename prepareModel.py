@@ -2,7 +2,7 @@ from torchvision import transforms, datasets, models
 import torch.nn as nn
 from utilsParams import *
 
-def prepareVGG16ModelWithTXT(experimentType, device):
+def prepareVGG16ModelWithTXT(experimentType, device, keepOriginalStructure=False):
     
     model = models.vgg16(pretrained=True)
     print('model', model.classifier)
@@ -26,11 +26,17 @@ def prepareVGG16ModelWithTXT(experimentType, device):
     #     model.avgpool = nn.AdaptiveAvgPool2d((1,1))
     
     # n_inputs = 512
-    n_inputs = model.classifier[0].in_features
+    
+    if keepOriginalStructure:
+        print('keepingOriginalStructure')
+        n_inputs = model.classifier[6].in_features
+        model.classifier[6] = getFullyConnectedStructure(n_inputs, 2, experimentType)
+    else:
+        n_inputs = model.classifier[0].in_features
+        model.classifier = getFullyConnectedStructure(n_inputs, 2, experimentType)
 
     # Add on classifier
     #model.classifier[6] = getFullyConnectedStructure(1024, 2)
-    model.classifier = getFullyConnectedStructure(n_inputs, 2, experimentType)
     #print('model = ', model)
 
     print('custom fc', model.classifier)

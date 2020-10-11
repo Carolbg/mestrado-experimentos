@@ -2,11 +2,11 @@
 
 %% Images definitions
 nomeSaudaveis=[
-    'T0174.1.1.S.2013-03-20.00',
-    'T0174.1.2.S.2013-03-20.00',
-    'T0174.1.3.S.2013-03-20.00',
-    'T0174.1.4.S.2013-03-20.00',
-    'T0174.1.5.S.2013-03-20.00',
+%     'T0174.1.1.S.2013-03-20.00',
+%     'T0174.1.2.S.2013-03-20.00',
+%     'T0174.1.3.S.2013-03-20.00',
+%     'T0174.1.4.S.2013-03-20.00',
+%     'T0174.1.5.S.2013-03-20.00',
     
     'T0177.1.1.S.2013-03-20.00',
     'T0177.1.2.S.2013-03-20.00',
@@ -14,11 +14,11 @@ nomeSaudaveis=[
     'T0177.1.4.S.2013-03-20.00',
     'T0177.1.5.S.2013-03-20.00',
     
-    'T0182.1.1.S.2013-05-24.00',
-    'T0182.1.2.S.2013-05-24.00',
-    'T0182.1.3.S.2013-05-24.00',
-    'T0182.1.4.S.2013-05-24.00',
-    'T0182.1.5.S.2013-05-24.00',
+%     'T0182.1.1.S.2013-05-24.00',
+%     'T0182.1.2.S.2013-05-24.00',
+%     'T0182.1.3.S.2013-05-24.00',
+%     'T0182.1.4.S.2013-05-24.00',
+%     'T0182.1.5.S.2013-05-24.00',
     
     'T0188.1.1.S.2013-08-12.00',
     'T0188.1.2.S.2013-08-12.00',
@@ -128,6 +128,7 @@ nomeSaudaveis=[
     'T0219.1.4.S.2013-11-11.00',
     'T0219.1.5.S.2013-11-11.00',
     
+    'T0220.1.1.S.2013-11-18.00',
     'T0220.1.2.S.2013-11-18.00',
     'T0220.1.3.S.2013-11-18.00',
     'T0220.1.4.S.2013-11-18.00',
@@ -192,6 +193,12 @@ nomeSaudaveis=[
     'T0238.1.4.S.2014-05-21.00',
     'T0238.1.5.S.2014-05-21.00',
     
+    'T0239.1.1.S.2014-05-26.00',
+    'T0239.1.2.S.2014-05-26.00',
+    'T0239.1.3.S.2014-05-26.00',
+    'T0239.1.4.S.2014-05-26.00',
+    'T0239.1.5.S.2014-05-26.00',
+    
     'T0243.1.1.S.2014-04-15.00', 
     'T0243.1.2.S.2014-04-15.00',
     'T0243.1.3.S.2014-04-15.00',
@@ -215,6 +222,11 @@ nomeSaudaveis=[
     'T0261.1.3.S.2014-11-11.00',
     'T0261.1.4.S.2014-11-11.00',
     'T0261.1.5.S.2014-11-11.00',
+    
+    'T0272.1.1.S.2015-03-13.00',
+    'T0272.1.2.S.2015-03-13.00',
+    'T0272.1.3.S.2015-03-13.00',
+    'T0272.1.5.S.2015-03-13.00',
     
     'T0275.1.1.S.2015-03-13.00',
     'T0275.1.2.S.2015-03-13.00',
@@ -485,10 +497,10 @@ for i = 1:sizeSaudaveis
     
     %Saving original image
     numpyRGB = py.numpy.array(RGB);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores_4/0Saudaveis/', nomeSaudaveis(i, :));
+    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_asMinMax/0Saudaveis/', nomeSaudaveis(i, :));
     py.numpy.save(folderSaudaveis, numpyRGB);
     
-    dataAugment(img, RGB, nomeSaudaveis, i, 4, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_semCores_4')
+%     dataAugment(img, RGB, nomeSaudaveis, i, 4, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_semCores_4')
 %     %getting mean
 %     I = img;
 %     RGBParsed = RGB;
@@ -585,10 +597,10 @@ for i = 1:sizeDoentes
     saveas(gcf, folderDoentes)
     
     numpyRGB = py.numpy.array(RGB);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores_4/1Doentes/', nomeDoentes(i, :));
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_asMinMax/1Doentes/', nomeDoentes(i, :));
     py.numpy.save(folderDoentes, numpyRGB);
     
-    dataAugment(img, RGB, nomeSaudaveis, i, 4, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_semCores_4')
+%     dataAugment(img, RGB, nomeSaudaveis, i, 4, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_semCores_4')
     
 %     %getting mean
 %     I = img;

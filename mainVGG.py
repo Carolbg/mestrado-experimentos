@@ -8,7 +8,7 @@ from prepareDataDictionary import mainPrepareDictionaryData
 from utils import saveCsvConfusionMatrix
 from readMatlabNumpyData import mainPrepareDictionaryDataFromNumpy
 
-def mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True):
+def mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True, keepOriginalStructure=False):
     print('\n\nTESTES COM VGG\n\n')
 
     resultsPlotName = resultsPlotName + '_vgg'
@@ -23,7 +23,7 @@ def mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=T
     
     #PREPARE MODEL STEPS:
     print('\nPrepare model')
-    model = prepareVGG16ModelWithTXT(experimentType, device)
+    model = prepareVGG16ModelWithTXT(experimentType, device, keepOriginalStructure)
     criterion = prepareTrainingLoss()
     optimizer = prepareTrainingOptimizer(model, typeLR)
 
