@@ -7,11 +7,11 @@ from mainVGG import *
 from mainResnet import *
 from mainDensenet import *
 
-# resultsPlotName = 'dataAugmentation_matlabPreprocessing_3camadas_ex6_comDropout_lr'
-resultsPlotName = 'dataAugmentation_matlabPreprocessing_3camadas_ex6_comDropout'
+resultsPlotName = 'dataAugmentation_matlabPreprocessing_3camadas_ex6_comDropout_lr'
+# resultsPlotName = 'dataAugmentation_matlabPreprocessing_3camadas_ex6_comDropout'
 experimentType = 6
 dataAugmentation = True
-typeLR = 2
+typeLR = 1
 
 print('Config: ', resultsPlotName)
 print('experimentType', experimentType, ' dataAugmentation ',dataAugmentation, ' typeLR ', typeLR)
@@ -19,16 +19,16 @@ print('experimentType', experimentType, ' dataAugmentation ',dataAugmentation, '
 #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData(dataAugmentation)
 
 try:
-    model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR)
+    model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, False)
 except Exception as e:
     print('Error in vgg', e)
 
 try:
-    model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR)
+    model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, False)
 except Exception as e:
     print('Error in resnet', e)
 
 try: 
-    model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR)
+    model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, False)
 except Exception as e:
     print('Error in densenet', e)
