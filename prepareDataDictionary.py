@@ -37,8 +37,8 @@ def mainReadData():
 
 def getFilesName():
     print('getFilesName')
-    txt_saudaveis_files = glob.glob("../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/*.txt")
+    txt_saudaveis_files = glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/*.txt")
+    txt_doentes_files = glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/*.txt")
     #txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
     #txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
     
