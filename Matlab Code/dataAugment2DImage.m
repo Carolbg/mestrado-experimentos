@@ -1,28 +1,31 @@
-function dataAugment(img, RGB, nomePacientes, patientIndex, numberAltered, folderImageName, folderName, folderDirectory)
+
+function dataAugment2DImage(imgMinMax, nomePacientes, patientIndex, numberAltered, folderImageName, folderName, folderDirectory)
     for i = 1:numberAltered
         %getting mean
-        I = img;
-        RGBParsed = RGB;
+        I = imgMinMax;
         thresh = multithresh(I);
         seg_I = imquantize(I,thresh);
         %figure; imagesc(seg_I);
 
-        RGBParsed1 = RGBParsed(:,:,1);
-        RGBParsed2 = RGBParsed(:,:,2);
-        RGBParsed3 = RGBParsed(:,:,3);
-        meanValue1 = mean(RGBParsed1(seg_I == 1));
-        meanValue2 = mean(RGBParsed2(seg_I == 1));
-        meanValue3 = mean(RGBParsed3(seg_I == 1));
-
+        meanValue1 = mean(imgMinMax(seg_I == 1));
+        
+        disp('na funcao')
+        min(imgMinMax(:))
+        max(imgMinMax(:))
+        
         %Generating and saving one altered image
-        imOriginal = RGB;
+        imOriginal = imgMinMax;
         tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
         outputView = affineOutputView(size(imOriginal),tform);
-        imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
+        imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',meanValue1);
     %     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
         imAlteradaCor=imAlterada;
         figure;
         imagesc(imAlteradaCor);
+        min(imgMinMax(:))
+        max(imgMinMax(:))
+        
+       
         folderSaudaveis = strcat(folderImageName, nomePacientes(patientIndex, :), '_alt',string(i),'.png');
         saveas(gcf, folderSaudaveis)
 
