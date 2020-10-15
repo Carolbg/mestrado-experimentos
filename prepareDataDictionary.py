@@ -355,7 +355,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
     # (ii) rotation between 0-45 degrees; 
     # (iii) 20% zoom and;
     # (iv) normalized noises, e.g. Gaussian. 
-    f = np.array([0, 0, 0.767])
+    f = np.array([0.22, 0.22, 0.22])
     #print('f', f)
     fillData = tuple(np.round(f * 255).astype(np.int64))
     #print('fillData', fillData)
