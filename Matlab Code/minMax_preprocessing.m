@@ -472,21 +472,13 @@ for i = 1:sizeSaudaveis
     meanBottom10 = mean(B);
 
     minMaxImg = (imgFiltered - meanBottom10)/(meanTop10-meanBottom10);
+%    
+%     min(minMaxImg(:))
+%     max(minMaxImg(:))
+% %     
+    minMaxImg(minMaxImg < 0) = 0;
+    minMaxImg(minMaxImg > 1) = 1;
     
-    figure;
-    subplot(1,2,1)
-    imagesc(minMaxImg);
-    title('antes')
-
-    subplot(1,2,2)
-    histogram(minMaxImg);
-    disp('no default 1')
-    min(minMaxImg(:))
-    max(minMaxImg(:))
-%     
-%     minMaxImg(minMaxImg < 0) = 0;
-%     minMaxImg(minMaxImg > 1) = 1;
-%     
 %     figure;
 %     subplot(1,2,1)
 %     imagesc(minMaxImg);
@@ -497,16 +489,30 @@ for i = 1:sizeSaudaveis
 %     disp('no default 2')
 %     min(minMaxImg(:))
 %     max(minMaxImg(:))
+
 %     
+    minMaxImg3D(:,:,1) = minMaxImg;
+    minMaxImg3D(:,:,2) = minMaxImg;
+    minMaxImg3D(:,:,3) = minMaxImg;
+    
+    figure;
+    subplot(1,2,1)
+    imagesc(minMaxImg3D);
+    title('antes')
+
+    subplot(1,2,2)
+    histogram(minMaxImg3D);
+    disp('no default 1')
+    
     folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '.png');
     saveas(gcf, folderSaudaveis)
     
     %Saving original image
-    numpyMinMax = py.numpy.array(minMaxImg);
+    numpyMinMax = py.numpy.array(minMaxImg3D);
     folderSaudaveis = strcat('../../Imagens_numpy_minMax_double/0Saudaveis/', nomeSaudaveis(i, :));
     py.numpy.save(folderSaudaveis, numpyMinMax);
     
-     dataAugment2DImage(minMaxImg, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_minMax_double')
+     dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_minMax_double')
      close all
 end
 
@@ -535,15 +541,42 @@ for i = 1:sizeDoentes
 
     minMaxImg = (imgFiltered - meanBottom10)/(meanTop10-meanBottom10);
     
+    minMaxImg(minMaxImg < 0) = 0;
+    minMaxImg(minMaxImg > 1) = 1;
+    
+%     figure;
+%     subplot(1,2,1)
+%     imagesc(minMaxImg);
+%     title('dp')
+% 
+%     subplot(1,2,2)
+%     histogram(minMaxImg);
+%     disp('no default 2')
+%     min(minMaxImg(:))
+%     max(minMaxImg(:))
+
+%     
+    minMaxImg3D(:,:,1) = minMaxImg;
+    minMaxImg3D(:,:,2) = minMaxImg;
+    minMaxImg3D(:,:,3) = minMaxImg;
+    
+    figure;
+    subplot(1,2,1)
+    imagesc(minMaxImg3D);
+    title(nomeDoentes(i, :))
+
+    subplot(1,2,2)
+    histogram(minMaxImg3D);
+    
     
     folderDoentes = strcat('doentes/', nomeDoentes(i, :), '.png');
     saveas(gcf, folderDoentes)
     
-    numpyMinMax = py.numpy.array(minMaxImg);
+    numpyMinMax = py.numpy.array(minMaxImg3D);
     folderDoentes = strcat('../../Imagens_numpy_minMax_double/1Doentes/', nomeDoentes(i, :));
     py.numpy.save(folderDoentes, numpyMinMax);
     
-    dataAugment2DImage(minMaxImg, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_minMax_double')
+    dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_minMax_double')
     
     
     close all
