@@ -41,8 +41,9 @@ def getFilesName():
     
     # numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array_allData_asMinMax/0Saudaveis/*.npy")
     # numpy_doentes_files = glob.glob("../../Imagens_numpy_array_allData_asMinMax/1Doentes/*.npy")
-
-    numpy_saudaveis_files = glob.glob("../../../Imagens_numpy_array_allData_asMinMax_double/0Saudaveis/*.npy")
+    folder = "Imagens_numpy_array_allData_asMinMax_double"
+    print(folder)
+    numpy_saudaveis_files = glob.glob("../../../"+ folder+"/0Saudaveis/*.npy")
     numpy_doentes_files = glob.glob("../../../Imagens_numpy_array_allData_asMinMax_double/1Doentes/*.npy")
 
     

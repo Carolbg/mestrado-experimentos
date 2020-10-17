@@ -37,6 +37,8 @@ def mainReadData():
 
 def getFilesName():
     print('getFilesName')
+    folder = 'Imagens_TXT_Estaticas_Balanceadas_allData'
+    print('folder = Imagens_TXT_Estaticas_Balanceadas_allData')
     txt_saudaveis_files = glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/*.txt")
     txt_doentes_files = glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/*.txt")
     #txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
@@ -384,14 +386,15 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
     else:
         print('Sem aumento de dados')
-        trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain)
+        print('com testValidationTransform', testValidationTransform)
+        trainDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, testValidationTransform)
     
     trainLoader = DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
 
-    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest)
+    testDataset = CustomDatasetFromNumpyArray(dataTest, dataTargetTest, testValidationTransform)
     testLoader = DataLoader(testDataset, batch_size=batch_size, shuffle=True)
 
-    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation)
+    validationDataset = CustomDatasetFromNumpyArray(dataValidation, dataTargetValidation, testValidationTransform)
     validationLoader = DataLoader(validationDataset, batch_size=batch_size, shuffle=True)
 
     resultLabelsTraining = torch.zeros(2, dtype=torch.long)
