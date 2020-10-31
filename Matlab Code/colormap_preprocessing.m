@@ -497,10 +497,10 @@ for i = 1:sizeSaudaveis
     
     %Saving original image
     numpyRGB = py.numpy.array(RGB);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_asMinMax_double/0Saudaveis/', nomeSaudaveis(i, :));
+    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_rgb_double/0Saudaveis/', nomeSaudaveis(i, :));
     py.numpy.save(folderSaudaveis, numpyRGB);
     
-     dataAugment(img, RGB, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_asMinMax_double')
+     dataAugment(img, RGB, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_rgb_double')
 %     %getting mean
 %     I = img;
 %     RGBParsed = RGB;
@@ -597,10 +597,10 @@ for i = 1:sizeDoentes
     saveas(gcf, folderDoentes)
     
     numpyRGB = py.numpy.array(RGB);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData_asMinMax_double/1Doentes/', nomeDoentes(i, :));
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_rgb_double/1Doentes/', nomeDoentes(i, :));
     py.numpy.save(folderDoentes, numpyRGB);
     
-     dataAugment(img, RGB, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_asMinMax_double')
+     dataAugment(img, RGB, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_rgb_double')
     
 %     %getting mean
 %     I = img;

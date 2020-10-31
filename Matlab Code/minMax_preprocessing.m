@@ -449,48 +449,79 @@ nomeDoentes=[
     'T0287.1.5.S.2015-07-20.00'
 ];
 
-%% Leitura imagens saudaveis
+%% Leitura imagens
 
 saudaveis = '../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/';
 sizeSaudaveis = size(nomeSaudaveis,1);
 pSaudaveis = cell(sizeSaudaveis,1);
-pSaudaveisRGB = cell(sizeSaudaveis,1);
-minSaudaveis = ones(sizeSaudaveis);
-maxSaudaveis = ones(sizeSaudaveis);
+pSaudaveisFiltered = cell(sizeSaudaveis,1);
+allImages = zeros(sizeSaudaveis*2, 480, 640);
 
 for i = 1:sizeSaudaveis
     fullPath = strcat(saudaveis, nomeSaudaveis(i, :), '.txt');
     img = load(fullPath);
     pSaudaveis{i} = img;
     
-    imgFiltered = medfilt2(img);
+    
+    imgFiltered = medfilt2(img, 'symmetric');
+    minK = mink(imgFiltered(:),100);
+    meanMin = mean(minK);
+    disp(['saudaveis i = ', num2str(meanMin)])
+    
+    pSaudaveisFiltered{i} = imgFiltered;
+    allImages(i, :, :) = imgFiltered;
+end
 
-    B = maxk(imgFiltered(:),100);
-    meanTop10 = mean(B);
+doentes = '../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/';
+sizeDoentes = size(nomeDoentes,1);
+pDoentes = cell(sizeDoentes,1);
+pDoentesFiltered = cell(sizeDoentes,1);
 
-    B = mink(imgFiltered(:),100);
-    meanBottom10 = mean(B);
+for i = 1:sizeDoentes
+    
+    fullPath = strcat(doentes, nomeDoentes(i, :), '.txt');
+    img = load(fullPath); 
+    pDoentes{i} = img;
+    
+    
+    imgFiltered = medfilt2(img, 'symmetric');
+    minK = mink(imgFiltered(:),100);
+    meanMin = mean(minK);
+    disp(['doentes i = ', num2str(meanMin)])
+    
+    pDoentesFiltered{i} = imgFiltered;
+    allImages(i*2, :, :) = imgFiltered;
+end
+
+%% Calc min and max da base
+
+B = maxk(allImages(:),100);
+meanTop10 = mean(B);
+
+B = mink(allImages(:),100);
+meanBottom10 = mean(B);
+
+%% Aplica min max e aumento imagens
+
+for i = 1:sizeSaudaveis
+    imgFiltered = pSaudaveisFiltered{i};
 
     minMaxImg = (imgFiltered - meanBottom10)/(meanTop10-meanBottom10);
-%    
-%     min(minMaxImg(:))
-%     max(minMaxImg(:))
-% %     
+    disp(['< 0 = ', num2str(sum(minMaxImg(:) < 0)), ' e > 1 = ',num2str(sum(minMaxImg(:) >1))])
     minMaxImg(minMaxImg < 0) = 0;
     minMaxImg(minMaxImg > 1) = 1;
     
-%     figure;
-%     subplot(1,2,1)
-%     imagesc(minMaxImg);
-%     title('dp')
-% 
-%     subplot(1,2,2)
-%     histogram(minMaxImg);
+    figure;
+    subplot(1,2,1)
+    imagesc(minMaxImg);
+    title('min max img')
+
+    subplot(1,2,2)
+    histogram(minMaxImg);
 %     disp('no default 2')
 %     min(minMaxImg(:))
 %     max(minMaxImg(:))
 
-%     
     minMaxImg3D(:,:,1) = minMaxImg;
     minMaxImg3D(:,:,2) = minMaxImg;
     minMaxImg3D(:,:,3) = minMaxImg;
@@ -502,60 +533,38 @@ for i = 1:sizeSaudaveis
 
     subplot(1,2,2)
     histogram(minMaxImg3D);
-    disp('no default 1')
+%     disp('no default 1')
     
     folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '.png');
     saveas(gcf, folderSaudaveis)
     
     %Saving original image
     numpyMinMax = py.numpy.array(minMaxImg3D);
-    folderSaudaveis = strcat('../../Imagens_numpy_minMax_double/0Saudaveis/', nomeSaudaveis(i, :));
+    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax/0Saudaveis/', nomeSaudaveis(i, :));
     py.numpy.save(folderSaudaveis, numpyMinMax);
     
-     dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_minMax_double')
-     close all
+%     dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_entireDatabase_MinMax')
+    close all
 end
 
-%% Leitura imagens doentes
-
-doentes = '../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/';
-sizeDoentes = size(nomeDoentes,1);
-pDoentes = cell(sizeDoentes,1);
-pDoentesRGB = cell(sizeDoentes,1);
-
-minDoentes = ones(sizeDoentes);
-maxDoentes = ones(sizeDoentes);
-
 for i = 1:sizeDoentes
-    fullPath = strcat(doentes, nomeDoentes(i, :), '.txt');
-    img = load(fullPath); 
-    pDoentes{i} = img;
-    
-    imgFiltered = medfilt2(img);
-
-    B = maxk(imgFiltered(:),100);
-    meanTop10 = mean(B);
-
-    B = mink(imgFiltered(:),100);
-    meanBottom10 = mean(B);
+    imgFiltered = pDoentes{i};
 
     minMaxImg = (imgFiltered - meanBottom10)/(meanTop10-meanBottom10);
     
+    disp(['< 0 = ', num2str(sum(minMaxImg(:) < 0)), ' e > 1 = ',num2str(sum(minMaxImg(:) >1))])
     minMaxImg(minMaxImg < 0) = 0;
     minMaxImg(minMaxImg > 1) = 1;
     
-%     figure;
-%     subplot(1,2,1)
-%     imagesc(minMaxImg);
-%     title('dp')
-% 
-%     subplot(1,2,2)
-%     histogram(minMaxImg);
-%     disp('no default 2')
-%     min(minMaxImg(:))
-%     max(minMaxImg(:))
+    figure;
+    subplot(1,2,1)
+    imagesc(minMaxImg3D);
+    title('antes')
 
-%     
+    subplot(1,2,2)
+    histogram(minMaxImg3D);
+%     disp('no default 2')
+    
     minMaxImg3D(:,:,1) = minMaxImg;
     minMaxImg3D(:,:,2) = minMaxImg;
     minMaxImg3D(:,:,3) = minMaxImg;
@@ -568,16 +577,14 @@ for i = 1:sizeDoentes
     subplot(1,2,2)
     histogram(minMaxImg3D);
     
-    
     folderDoentes = strcat('doentes/', nomeDoentes(i, :), '.png');
     saveas(gcf, folderDoentes)
     
     numpyMinMax = py.numpy.array(minMaxImg3D);
-    folderDoentes = strcat('../../Imagens_numpy_minMax_double/1Doentes/', nomeDoentes(i, :));
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax/1Doentes/', nomeDoentes(i, :));
     py.numpy.save(folderDoentes, numpyMinMax);
     
-    dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_minMax_double')
-    
+%     dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_entireDatabase_MinMax')
     
     close all
 end

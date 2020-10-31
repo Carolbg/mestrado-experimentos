@@ -41,10 +41,12 @@ def getFilesName():
     
     # numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array_allData_asMinMax/0Saudaveis/*.npy")
     # numpy_doentes_files = glob.glob("../../Imagens_numpy_array_allData_asMinMax/1Doentes/*.npy")
-    folder = "Imagens_numpy_array_allData_asMinMax_double"
+    # folder = "Imagens_numpy_array_allData_semAumentoDados"
+    folder="Imagens_numpy_array_allData_entireDatabase_MinMax"
+    # folder = "Imagens_numpy_array_allData_entireDatabase_MinMax_double"
     print(folder)
     numpy_saudaveis_files = glob.glob("../../../"+ folder+"/0Saudaveis/*.npy")
-    numpy_doentes_files = glob.glob("../../../Imagens_numpy_array_allData_asMinMax_double/1Doentes/*.npy")
+    numpy_doentes_files = glob.glob("../../../"+ folder+"/1Doentes/*.npy")
 
     
     #If not reading from the script

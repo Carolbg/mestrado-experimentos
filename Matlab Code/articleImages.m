@@ -34,7 +34,7 @@ saveas(gcf,'sick_frontal_181.png')
 
 
 
-A = load('../../Imagens_TXT_Estaticas_Balanceadas/1Doente/T0181.1.3.S.2013-08-16.00.txt');
+A = load('../../Imagens_TXT_Estaticas_Balanceadas/1Doente/T0181.1.4.S.2013-08-16.00.txt');
 f = figure;
 % cmap = colormap(f,jet);
 h = imagesc(A);
@@ -44,9 +44,7 @@ saveas(gcf,'sick_lateral_181.png')
 
 %% 
 
-fullPath = '../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/T0174.1.1.S.2013-03-20.00.txt';
-minSaudaveis = ones(sizeSaudaveis);
-maxSaudaveis = ones(sizeSaudaveis);
+fullPath = '../../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/T0174.1.1.S.2013-03-20.00.txt';
 
 img = load(fullPath);
 pSaudaveis = img;
@@ -87,3 +85,59 @@ saveas(gcf, folderSaudaveis)
 % 
 % folderSaudaveis = 'health_174_RGB_preprocessing.png';
 % saveas(gcf, folderSaudaveis)
+
+
+%%
+
+A = load('../../Imagens_TXT_Estaticas_Balanceadas/0Saudavel/T0174.1.1.S.2013-03-20.00.txt') ; 
+imgFiltered = medfilt2(A);
+
+B = maxk(imgFiltered(:),100);
+meanTop10 = mean(B);
+
+B = mink(imgFiltered(:),100);
+meanBottom10 = mean(B);
+
+minMaxImg = (imgFiltered - meanBottom10)/(meanTop10-meanBottom10);
+%    
+%     min(minMaxImg(:))
+%     max(minMaxImg(:))
+% %     
+minMaxImg(minMaxImg < 0) = 0;
+minMaxImg(minMaxImg > 1) = 1;
+
+minMaxImg3D(:,:,1) = minMaxImg;
+minMaxImg3D(:,:,2) = minMaxImg;
+minMaxImg3D(:,:,3) = minMaxImg;
+    
+f = figure;
+% cmap = colormap(f,jet);
+h = imagesc(minMaxImg3D);
+saveas(gcf,'minMax_health_frontal_174.png')
+
+A = load('../../Imagens_TXT_Estaticas_Balanceadas/1Doente/T0181.1.4.S.2013-08-16.00.txt');
+imgFiltered = medfilt2(A);
+
+B = maxk(imgFiltered(:),100);
+meanTop10 = mean(B);
+
+B = mink(imgFiltered(:),100);
+meanBottom10 = mean(B);
+
+minMaxImg = (imgFiltered - meanBottom10)/(meanTop10-meanBottom10);
+%    
+%     min(minMaxImg(:))
+%     max(minMaxImg(:))
+% %     
+minMaxImg(minMaxImg < 0) = 0;
+minMaxImg(minMaxImg > 1) = 1;
+
+minMaxImg3D(:,:,1) = minMaxImg;
+minMaxImg3D(:,:,2) = minMaxImg;
+minMaxImg3D(:,:,3) = minMaxImg;
+    
+f = figure;
+% cmap = colormap(f,jet);
+h = imagesc(minMaxImg3D);
+saveas(gcf,'minMax_sick_lateral_181.png')
+% 
