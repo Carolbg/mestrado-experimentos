@@ -470,6 +470,8 @@ for i = 1:sizeSaudaveis
     
     pSaudaveisFiltered{i} = imgFiltered;
     allImages(i, :, :) = imgFiltered;
+    
+    disp(['i = ', num2str(i)])
 end
 
 doentes = '../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/';
@@ -490,7 +492,9 @@ for i = 1:sizeDoentes
     disp(['doentes i = ', num2str(meanMin)])
     
     pDoentesFiltered{i} = imgFiltered;
-    allImages(i*2, :, :) = imgFiltered;
+    allImages(188+i, :, :) = imgFiltered;
+    
+    disp(['i = ', num2str(188+i)])
 end
 
 %% Calc min and max da base
@@ -540,10 +544,10 @@ for i = 1:sizeSaudaveis
     
     %Saving original image
     numpyMinMax = py.numpy.array(minMaxImg3D);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax/0Saudaveis/', nomeSaudaveis(i, :));
+    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax_double/0Saudaveis/', nomeSaudaveis(i, :));
     py.numpy.save(folderSaudaveis, numpyMinMax);
     
-%     dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_entireDatabase_MinMax')
+    dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_entireDatabase_MinMax_double')
     close all
 end
 
@@ -581,10 +585,10 @@ for i = 1:sizeDoentes
     saveas(gcf, folderDoentes)
     
     numpyMinMax = py.numpy.array(minMaxImg3D);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax/1Doentes/', nomeDoentes(i, :));
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax_double/1Doentes/', nomeDoentes(i, :));
     py.numpy.save(folderDoentes, numpyMinMax);
     
-%     dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_entireDatabase_MinMax')
+    dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_entireDatabase_MinMax_double')
     
     close all
 end
