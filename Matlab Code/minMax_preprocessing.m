@@ -508,13 +508,13 @@ meanBottom10 = mean(B);
 %% Aplica min max e aumento imagens
 
 for i = 1:sizeSaudaveis
-    imgFiltered = pSaudaveisFiltered{i};
+    imgFiltered = pSaudaveis{i};
 
     minMaxImg = (imgFiltered - meanBottom10)/(meanTop10-meanBottom10);
     disp(['< 0 = ', num2str(sum(minMaxImg(:) < 0)), ' e > 1 = ',num2str(sum(minMaxImg(:) >1))])
-    minMaxImg(minMaxImg < 0) = 0;
-    minMaxImg(minMaxImg > 1) = 1;
-    
+%     minMaxImg(minMaxImg < 0) = 0;
+%     minMaxImg(minMaxImg > 1) = 1;
+%     
     figure;
     subplot(1,2,1)
     imagesc(minMaxImg);
@@ -544,10 +544,10 @@ for i = 1:sizeSaudaveis
     
     %Saving original image
     numpyMinMax = py.numpy.array(minMaxImg3D);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax_double/0Saudaveis/', nomeSaudaveis(i, :));
+    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites/0Saudaveis/', nomeSaudaveis(i, :));
     py.numpy.save(folderSaudaveis, numpyMinMax);
     
-    dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_entireDatabase_MinMax_double')
+%     dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites')
     close all
 end
 
@@ -557,16 +557,16 @@ for i = 1:sizeDoentes
     minMaxImg = (imgFiltered - meanBottom10)/(meanTop10-meanBottom10);
     
     disp(['< 0 = ', num2str(sum(minMaxImg(:) < 0)), ' e > 1 = ',num2str(sum(minMaxImg(:) >1))])
-    minMaxImg(minMaxImg < 0) = 0;
-    minMaxImg(minMaxImg > 1) = 1;
+%     minMaxImg(minMaxImg < 0) = 0;
+%     minMaxImg(minMaxImg > 1) = 1;
     
-    figure;
-    subplot(1,2,1)
-    imagesc(minMaxImg3D);
-    title('antes')
-
-    subplot(1,2,2)
-    histogram(minMaxImg3D);
+%     figure;
+%     subplot(1,2,1)
+%     imagesc(minMaxImg3D);
+%     title('antes')
+% 
+%     subplot(1,2,2)
+%     histogram(minMaxImg3D);
 %     disp('no default 2')
     
     minMaxImg3D(:,:,1) = minMaxImg;
@@ -585,10 +585,10 @@ for i = 1:sizeDoentes
     saveas(gcf, folderDoentes)
     
     numpyMinMax = py.numpy.array(minMaxImg3D);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax_double/1Doentes/', nomeDoentes(i, :));
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites/1Doentes/', nomeDoentes(i, :));
     py.numpy.save(folderDoentes, numpyMinMax);
     
-    dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_entireDatabase_MinMax_double')
+%     dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites')
     
     close all
 end
