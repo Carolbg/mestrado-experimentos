@@ -4,7 +4,7 @@ from torch import optim, cuda
 from torch.optim import lr_scheduler
 
 def getCommonArgs():
-    shuffleSeed = 3
+    shuffleSeed = 1
     print('shuffleSeed', shuffleSeed)
     batch_size = 10
     max_epochs_stop = 10

@@ -42,11 +42,13 @@ def getFilesName():
     # numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array_allData_asMinMax/0Saudaveis/*.npy")
     # numpy_doentes_files = glob.glob("../../Imagens_numpy_array_allData_asMinMax/1Doentes/*.npy")
     # folder = "Imagens_numpy_array_allData_semAumentoDados"
-    folder="Imagens_numpy_array_allData_entireDatabase_MinMax"
-    # folder = "Imagens_numpy_array_allData_entireDatabase_MinMax_double"
+    
+    # folder="Imagens_numpy_array_allData_entireDatabase_MinMax"
+    # folder = "Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites"
+    folder = "Imagens_numpy_array_allData_entireDatabase_MinMax_double"
     print(folder)
-    numpy_saudaveis_files = glob.glob("../../../"+ folder+"/0Saudaveis/*.npy")
-    numpy_doentes_files = glob.glob("../../../"+ folder+"/1Doentes/*.npy")
+    numpy_saudaveis_files = sorted(glob.glob("../../../"+ folder+"/0Saudaveis/*.npy"))
+    numpy_doentes_files = sorted(glob.glob("../../../"+ folder+"/1Doentes/*.npy"))
 
     
     #If not reading from the script
@@ -63,13 +65,13 @@ def readFilesByPatient(numpy_files_name, patientClass):
         fileName = name[len(name)-1]
         patientId = fileName.split('.')[0]
         inputData = np.load(numpy_files_name[i])
-        #print('inputData.shape', inputData.shape)
+        # print('1 original input shape -> inputData.shape', inputData.shape)
         # print('1 - min', np.min(inputData))
         # print('1 - max', np.max(inputData))
         inputData = np.transpose(inputData, (2, 0, 1))
         # print('2 - min', np.min(inputData))
         # print('2 - max', np.max(inputData))
-        #print('inputData.shape', inputData.shape)
+        # print('2 after transpose inputData.shape', inputData.shape)
         #isso porque o tensor tem formato C, H, W
        
         
