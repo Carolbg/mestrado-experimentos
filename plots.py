@@ -148,7 +148,7 @@ def plotAllSubsetImages(images, typeImg):
     print('shape',numberImages[0])
     for i in range(numberImages[0]):
         numpyImage = np.transpose(images[i], (1, 2, 0))
-
+    
         fig = plt.figure(figsize=(10, 4))
         fig.subplots_adjust(wspace=0.3)
         
@@ -174,10 +174,10 @@ def plotTransformedImages(images, i, typeImg):
     inputs = inputs.permute(1, 2, 0)
     numpyImage = inputs.numpy()
     #Removendo a normalização
-    # mean = np.array([0.485, 0.456, 0.406])
-    # std = np.array([0.229, 0.224, 0.225])
-    # numpyImage = std * numpyImage + mean
-    # numpyImage = np.clip(numpyImage, 0, 1)
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
+    numpyImage = std * numpyImage + mean
+    numpyImage = np.clip(numpyImage, 0, 1)
 
     print('1 - min', np.min(numpyImage))
     print('1 - max', np.max(numpyImage))

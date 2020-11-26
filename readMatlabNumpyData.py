@@ -15,13 +15,13 @@ from prepareDataDictionary import prepareNumpyDatasetBalancedData, splitData
 
 def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
     print('Lidando com numpy data')
-    shuffleSeed, batch_size, max_epochs_stop, n_epochs = getCommonArgs()
+    shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
     saudaveisDictionaryData, doentesDictionaryData = mainReadNumpyData()
     
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
 
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation)
-    return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs
+    return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device
 
 def mainReadNumpyData():
     print('\nPrepareDataFromNumpy arrays')
@@ -39,8 +39,18 @@ def getFilesName():
     # numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array_allData_semAumentoDados/0Saudaveis/*.npy")
     # numpy_doentes_files = glob.glob("../../Imagens_numpy_array_allData_semAumentoDados/1Doentes/*.npy")
     
-    numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array_allData_semCores/0Saudaveis/*.npy")
-    numpy_doentes_files = glob.glob("../../Imagens_numpy_array_allData_semCores/1Doentes/*.npy")
+    # numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array_allData_asMinMax/0Saudaveis/*.npy")
+    # numpy_doentes_files = glob.glob("../../Imagens_numpy_array_allData_asMinMax/1Doentes/*.npy")
+    # folder = "Imagens_numpy_array_allData_semAumentoDados"
+    
+    # folder="Imagens_numpy_array_allData_entireDatabase_MinMax"
+    # folder = "Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites"
+    # folder = "Imagens_numpy_array_allData_entireDatabase_MinMax_double"
+    # folder = "Imagens_numpy_array_allData_rgb"
+    folder = "Imagens_numpy_array_allData_rgb_double"
+    print(folder)
+    numpy_saudaveis_files = sorted(glob.glob("../../../"+ folder+"/0Saudaveis/*.npy"))
+    numpy_doentes_files = sorted(glob.glob("../../../"+ folder+"/1Doentes/*.npy"))
 
     
     #If not reading from the script
@@ -57,13 +67,13 @@ def readFilesByPatient(numpy_files_name, patientClass):
         fileName = name[len(name)-1]
         patientId = fileName.split('.')[0]
         inputData = np.load(numpy_files_name[i])
-        #print('inputData.shape', inputData.shape)
+        # print('1 original input shape -> inputData.shape', inputData.shape)
         # print('1 - min', np.min(inputData))
         # print('1 - max', np.max(inputData))
         inputData = np.transpose(inputData, (2, 0, 1))
         # print('2 - min', np.min(inputData))
         # print('2 - max', np.max(inputData))
-        #print('inputData.shape', inputData.shape)
+        # print('2 after transpose inputData.shape', inputData.shape)
         #isso porque o tensor tem formato C, H, W
        
         

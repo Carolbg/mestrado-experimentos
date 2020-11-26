@@ -449,256 +449,150 @@ nomeDoentes=[
     'T0287.1.5.S.2015-07-20.00'
 ];
 
-%% Leitura imagens saudaveis
+%% Leitura imagens
 
 saudaveis = '../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/';
 sizeSaudaveis = size(nomeSaudaveis,1);
 pSaudaveis = cell(sizeSaudaveis,1);
-pSaudaveisRGB = cell(sizeSaudaveis,1);
-minSaudaveis = ones(sizeSaudaveis);
-maxSaudaveis = ones(sizeSaudaveis);
+pSaudaveisFiltered = cell(sizeSaudaveis,1);
+allImages = zeros(sizeSaudaveis*2, 480, 640);
 
 for i = 1:sizeSaudaveis
     fullPath = strcat(saudaveis, nomeSaudaveis(i, :), '.txt');
     img = load(fullPath);
-    pSaudaveis{i} = img;
+    RGBImg(1,:,:) = img;
+    RGBImg(2,:,:) = img;
+    RGBImg(3,:,:) = img;
     
-    % Essa parte aqui que trata a conversao pra RBG, das linhas 455 ate a
-    % 468
-    f = figure;
-    cmap = colormap(f,jet);
-    h = imagesc(img);
-    Cdata = h.CData;
-    cmap = colormap;
-
-    % make it into a index image.
-    cmin = min(Cdata(:));
-    cmax = max(Cdata(:));
-    m = length(cmap);
+    pSaudaveis{i} = RGBImg;
     
-    index = fix((Cdata-cmin)/(cmax-cmin)*m)+1;
-    % Then to RGB
-    RGB = ind2rgb(index, cmap);
+    imgFiltered = medfilt3(RGBImg, 'symmetric');
+    minK = mink(imgFiltered(:),100);
+    meanMin = mean(minK);
+    disp(['saudaveis i = ', num2str(meanMin)])
     
-    minSaudaveis(i) = min(RGB(:));
-    maxSaudaveis(i) = max(RGB(:));
-    pSaudaveisRGB{i} = RGB;
+    pSaudaveisFiltered{i} = imgFiltered;
+    allImages(i, :, :) = imgFiltered;
     
-    figure;
-    subplot(1,2,1)
-    imagesc(RGB);
-    title(nomeSaudaveis(i, :))
-
-    subplot(1,2,2)
-    histogram(RGB);
-  
-    folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '.png');
-    saveas(gcf, folderSaudaveis)
-    
-    %Saving original image
-    numpyRGB = py.numpy.array(RGB);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_rgb/0Saudaveis/', nomeSaudaveis(i, :));
-    py.numpy.save(folderSaudaveis, numpyRGB);
-%     
-%      dataAugment(img, RGB, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_rgb')
-%     %getting mean
-%     I = img;
-%     RGBParsed = RGB;
-%     thresh = multithresh(I);
-%     seg_I = imquantize(I,thresh);
-%     %figure; imagesc(seg_I);
-%     
-%     RGBParsed1 = RGBParsed(:,:,1);
-%     RGBParsed2 = RGBParsed(:,:,2);
-%     RGBParsed3 = RGBParsed(:,:,3);
-%     meanValue1 = mean(RGBParsed1(seg_I == 1));
-%     meanValue2 = mean(RGBParsed2(seg_I == 1));
-%     meanValue3 = mean(RGBParsed3(seg_I == 1));
-%     
-%     %Generating and saving one altered image
-%     imOriginal = RGB;
-%     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
-%     outputView = affineOutputView(size(imOriginal),tform);
-%     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-% %     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-%     imAlteradaCor=imAlterada;
-%     figure;
-%     imagesc(imAlteradaCor);
-%     folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '_alt1.png');
-%     saveas(gcf, folderSaudaveis)
-%     
-%     numpyRGB = py.numpy.array(imAlteradaCor);
-%     folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores_3/0Saudaveis/', nomeSaudaveis(i, :), '_alt_1');
-%     py.numpy.save(folderSaudaveis, numpyRGB);
-%     
-    
-    %Generating and saving other altered image
-%     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
-%     outputView = affineOutputView(size(imOriginal),tform);
-%     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-% %     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-%     figure;
-%     imAlteradaCor=imAlterada;
-%     imagesc(imAlteradaCor);
-%     folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '_alt2.png');
-%     saveas(gcf, folderSaudaveis)
-%     
-%     numpyRGB = py.numpy.array(imAlteradaCor);
-%     folderSaudaveis = strcat('../../Imagens_numpy_array_allData_semCores_3/0Saudaveis/', nomeSaudaveis(i, :), '_alt_2');
-%     py.numpy.save(folderSaudaveis, numpyRGB);
-   
-    close all
+    disp(['i = ', num2str(i), 'nomeSaudaveis(i, :)', nomeSaudaveis(i, :)])
 end
-
-%% Leitura imagens doentes
 
 doentes = '../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/';
 sizeDoentes = size(nomeDoentes,1);
 pDoentes = cell(sizeDoentes,1);
-pDoentesRGB = cell(sizeDoentes,1);
-
-minDoentes = ones(sizeDoentes);
-maxDoentes = ones(sizeDoentes);
+pDoentesFiltered = cell(sizeDoentes,1);
 
 for i = 1:sizeDoentes
+    
     fullPath = strcat(doentes, nomeDoentes(i, :), '.txt');
     img = load(fullPath); 
     pDoentes{i} = img;
     
-     % 
-    f = figure;
-    cmap = colormap(f,jet);
-    h = imagesc(img);
-    Cdata = h.CData;
-    cmap = colormap;
+    
+    imgFiltered = medfilt2(img, 'symmetric');
+    minK = mink(imgFiltered(:),100);
+    meanMin = mean(minK);
+    disp(['doentes i = ', num2str(meanMin)])
+    
+    pDoentesFiltered{i} = imgFiltered;
+    allImages(188+i, :, :) = imgFiltered;
+    
+    disp(['i = ', num2str(188+i)])
+end
 
-    % make it into a index image.
-    cmin = min(Cdata(:));
-    cmax = max(Cdata(:));
-    m = length(cmap);
-    index = fix((Cdata-cmin)/(cmax-cmin)*m)+1;
-    
-    % Then to RGB
-    RGB = ind2rgb(index, cmap);
-    
-    minDoentes(i) = min(RGB(:));
-    maxDoentes(i) = max(RGB(:));
-    pDoentesRGB{i} = RGB;
-   
+%% Calc min and max da base
+
+B = maxk(allImages(:),100);
+meanTop10 = mean(B);
+
+B = mink(allImages(:),100);
+meanBottom10 = mean(B);
+
+%% Aplica min max e aumento imagens
+
+for i = 1:sizeSaudaveis
+    imgFiltered = pSaudaveis{i};
+
+    minMaxImg = (imgFiltered - meanBottom10)/(meanTop10-meanBottom10);
+    disp(['< 0 = ', num2str(sum(minMaxImg(:) < 0)), ' e > 1 = ',num2str(sum(minMaxImg(:) >1))])
+%     minMaxImg(minMaxImg < 0) = 0;
+%     minMaxImg(minMaxImg > 1) = 1;
+%     
     figure;
     subplot(1,2,1)
-    imagesc(RGB);
+    imagesc(minMaxImg);
+    title('min max img')
+
+    subplot(1,2,2)
+    histogram(minMaxImg);
+%     disp('no default 2')
+%     min(minMaxImg(:))
+%     max(minMaxImg(:))
+
+    minMaxImg3D(:,:,1) = minMaxImg;
+    minMaxImg3D(:,:,2) = minMaxImg;
+    minMaxImg3D(:,:,3) = minMaxImg;
+    
+    figure;
+    subplot(1,2,1)
+    imagesc(minMaxImg3D);
+    title('antes')
+
+    subplot(1,2,2)
+    histogram(minMaxImg3D);
+%     disp('no default 1')
+    
+    folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '.png');
+    saveas(gcf, folderSaudaveis)
+    
+    %Saving original image
+    numpyMinMax = py.numpy.array(minMaxImg3D);
+    folderSaudaveis = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites/0Saudaveis/', nomeSaudaveis(i, :));
+    py.numpy.save(folderSaudaveis, numpyMinMax);
+    
+%     dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites')
+    close all
+end
+
+for i = 1:sizeDoentes
+    imgFiltered = pDoentes{i};
+
+    minMaxImg = (imgFiltered - meanBottom10)/(meanTop10-meanBottom10);
+    
+    disp(['< 0 = ', num2str(sum(minMaxImg(:) < 0)), ' e > 1 = ',num2str(sum(minMaxImg(:) >1))])
+%     minMaxImg(minMaxImg < 0) = 0;
+%     minMaxImg(minMaxImg > 1) = 1;
+    
+%     figure;
+%     subplot(1,2,1)
+%     imagesc(minMaxImg3D);
+%     title('antes')
+% 
+%     subplot(1,2,2)
+%     histogram(minMaxImg3D);
+%     disp('no default 2')
+    
+    minMaxImg3D(:,:,1) = minMaxImg;
+    minMaxImg3D(:,:,2) = minMaxImg;
+    minMaxImg3D(:,:,3) = minMaxImg;
+    
+    figure;
+    subplot(1,2,1)
+    imagesc(minMaxImg3D);
     title(nomeDoentes(i, :))
 
     subplot(1,2,2)
-    histogram(RGB);
+    histogram(minMaxImg3D);
     
     folderDoentes = strcat('doentes/', nomeDoentes(i, :), '.png');
     saveas(gcf, folderDoentes)
     
-    numpyRGB = py.numpy.array(RGB);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData_rgb_double/1Doentes/', nomeDoentes(i, :));
-    py.numpy.save(folderDoentes, numpyRGB);
+    numpyMinMax = py.numpy.array(minMaxImg3D);
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites/1Doentes/', nomeDoentes(i, :));
+    py.numpy.save(folderDoentes, numpyMinMax);
     
-     dataAugment(img, RGB, nomeDoentes, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_rgb_double')
-    
-%     %getting mean
-%     I = img;
-%     RGBParsed = RGB;
-%     thresh = multithresh(I);
-%     seg_I = imquantize(I,thresh);
-%     %figure; imagesc(seg_I);
-%     
-%     RGBParsed1 = RGBParsed(:,:,1);
-%     RGBParsed2 = RGBParsed(:,:,2);
-%     RGBParsed3 = RGBParsed(:,:,3);
-%     meanValue1 = mean(RGBParsed1(seg_I == 1));
-%     meanValue2 = mean(RGBParsed2(seg_I == 1));
-%     meanValue3 = mean(RGBParsed3(seg_I == 1));
-%     
-%     imOriginal = RGB;
-%     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
-%     outputView = affineOutputView(size(imOriginal),tform);
-%     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-% %     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-%     imAlteradaCor = imAlterada;
-%     figure;
-%     imagesc(imAlteradaCor);
-%     folderDoentes = strcat('doentes/', nomeDoentes(i, :), '_alt1.png');
-%     saveas(gcf, folderDoentes)
-%     numpyRGB = py.numpy.array(imAlteradaCor);
-%     folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores_3/1Doentes/', nomeDoentes(i, :), '_alt_1');
-%     py.numpy.save(folderDoentes, numpyRGB);
-%     
-%     %Generating and saving other altered image
-%     tform = randomAffine2d('Rotation',[-45 45], 'XReflection',true,'YReflection',true); 
-%     outputView = affineOutputView(size(imOriginal),tform);
-%     imAlterada = imwarp(imOriginal,tform,'OutputView',outputView,'FillValues',[meanValue1 meanValue2 meanValue3]);
-% %     imAlteradaCor = jitterColorHSV(imAlterada,'Contrast',[1.2 1.4],'Saturation',[-0.4 -0.1],'Brightness',[-0.2 0.2]);
-%     imAlteradaCor = imAlterada;
-%     figure;
-%     imagesc(imAlteradaCor);
-%     folderDoentes = strcat('doentes/', nomeDoentes(i, :), '_alt2.png');
-%     saveas(gcf, folderDoentes)
-%     
-%     numpyRGB = py.numpy.array(imAlteradaCor);
-%     folderDoentes = strcat('../../Imagens_numpy_array_allData_semCores_3/1Doentes/', nomeDoentes(i, :), '_alt_2');
-%     py.numpy.save(folderDoentes, numpyRGB);
+%     dataAugment2DImage(minMaxImg3D, nomeSaudaveis, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites')
     
     close all
 end
 
-%% Generate Mask 1
-% 
-% for i = 1:size(pSaudaveis, 1)
-%     I = pSaudaveis{i};
-%     
-%     %Conversao de tipo
-%     top = mean(maxk(I(:),100));
-%     I = uint8((255/top)*I);
-%     imagesc(I)
-%     
-%     [L,Centers] = imsegkmeans(I,4, 'NormalizeInput', true);
-%     B = labeloverlay(I,L);
-%     fig = figure;
-%     imshow(B)
-%     saveas(fig, 'imsegkmeans_4', 'png')
-% 
-%     [L,Centers] = imsegkmeans(I,5, 'NormalizeInput', true);
-%     B = labeloverlay(I,L);
-%     fig = figure;
-%     imshow(B)
-%     saveas(fig, 'imsegkmeans_5', 'png')
-% 
-%     [~, threshold] = edge(I, 'canny');
-%     BWs = edge(I,'canny', threshold);
-%     se90 = strel('line', 3, 90); 
-%     se0 = strel('line', 3, 0);
-%     BWsdil = imdilate(BWs, [se90 se0]);
-%     BWdfill = imfill(BWsdil, 'holes'); figure, 
-%     fig = imshow(BWdfill);
-%     title('Preprocessed canny');
-%     saveas(fig, 'canny', 'png')
-% end
-% 
-% 
-% M = ones(size(I,1), size(I,2));
-% M(seg_I<=1) = 0;
-% imagesc(M*I)
-% 
-% % t1 = size(M,1);
-% % t2 = size(M,2);
-% % for k = 1:t1
-% %     for j = 1:t2
-% %         if((x1(k,j) <=2 || x1(k,j) ==6))
-% %             M(k,j) = 0;
-% %         end
-% %     end
-% % end
-% 
-% %%
-% for i = 1:sizeSaudaveis
-%     fullPath = strcat(saudaveis, nomeSaudaveis(i, :));
-%     img = load(fullPath); 
-%     pSaudaveis{i} = img;
-% end

@@ -7,7 +7,7 @@ from utils import calcMetrics
 import matplotlib.pyplot as plt
 
 def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName,
-    max_epochs_stop=3, n_epochs=20):
+    max_epochs_stop=3, n_epochs=20, device="cpu", deltaError=0.001):
 
     # Early stopping intialization
     epochs_no_improve = 0
@@ -47,6 +47,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
         # Training loop
         for i, data in enumerate(trainLoader, 0):
             inputs, labels = data
+            
+            inputs = inputs.to(device)
+            labels = labels.to(device)
 
             optimizer.zero_grad()
 
@@ -91,6 +94,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             for data, target in validLoader:
                 # Forward pass
                 #model.eval()
+                data = data.to(device)
+                target = target.to(device)
+                
                 output = model(data)
 
                 # Calculate validation accuracy
@@ -135,22 +141,14 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             )
 
             # Save the model if validation loss decreases
-            if valid_loss < valid_loss_min:
-                # Save model
-                #torch.save(model.state_dict(), save_file_name)
-                # Track improvement
-                epochs_no_improve = 0
-                valid_loss_min = valid_loss
-                valid_best_acc = validation_acc
-                best_epoch = epoch
-
-            # Otherwise increment count of epochs with no improvement
-            else:
+            if valid_loss > valid_loss_min + deltaError:
+                # print('valid_loss > valid_loss_min + deltaError', valid_loss > valid_loss_min + deltaError)
                 epochs_no_improve += 1
+                # print('epochs_no_improve', epochs_no_improve)
                 # Trigger early stopping
                 if epochs_no_improve >= max_epochs_stop:
                     print(
-                        f'\nEarly Stopping! Total epochs: {epoch}. Best epoch: {best_epoch} with loss: {valid_loss_min:.2f} and acc: {100 * validation_acc:.2f}%'
+                        f'\nEarly Stopping! Total epochs: {epoch}.'
                     )
                     total_time = timer() - overall_start
                     print(
@@ -171,7 +169,12 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                             'validation_acc', 'validation_sensitividade', 'validation_especificidade', 
                             'validation_f1Score', 'valid_loss'
                         ])
-                    return model, history
+                    break
+            elif valid_loss < valid_loss_min:
+                best_epoch = epoch
+                epochs_no_improve = 0
+                valid_loss_min = valid_loss
+                valid_best_acc = validation_acc
 
         epoch_loss = running_loss/len(trainLoader.dataset)
         epoch_acc = running_corrects.float()/len(trainLoader.dataset)

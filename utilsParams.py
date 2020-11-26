@@ -1,15 +1,26 @@
 import torch.nn as nn
-from torch import optim
+import torch
+from torch import optim, cuda
 from torch.optim import lr_scheduler
 
 def getCommonArgs():
     shuffleSeed = 1
     print('shuffleSeed', shuffleSeed)
     batch_size = 10
-    max_epochs_stop = 30
+    max_epochs_stop = 10
     n_epochs = 30
-    print('n_epochs', n_epochs)
-    return shuffleSeed, batch_size, max_epochs_stop, n_epochs
+    print('n_epochs', n_epochs, 'max_epochs_stop', max_epochs_stop)
+    device = getDevice()
+
+    return shuffleSeed, batch_size, max_epochs_stop, n_epochs, device
+
+def getDevice():
+    # Whether to train on a gpu
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    # Assuming that we are on a CUDA machine, this should print a CUDA device:
+    print('device = ', device)
+
+    return device
 
 def getFullyConnectedStructure(n_inputs, n_classes, experimentType):
     #nn.Sequential(nn.Linear(n_inputs, 256), nn.ReLU(), nn.Dropout(0.2), nn.Linear(256, n_classes))

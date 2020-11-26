@@ -12,25 +12,25 @@ def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNu
     print('\n\nTESTES COM DENSENET\n\n')
     
     resultsPlotName = resultsPlotName + '_densenet'
-
+    print('isNumpy', isNumpy)
+    
     #DATASET STEPS:
     print('Load dataset')
     #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
     if isNumpy:
-        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryDataFromNumpy(dataAugmentation)
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation)
     else:
-        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = mainPrepareDictionaryData(dataAugmentation)
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryData(dataAugmentation)
     
     #PREPARE MODEL STEPS:
     print('\nPrepare model')
-    model = prepareDensenetModelWithTXT(experimentType)
+    model = prepareDensenetModelWithTXT(experimentType, device)
     criterion = prepareTrainingLoss()
     optimizer = prepareTrainingOptimizer(model, typeLR)
 
     print('Train model')
     model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation = train(model, criterion,
-        optimizer, trainLoader, validationLoader, resultsPlotName, max_epochs_stop=max_epochs_stop, 
-        n_epochs=n_epochs)
+        optimizer, trainLoader, validationLoader, resultsPlotName, max_epochs_stop, n_epochs, device)
 
     print('\nConfusion matrix Train\n', cmTrain)
     print('\nConfusion matrix Validation\n', cmValidation)
@@ -41,7 +41,7 @@ def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNu
 
     #TEST MODEL
     print('Test model')
-    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes, resultsPlotName)
+    historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes, resultsPlotName, device)
     print('\nConfusion matrix Test\n', cmTest)
     saveCsvConfusionMatrix(cmTest, resultsPlotName)
 

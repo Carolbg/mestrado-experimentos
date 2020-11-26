@@ -2,7 +2,7 @@ from torchvision import transforms, datasets, models
 import torch.nn as nn
 from utilsParams import *
 
-def prepareVGG16ModelWithTXT(experimentType, flattenPooling=0):
+def prepareVGG16ModelWithTXT(experimentType, device, keepOriginalStructure=False):
     
     model = models.vgg16(pretrained=True)
     print('model', model.classifier)
@@ -26,11 +26,17 @@ def prepareVGG16ModelWithTXT(experimentType, flattenPooling=0):
     #     model.avgpool = nn.AdaptiveAvgPool2d((1,1))
     
     # n_inputs = 512
-    n_inputs = model.classifier[0].in_features
+    
+    if keepOriginalStructure:
+        print('keepingOriginalStructure')
+        n_inputs = model.classifier[6].in_features
+        model.classifier[6] = getFullyConnectedStructure(n_inputs, 2, experimentType)
+    else:
+        n_inputs = model.classifier[0].in_features
+        model.classifier = getFullyConnectedStructure(n_inputs, 2, experimentType)
 
     # Add on classifier
     #model.classifier[6] = getFullyConnectedStructure(1024, 2)
-    model.classifier = getFullyConnectedStructure(n_inputs, 2, experimentType)
     #print('model = ', model)
 
     print('custom fc', model.classifier)
@@ -39,9 +45,9 @@ def prepareVGG16ModelWithTXT(experimentType, flattenPooling=0):
         p.numel() for p in model.parameters() if p.requires_grad)
     print('total_params', total_params, 'total_trainable_params', total_trainable_params)
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
-    return model
+    return model.to(device)
 
-def prepareResnetModelWithTXT(experimentType):
+def prepareResnetModelWithTXT(experimentType, device):
     model = models.resnet50(pretrained=True)
     print('model', model.fc)
 
@@ -61,10 +67,10 @@ def prepareResnetModelWithTXT(experimentType):
         p.numel() for p in model.parameters() if p.requires_grad)
     print('total_params', total_params, 'total_trainable_params', total_trainable_params)
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
-    return model
+    return model.to(device)
 
 
-def prepareDensenetModelWithTXT(experimentType):
+def prepareDensenetModelWithTXT(experimentType, device):
     model = models.densenet201(pretrained=True)
     print('model', model.classifier)
     # Freeze early layers
@@ -85,5 +91,5 @@ def prepareDensenetModelWithTXT(experimentType):
     print('total_params', total_params, 'total_trainable_params', total_trainable_params)
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
     
-    return model
+    return model.to(device)
 
