@@ -39,8 +39,8 @@ def getFilesName():
     print('getFilesName')
     folder = 'Imagens_TXT_Estaticas_Balanceadas_allData'
     print('folder = Imagens_TXT_Estaticas_Balanceadas_allData')
-    txt_saudaveis_files = glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/*.txt")
-    txt_doentes_files = glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/*.txt")
+    txt_saudaveis_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/*.txt"))
+    txt_doentes_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/*.txt"))
     #txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
     #txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
     
@@ -100,10 +100,20 @@ def preProcessingWithRatio(image, i, type):
 def splitData(shuffleSeed, saudaveisData, doentesData):
     print('\nSplit Healthy Dataset')
     saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData)
+    
+    saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
+    saudaveisIndTeste = ['T0218','T0233','T0208','T0190','T0225','T0177']
+    saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244','T0212']
     saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid, 'saudaveis')
+    
     print('\nSplit Cancer Dataset')
     doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
+    
+    doentesIndTra= ['T0267','T0255','T0138','T0286','T0198','T0246','T0192','T0258','T0202','T0209','T0241','T0179','T0287','T0213','T0203','T0210','T0240','T0270','T0180','T0264','T0269','T0282','T0281','T0277','T0273','T0256']
+    doentesIndTeste=['T0257','T0278','T0285','T0268','T0283','T0271']
+    doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
     doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid, 'doentes')
+    
     trainData, trainTarget = createSplitDataset(shuffleSeed, saudaveisTrainDataset, doentesTrainDataset)
     print('\nTotal de dados para treinamento', len(trainData))
     testData, testTarget = createSplitDataset(shuffleSeed, saudaveisTestDataset, doentesTestDataset)
@@ -148,9 +158,14 @@ def createSplitDataset(shuffleSeed, saudaveisDataset, doentesDataset):
 def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTeste, indicesValidacao, name):
     dictKeys = dictionaryData.keys()
     keysArray = np.array(list(dictKeys))
-    trainPatients = keysArray[indicesTreinamento]
-    testPatients = keysArray[indicesTeste]
-    validationPatients = keysArray[indicesValidacao] 
+    # print('keysArray', keysArray)
+    # print('len', len(keysArray))
+    # print('type', type(keysArray))
+
+    trainPatients = indicesTreinamento#keysArray[indicesTreinamento]
+    testPatients = indicesTeste#keysArray[indicesTeste]
+    validationPatients = indicesValidacao#keysArray[indicesValidacao] 
+    
     print('trainPatients', trainPatients)
     print('validationPatients', validationPatients) 
     print('testPatients', testPatients)
@@ -164,6 +179,7 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     for patient in trainPatients:
         # print('patient', patient)
         images = dictionaryData[patient]
+        # print('len(images', len(images))
         trainDataset.extend(images)
         # if i < len(testPatients):
         #     testPatientsAsTrain.append(patient)
@@ -370,7 +386,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
         transforms.ToTensor(),
-        # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
     ])
     
     testValidationTransform = transforms.Compose([

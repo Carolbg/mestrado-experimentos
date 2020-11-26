@@ -30,7 +30,7 @@ function dataAugment2DImage(imgMinMax, nomePacientes, patientIndex, numberAltere
         saveas(gcf, folderSaudaveis)
 
         numpyRGB = py.numpy.array(imAlteradaCor);
-        folderSaudaveis = strcat('../../',folderDirectory,'/',folderName,'/', nomePacientes(patientIndex, :), '_alt_', string(i));
-        py.numpy.save(folderSaudaveis, numpyRGB);
+%         folderSaudaveis = strcat('../../',folderDirectory,'/',folderName,'/', nomePacientes(patientIndex, :), '_alt_', string(i));
+%         py.numpy.save(folderSaudaveis, numpyRGB);
     end
 end

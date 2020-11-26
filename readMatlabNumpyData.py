@@ -45,7 +45,9 @@ def getFilesName():
     
     # folder="Imagens_numpy_array_allData_entireDatabase_MinMax"
     # folder = "Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites"
-    folder = "Imagens_numpy_array_allData_entireDatabase_MinMax_double"
+    # folder = "Imagens_numpy_array_allData_entireDatabase_MinMax_double"
+    # folder = "Imagens_numpy_array_allData_rgb"
+    folder = "Imagens_numpy_array_allData_rgb_double"
     print(folder)
     numpy_saudaveis_files = sorted(glob.glob("../../../"+ folder+"/0Saudaveis/*.npy"))
     numpy_doentes_files = sorted(glob.glob("../../../"+ folder+"/1Doentes/*.npy"))
