@@ -8,7 +8,7 @@ def initializePopulation(tp):
 def initializeIndividual():
     individual = [initializeGene(i) for i in range(12)]
     # print('individual', len(individual))
-    return individual
+    return np.array(individual)
 
 def initializeGene(i):
     if i >= 2:
