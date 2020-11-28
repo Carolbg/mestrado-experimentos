@@ -10,7 +10,7 @@ def convertAgToCNN(individuo, device):
     optimizer = prepareOptimizer(model, lrIndex)
 
     #epocas
-    epocas = individuo[1]*10
+    epocas = (individuo[1][0])*10
     
     return model, optimizer, epocas
 
@@ -44,7 +44,7 @@ def getFullyConnectedStructureFromAG(nInputs, individuo):
         if geneLayer[0] == 1:
             geneDropout = individuo[i+1]
             layersAsArray.extend(defineSingleLayer(nInputs, geneLayer, geneDropout))
-            nInputs = geneLayer[1]
+            nInputs = pow(2, geneLayer[1])
 
     # addFinalLayer
     layersAsArray.extend(defineFinalLayer(nInputs))
@@ -61,14 +61,16 @@ def defineFinalLayer(n_inputs):
 def defineSingleLayer(n_inputs, geneLayer, geneDropout):
     #sem dropout
     # print('geneDropout', geneDropout)
+    numeroNeurons = pow(2, geneLayer[1])
+
     if geneDropout[0] == 0:
         layer = nn.Sequential(
-            nn.Linear(n_inputs, geneLayer[1]), 
+            nn.Linear(n_inputs, numeroNeurons), 
             nn.ReLU()
         )
     else:
         layer = nn.Sequential(
-            nn.Linear(n_inputs, geneLayer[1]), 
+            nn.Linear(n_inputs, numeroNeurons), 
             nn.ReLU(), 
             nn.Dropout(geneDropout[1])
         )

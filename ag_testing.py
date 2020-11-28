@@ -4,6 +4,7 @@ from ag_crossover import *
 from ag_mutation import *
 from ag_cnnInit import *
 from ag_cnnFromAG import *
+from ag_fitness import *
 
 tp=4
 tour=3
@@ -20,9 +21,21 @@ newPopulationAfterMutation = applyMutation(newPopulation, tm, tp)
 
 #cnn parts
 isNumpy=True
-trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, device, criterion = prepareCNN(isNumpy)
-individuo = population[0]
+trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion = prepareCNN(isNumpy)
+# individuo = population[0]
+# model, optimizer, epocas = convertAgToCNN(individuo, device)
+i=0
+individuo = population[i]
 model, optimizer, epocas = convertAgToCNN(individuo, device)
+resultsPlotName = 'runAG_individuo_'+str(i)
+
+#treinamento
+model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation = train(model, criterion,
+    optimizer, trainLoader, validationLoader, resultsPlotName, epocas, epocas, device)
+
+#teste
+historyTest, cmTest = evaluate(model, testLoader, criterion, 2, resultsPlotName, device)
+testAcc = historyTest['test_acc'][0]
 
 # individuo = population[0]
 # convertAgToCNN(individuo, device)
