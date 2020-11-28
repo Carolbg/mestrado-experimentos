@@ -2,8 +2,12 @@ from ag_initialize import *
 from ag_selection import *
 from ag_crossover import *
 from ag_mutation import *
+from ag_cnnInit import *
 
-def main(tp=10, tour=3, tr=80, numberIterations=10, tm=10):
+
+def main(tp=10, tour=3, tr=80, numberIterations=10, tm=10, isNumpy=False):
+    trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion = prepareCNN(isNumpy)
+
     sequenceIndividual = [i for i in range(12)]
 
     population = initializePopulation(tp)

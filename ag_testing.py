@@ -2,6 +2,8 @@ from ag_initialize import *
 from ag_selection import *
 from ag_crossover import *
 from ag_mutation import *
+from ag_cnnInit import *
+from ag_cnnFromAG import *
 
 tp=4
 tour=3
@@ -15,6 +17,29 @@ selectedParents1, selectedParents2 = selectParentsWithTorneio(population, popula
 newPopulation = applyCrossover(selectedParents1, selectedParents2, tr, sequenceIndividual)
 
 newPopulationAfterMutation = applyMutation(newPopulation, tm, tp)
+
+#cnn parts
+isNumpy=True
+trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, device, criterion = prepareCNN(isNumpy)
+individuo = population[0]
+model, optimizer, epocas = convertAgToCNN(individuo, device)
+
+# individuo = population[0]
+# convertAgToCNN(individuo, device)
+
+# individuo = population[0]
+# individuoSize = len(individuo)
+# print('individuoSize', individuoSize)
+# layersAsArray = []
+# for i in range(2, individuoSize, 2):
+#     print('i', i)
+#     geneLayer = individuo[i]
+#     #tem a camada dessa layer
+#     if geneLayer[0] == 1:
+#         geneDropout = individuo[i+1]
+#         layersAsArray.extend(defineSingleLayer(nInputs, geneLayer, geneDropout))
+#         nInputs = geneLayer[1]
+
 # childPopulation=newPopulation#.copy()
 # sequenceChild = [i for i in range(len(childPopulation))]
     
