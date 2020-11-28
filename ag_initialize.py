@@ -1,5 +1,6 @@
 from random import sample, uniform, seed, randint
 import numpy as np
+from ag_utils import *
 
 def initializePopulation(tp):
     population = [initializeIndividual() for i in range(tp)]
@@ -13,18 +14,23 @@ def initializeIndividual():
 def initializeGene(i):
     if i >= 2:
         return initializeGeneLayers(i)
-    elif i == 0:
-        lr = randomInt(1, 6)
-        # L=10^ (−k1), k1 ∈ [1,6]
-        # print('lr = ', lr)
-        return [lr]
     else:
-        # Ne ∈ [10, 60]
-        # 1 = 10, 2=20, 3=30, 4=40, 5=50, 6=60
+        value = randomInt(1, 6)
+        print('value = ', value)
+        return [value]
+        
+    # elif i == 0:
+    #     lr = randomInt(1, 6)
+    #     # L=10^ (−k1), k1 ∈ [1,6]
+    #     # print('lr = ', lr)
+    #     return [lr]
+    # else:
+    #     # Ne ∈ [10, 60]
+    #     # 1 = 10, 2=20, 3=30, 4=40, 5=50, 6=60
 
-        epocas = randomInt(1, 6)
-        # print('epocas = ', epocas)
-        return [epocas]
+    #     epocas = randomInt(1, 6)
+    #     # print('epocas = ', epocas)
+    #     return [epocas]
 
 def initializeGeneLayers(i):
     initialSeed = uniform(0, 5000)
@@ -52,13 +58,3 @@ def initializeDropoutLayers(i):
     isPresent = randomInt(0, 1)
     dropoutRate = randomFloat(0, 0.6)
     return [isPresent, dropoutRate]
-
-def randomFloat(start, end):
-    value = uniform(start, end)
-    # print('value in randomFloat', value)
-    return value
-
-def randomInt(start, end):
-    value = randint(start, end)
-    # print('value in randomInt', value)
-    return value
