@@ -4,10 +4,11 @@ from ag_crossover import *
 from ag_mutation import *
 from ag_cnnInit import *
 from ag_fitness import *
+from ag_cacheConfig import *
 
-def main(tp=2, tour=3, tr=100, numberIterations=2, tm=100, isNumpy=True):
+def main(tp=10, tour=3, tr=80, numberIterations=2, tm=20, isNumpy=True):
     trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion = prepareCNN(isNumpy)
-
+    initCache()
     sequenceIndividual = [i for i in range(12)]
 
     population = initializePopulation(tp)
