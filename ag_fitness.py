@@ -3,20 +3,55 @@ from ag_cacheConfig import *
 from training import train
 from testing import evaluate
 
+import timeit
+import concurrent.futures
+import multiprocessing as mp
+
+def saveGlobalVariables(aTrainLoader, aTestLoader, aValidationLoader, aCat_df, aBatch_size, aDevice, aCriterion):
+    global trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion
+    
+    trainLoader = aTrainLoader
+    testLoader = aTestLoader
+    validationLoader = aValidationLoader
+    cat_df = aCat_df
+    batch_size = aBatch_size
+    device = aDevice
+    criterion = aCriterion
+
 def calcFitness(population, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion):
     tp = len(population)
+    # print('calcFitness', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
+    saveGlobalVariables(trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
+    
+    startAll = timeit.default_timer()
+    iterations = [i for i in range(tp)]
+    
+    fitnessArray = []
 
-    fitnessArray = [calcFitnessIndividuo(population[i], i, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion) for i in range(tp)]
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for result in zip(iterations, executor.map(calcFitnessIndividuo, population, iterations)):
+            print('result', result)
+            iteration, fitness = result
+            fitnessArray.append(fitness)
+
+    endAll = timeit.default_timer()
+    timeAll = endAll-startAll
+
+    # fitnessArray = [calcFitnessIndividuo(population[i], i, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion) for i in range(tp)]
     return fitnessArray
         
-def calcFitnessIndividuo(individuo, i, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion):
+def calcFitnessIndividuo(individuo, i):
+    # print('calcFitnessIndividuo = ', i, individuo, '\n')
+    # print('\n pt1 ', i, trainLoader, testLoader, validationLoader)
+    # print('\n pt2', cat_df, batch_size, device, criterion)
+
     cacheValue=verifyEntry(individuo)
     if cacheValue != None:
         print('achei cache', cacheValue)
         return cacheValue
 
     model, optimizer, epocas = convertAgToCNN(individuo, device)
-    print('epocas', epocas)
+    # print('epocas', epocas)
     resultsPlotName = 'runAG_individuo_'+str(i)
     
     #treinamento
@@ -29,5 +64,5 @@ def calcFitnessIndividuo(individuo, i, trainLoader, testLoader, validationLoader
     
     addNewEntry(individuo, testAcc)
     
-    print('fitness', testAcc)
+    print('@@@@ individuo = ', i, individuo, '\n fitness = ', testAcc)
     return testAcc
