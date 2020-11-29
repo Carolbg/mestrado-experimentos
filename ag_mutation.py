@@ -25,8 +25,8 @@ def applyMutationInd(individuo, sequenceChild):
     # print('subGenesIndex', subGenesIndex)
 
     #Gene to mutate:
-    initialSeed = uniform(0, 5000)
-    seed(initialSeed)
+    # initialSeed = uniform(0, 5000)
+    # seed(initialSeed)
     
     individuo[geneToMutate] = mutateGene(individuo, geneToMutate, subGenesIndex)
     # print('####  after individuo', individuo)
