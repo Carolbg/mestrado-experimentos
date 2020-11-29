@@ -4,6 +4,7 @@ from training import train
 from testing import evaluate
 
 import timeit
+import numpy as np
 import concurrent.futures
 import multiprocessing as mp
 
@@ -19,6 +20,7 @@ def saveGlobalVariables(aTrainLoader, aTestLoader, aValidationLoader, aCat_df, a
     criterion = aCriterion
 
 def calcFitness(population, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion):
+    print('\n\n@@@@ Calculando fitness')
     tp = len(population)
     # print('calcFitness', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
     saveGlobalVariables(trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
@@ -38,7 +40,7 @@ def calcFitness(population, trainLoader, testLoader, validationLoader, cat_df, b
     timeAll = endAll-startAll
 
     # fitnessArray = [calcFitnessIndividuo(population[i], i, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion) for i in range(tp)]
-    return fitnessArray
+    return np.array(fitnessArray)
         
 def calcFitnessIndividuo(individuo, i):
     # print('calcFitnessIndividuo = ', i, individuo, '\n')

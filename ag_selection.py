@@ -2,7 +2,7 @@ import numpy as np
 from random import sample, uniform, seed, randint, randrange
 
 def selectParentsWithTorneio(population, populationFitness, tour):
-
+    print('\n\n@@@@ Selecao')
     numberChildren = len(population)
     numberParents = int(numberChildren/2)
 

@@ -3,6 +3,7 @@ import numpy as np
 from ag_utils import *
 
 def initializePopulation(tp):
+    print('\n\n@@@@ Init pop')
     population = [initializeIndividual() for i in range(tp)]
     return np.array(population)
 

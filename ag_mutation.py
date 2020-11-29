@@ -3,6 +3,7 @@ import math
 from ag_utils import *
 
 def applyMutation(childPopulation, tm, tp):
+    print('\n\n@@@@ Mutacao')
     sequenceChild = [i for i in range(len(childPopulation))]
     
     numberChildrenToMutate = int(tm * tp /100)

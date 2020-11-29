@@ -5,6 +5,7 @@ from ag_mutation import *
 from ag_cnnInit import *
 from ag_cnnFromAG import *
 from ag_fitness import *
+from ag_reinsercao import *
 
 tp=4
 tour=3

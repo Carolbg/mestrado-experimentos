@@ -10,10 +10,10 @@ def verifyEntry(individuo):
             keyArray.append(individuo[i])
         elif individuo[i][0] == 1:
             keyArray.append(individuo[i])
-    print('keyArray', keyArray)
+    # print('keyArray', keyArray)
     
     individuoAsStr = repr(tuple(individuo))
-    print('verifyEntry = cacheStore', cacheStore)
+    # print('verifyEntry = cacheStore', cacheStore)
 
     if individuoAsStr in cacheStore.keys():
         return cacheStore[individuoAsStr]
