@@ -2,7 +2,7 @@ def initCache():
     global cacheStore
     cacheStore = {}
 
-def verifyEntry(individuo):
+def parseIndividuoToKey(individuo):
     #retirar o que tem 0 que acaba nao aplicando para compor a chave
     keyArray = []
     for i in range(len(individuo)):
@@ -10,18 +10,28 @@ def verifyEntry(individuo):
             keyArray.append(individuo[i])
         elif individuo[i][0] == 1:
             keyArray.append(individuo[i])
-    # print('keyArray', keyArray)
     
-    individuoAsStr = repr(tuple(individuo))
+    individuoAsStr = repr(tuple(keyArray))
+    # print('keyArray', keyArray)
+    return individuoAsStr
+
+def verifyEntry(individuo):
+    
     # print('verifyEntry = cacheStore', cacheStore)
+    individuoAsStr = parseIndividuoToKey(individuo)
 
     if individuoAsStr in cacheStore.keys():
+        # print('achei ',individuoAsStr,' no cache')
         return cacheStore[individuoAsStr]
     return None
 
 def addNewEntry(individuo, fitnessValue):
-    individuoAsStr = repr(tuple(individuo))
+    individuoAsStr = parseIndividuoToKey(individuo)
 
     global cacheStore
     cacheStore[individuoAsStr] = fitnessValue
-    print('addNewEntry = cacheStore', cacheStore)
+    # print('addNewEntry = cacheStore', cacheStore)
+    
+
+def savePopulationToCache(population, fitness):
+    [addNewEntry(population[i], fitness[i]) for i in range(len(population))]

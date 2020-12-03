@@ -1,5 +1,5 @@
 from ag_cnnFromAG import *
-from ag_cacheConfig import *
+import ag_cacheConfig
 from training import train
 from testing import evaluate
 
@@ -47,9 +47,9 @@ def calcFitnessIndividuo(individuo, i):
     # print('\n pt1 ', i, trainLoader, testLoader, validationLoader)
     # print('\n pt2', cat_df, batch_size, device, criterion)
 
-    cacheValue=verifyEntry(individuo)
+    cacheValue = ag_cacheConfig.verifyEntry(individuo)
     if cacheValue != None:
-        print('achei cache', cacheValue)
+        print('achei cache', cacheValue, ' individuo = ', i, individuo, '\n fitness = ', cacheValue)
         return cacheValue
 
     model, optimizer, epocas = convertAgToCNN(individuo, device)
@@ -62,9 +62,7 @@ def calcFitnessIndividuo(individuo, i):
 
     #teste
     historyTest, cmTest = evaluate(model, testLoader, criterion, 2, resultsPlotName, device)
-    testAcc = historyTest['test_acc'][0]  
-    
-    addNewEntry(individuo, testAcc)
+    testAcc = historyTest['test_acc'][0]
     
     print('@@@@ individuo = ', i, individuo, '\n fitness = ', testAcc)
     return testAcc
