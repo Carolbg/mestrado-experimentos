@@ -1,6 +1,7 @@
 from random import sample, uniform, seed
 import numpy as np
 from ag_utils import *
+import copy
 
 def crossover2points(parent1, parent2, tr, sequence):
     #tr = 80% entao vira 0.8
@@ -28,8 +29,10 @@ def crossover2points(parent1, parent2, tr, sequence):
     
     # print('startPoint', startPoint, 'endPoint', endPoint)
 
-    child1 = parent1.copy()
-    child2 = parent2.copy()
+    # child1 = parent1.copy()
+    # child2 = parent2.copy()
+    child1 = copy.deepcopy(parent1)
+    child2 = copy.deepcopy(parent2)
 
     child1[startPoint:endPoint]=parent2[startPoint:endPoint]
     child2[startPoint:endPoint]=parent1[startPoint:endPoint]
@@ -49,19 +52,22 @@ def crossover1point(parent1, parent2, tr, sequence):
     # print('randomNumber', randomNumber)
     if randomNumber > tr:
         print('not changing individuals')
-        return parent1, parent2
+        return copy.deepcopy(parent1), copy.deepcopy(parent2)
     
     crossoverPoint = randomInt(1, 10)
     
     print('crossoverPoint', crossoverPoint)
 
-    child1 = parent1.copy()
-    child2 = parent2.copy()
+    # child1 = parent1.copy()
+    # child2 = parent2.copy()
+     
+    child1 = copy.deepcopy(parent1)
+    child2 = copy.deepcopy(parent2)
 
-    child1[crossoverPoint:] =parent2[crossoverPoint:]
-    child2[crossoverPoint:]=parent1[crossoverPoint:]
-    # print('child1', child1)
-    # print('\nchild2', child2)
+    child1[crossoverPoint:] = parent2[crossoverPoint:]
+    child2[crossoverPoint:] = parent1[crossoverPoint:]
+    
+    # print('child1', child1, '\nchild2', child2)
 
     return child1, child2
 

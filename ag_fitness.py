@@ -49,7 +49,7 @@ def calcFitnessIndividuo(individuo, i):
 
     cacheValue = ag_cacheConfig.verifyEntry(individuo)
     if cacheValue != None:
-        print('achei cache', cacheValue, ' individuo = ', i, individuo, '\n fitness = ', cacheValue)
+        print('\nachei cache', cacheValue, ' individuo = ', i, individuo, '\n fitness = ', cacheValue)
         return cacheValue
 
     model, optimizer, epocas = convertAgToCNN(individuo, device)
