@@ -130,15 +130,15 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
 
             # Print training and validation results
             
-            print(
-                f'\nEpoch: {epoch} \tTraining Loss: {train_loss:.4f} \t\tValidation Loss: {valid_loss:.4f}'
-            )
-            print(
-                f'\t\tTraining Accuracy: {100 * train_acc:.2f}%\t Validation Accuracy: {100 * validation_acc:.2f}%'
-            )
-            print(
-                f'\t\tTraining F1-Score: {train_f1Score:.2f}\t Validation F1-Score: {validation_f1Score:.2f} \n'
-            )
+            # print(
+            #     f'\nEpoch: {epoch} \tTraining Loss: {train_loss:.4f} \t\tValidation Loss: {valid_loss:.4f}'
+            # )
+            # print(
+            #     f'\t\tTraining Accuracy: {100 * train_acc:.2f}%\t Validation Accuracy: {100 * validation_acc:.2f}%'
+            # )
+            # print(
+            #     f'\t\tTraining F1-Score: {train_f1Score:.2f}\t Validation F1-Score: {validation_f1Score:.2f} \n'
+            # )
 
             # Save the model if validation loss decreases
             if valid_loss > valid_loss_min + deltaError:
@@ -203,9 +203,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                             'validation_f1Score', 'valid_loss'])
     
     #print('Trained model', model)
-    print('\nHistorico treinamento e validação \n', history)
+    # print('\nHistorico treinamento e validação \n', history)
 
-    history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
+    # history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
     
 
     # fig = plt.figure()

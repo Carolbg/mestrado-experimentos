@@ -34,7 +34,7 @@ def verifyEntry(individuo):
     
     # print('verifyEntry = cacheStore', cacheStore)
     individuoAsStr = parseIndividuoToKey(individuo)
-    print('verifyEntry', individuoAsStr)
+    # print('verifyEntry', individuoAsStr)
     
     if individuoAsStr in cacheStore.keys():
         # print('achei ',individuoAsStr,' no cache')
@@ -43,7 +43,7 @@ def verifyEntry(individuo):
 
 def addNewEntry(individuo, fitnessValue):
     individuoAsStr = parseIndividuoToKey(individuo)
-    print('\nindividuo', individuo, ' key ', individuoAsStr, '\n')
+    # print('key ', individuoAsStr, '\n')
     global cacheStore
     cacheStore[individuoAsStr] = fitnessValue
     # print('addNewEntry = cacheStore', cacheStore)

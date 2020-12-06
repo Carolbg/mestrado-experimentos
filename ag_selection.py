@@ -34,5 +34,5 @@ def torneio(populationFitness, tour, sequence):
     indexMaxValue = np.argmax(subgroupFitness)
     # print('indexMaxValue', indexMaxValue)
     indexParent = subgroupIndex[indexMaxValue]
-    print('indexParent', indexParent)
+    # print('indexParent', indexParent)
     return indexParent

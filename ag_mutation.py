@@ -48,8 +48,8 @@ def mutateGene(individuo, geneIndex, subGene):
         if newValue == geneToMutate:
             newValue = randomInt(1, 6)
         
-        if newValue == geneToMutate:
-            print('continua igual')
+        # if newValue == geneToMutate:
+            # print('continua igual')
         newValue = [newValue]
 
     # print('@@@ mutated', newValue)
@@ -73,8 +73,8 @@ def mutateDenseLayers(originalValue, index, subGene):
         if originalValue[subGene] == newValue:
             newValue = randomInt(3, 12)
 
-        if originalValue[subGene] == newValue:
-            print('continua igual')
+        # if originalValue[subGene] == newValue:
+        #     print('continua igual')
 
     # print('newValue', newValue)
     originalValue[subGene] = newValue
@@ -92,8 +92,8 @@ def mutateDropoutLayers(originalValue, index, subGene):
         if originalValue[subGene] == newValue:
             newValue = randomFloat(0, 0.6)
 
-        if originalValue[subGene] == newValue:
-            print('continua igual')
+        # if originalValue[subGene] == newValue:
+        #     print('continua igual')
 
     # print('newValue', newValue)
     originalValue[subGene] = newValue

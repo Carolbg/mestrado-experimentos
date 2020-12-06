@@ -26,7 +26,7 @@ def generateResnetModelFromAG(device, individuo):
 
     # Add on classifier
     model.fc = getFullyConnectedStructureFromAG(n_inputs, individuo)
-    print('custom fc', model.fc)
+    # print('custom fc', model.fc)
 
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
 

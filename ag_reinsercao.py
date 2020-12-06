@@ -1,4 +1,5 @@
 import numpy as np
+from ag_cacheConfig import parseIndividuoToKey
 
 def sortGenerationDecrescente(allPopulation, allFitness):
     # print('allFitness', allFitness)
@@ -14,14 +15,19 @@ def sortGenerationDecrescente(allPopulation, allFitness):
 def selectNewGenerationDecrescente(bestParent, bestParentFitness, childPopulation, childrenFitness):
     print('\n\n@@@@ Reinsercao')
 
+    # print('bestParent, bestParentFitness', bestParent, bestParentFitness)
+    # print(' childPopulation, childrenFitness', childPopulation, childrenFitness)
+
     tp = len(childPopulation)
+    # print('tp', tp)
     bestParent = np.array([bestParent])
     bestParentFitness = np.array([bestParentFitness])
     allPopulation = np.concatenate((bestParent, childPopulation))
-    # print('allPopulation', allPopulation.shape)
+    # print('allPopulation', allPopulation)
     allFitness = np.concatenate((bestParentFitness, childrenFitness))
-    # print('allFitness', allFitness.shape)
+    # print('allFitness', allFitness)
     sortedPopulation, sortedFitness = sortGenerationDecrescente(allPopulation, allFitness)
+    # print('sortedPopulation, sortedFitness', sortedPopulation, sortedFitness)
     newGeneration = sortedPopulation[0:tp]
     # print('newGeneration', newGeneration.shape)
     newGenerationFitness = sortedFitness[0:tp]
@@ -31,7 +37,20 @@ def selectNewGenerationDecrescente(bestParent, bestParentFitness, childPopulatio
 
 def findBestIndividuo(population, populationFitness):
     sortedPopulation, sortedFitness = sortGenerationDecrescente(population, populationFitness)
-    bestIndividuo = sortedPopulation[0]
-    bestIndividuoFitness = sortedFitness[0]
+    
+    m = max(sortedFitness)
+    indexMax = [i for i, j in enumerate(sortedFitness) if j == m]
+    numberMax = len(indexMax)
+    if numberMax == 1:
+        bestIndividuo = sortedPopulation[0]
+        bestIndividuoFitness = sortedFitness[0]
+    else:
+        print('\nmultiplos individiduos com maxValue = ',str(numberMax))
+        #se tiver mais de um individuo com o maior valor, quero o que tem a menor cnn
+        key = [parseIndividuoToKey(sortedPopulation[i]) for i in range(numberMax)]
+        indexMinStr = key.index(min(key, key=len))
+        bestIndividuo = sortedPopulation[indexMinStr]
+        bestIndividuoFitness = sortedFitness[indexMinStr]
+        
     # print('bestIndividuo, bestIndividuoFitness', bestIndividuo, bestIndividuoFitness)
     return bestIndividuo, bestIndividuoFitness

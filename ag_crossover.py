@@ -14,7 +14,7 @@ def crossover2points(parent1, parent2, tr, sequence):
     randomNumber = uniform(0, 1)
     # print('randomNumber', randomNumber)
     if randomNumber > tr:
-        print('not changing individuals')
+        # print('not changing individuals')
         return parent1, parent2
     
     crossoverPoints = sample(sequence, 2)
@@ -51,12 +51,12 @@ def crossover1point(parent1, parent2, tr, sequence):
     randomNumber = uniform(0, 1)
     # print('randomNumber', randomNumber)
     if randomNumber > tr:
-        print('not changing individuals')
+        # print('not changing individuals')
         return copy.deepcopy(parent1), copy.deepcopy(parent2)
     
     crossoverPoint = randomInt(1, 10)
     
-    print('crossoverPoint', crossoverPoint)
+    # print('crossoverPoint', crossoverPoint)
 
     # child1 = parent1.copy()
     # child2 = parent2.copy()

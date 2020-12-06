@@ -8,9 +8,9 @@ import numpy as np
 import concurrent.futures
 import multiprocessing as mp
 
-def saveGlobalVariables(aTrainLoader, aTestLoader, aValidationLoader, aCat_df, aBatch_size, aDevice, aCriterion):
-    global trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion
-    
+def saveGlobalVariables(aGeneration, aTrainLoader, aTestLoader, aValidationLoader, aCat_df, aBatch_size, aDevice, aCriterion):
+    global generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion
+    generation = aGeneration
     trainLoader = aTrainLoader
     testLoader = aTestLoader
     validationLoader = aValidationLoader
@@ -19,11 +19,11 @@ def saveGlobalVariables(aTrainLoader, aTestLoader, aValidationLoader, aCat_df, a
     device = aDevice
     criterion = aCriterion
 
-def calcFitness(population, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion):
+def calcFitness(generation, population, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion):
     print('\n\n@@@@ Calculando fitness')
     tp = len(population)
     # print('calcFitness', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
-    saveGlobalVariables(trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
+    saveGlobalVariables(generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
     
     startAll = timeit.default_timer()
     iterations = [i for i in range(tp)]
@@ -32,7 +32,7 @@ def calcFitness(population, trainLoader, testLoader, validationLoader, cat_df, b
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
         for result in zip(iterations, executor.map(calcFitnessIndividuo, population, iterations)):
-            print('result', result)
+            # print('result', result)
             iteration, fitness = result
             fitnessArray.append(fitness)
 
@@ -54,15 +54,17 @@ def calcFitnessIndividuo(individuo, i):
 
     model, optimizer, epocas = convertAgToCNN(individuo, device)
     # print('epocas', epocas)
-    resultsPlotName = 'runAG_individuo_'+str(i)
+    resultsPlotName = 'runAG_geracao_' + str(generation) +'_individuo_'+str(i) 
     
     #treinamento
     model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation = train(model, criterion,
         optimizer, trainLoader, validationLoader, resultsPlotName, epocas, epocas, device)
+    
+    history.to_csv('history_'+ resultsPlotName+ '.csv', index = False, header=True)
 
     #teste
     historyTest, cmTest = evaluate(model, testLoader, criterion, 2, resultsPlotName, device)
     testAcc = historyTest['test_acc'][0]
     
-    print('@@@@ individuo = ', i, individuo, '\n fitness = ', testAcc)
+    # print('@@@@ individuo = ', i, individuo, '\n fitness = ', testAcc)
     return testAcc

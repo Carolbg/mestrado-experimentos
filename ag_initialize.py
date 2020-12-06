@@ -17,7 +17,7 @@ def initializeGene(i):
         return initializeGeneLayers(i)
     else:
         value = randomInt(1, 6)
-        print('value = ', value)
+        # print('value = ', value)
         return [value]
         
     # elif i == 0:
