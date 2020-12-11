@@ -14,8 +14,8 @@ def crossover2points(parent1, parent2, tr, sequence):
     randomNumber = uniform(0, 1)
     # print('randomNumber', randomNumber)
     if randomNumber > tr:
-        # print('not changing individuals')
-        return parent1, parent2
+        print('not changing individuals')
+        return copy.deepcopy(parent1), copy.deepcopy(parent2)
     
     crossoverPoints = sample(sequence, 2)
     # print('crossoverPoints', crossoverPoints)
@@ -26,8 +26,9 @@ def crossover2points(parent1, parent2, tr, sequence):
     else:
         startPoint = crossoverPoints[0] 
         endPoint = crossoverPoints[1] 
-    
-    # print('startPoint', startPoint, 'endPoint', endPoint)
+
+    print('parent1', parent1, '\parent2', parent2)
+    print('startPoint', startPoint, 'endPoint', endPoint)
 
     # child1 = parent1.copy()
     # child2 = parent2.copy()
@@ -36,7 +37,7 @@ def crossover2points(parent1, parent2, tr, sequence):
 
     child1[startPoint:endPoint]=parent2[startPoint:endPoint]
     child2[startPoint:endPoint]=parent1[startPoint:endPoint]
-    # print('child1', child1, '\nchild2', child2)
+    print('child1', child1, '\nchild2', child2)
 
     return child1, child2
 
@@ -72,11 +73,13 @@ def crossover1point(parent1, parent2, tr, sequence):
     return child1, child2
 
 def applyCrossover(parents1, parents2, tr, sequence):
-    print('\n\n@@@@ Crossover')
+    print('\n\n@@@@ Crossover 2 ptos')
     numberChildren = len(parents1)
     # print('numberChildren', numberChildren)
 
-    children1, children2 =  map(list,zip(*[crossover1point(parents1[i], parents2[i], tr, sequence) for i in range(numberChildren)]))
+    # children1, children2 =  map(list,zip(*[crossover1point(parents1[i], parents2[i], tr, sequence) for i in range(numberChildren)]))
+    children1, children2 =  map(list,zip(*[crossover2points(parents1[i], parents2[i], tr, sequence) for i in range(numberChildren)]))
+
     # print('children1[0]', children1[0])
     childrenPopulation = np.concatenate((children1, children2))
     #  childrenPopulation = np.concatenate((np.array(children1), np.array(children2)))
