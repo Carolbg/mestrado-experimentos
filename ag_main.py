@@ -30,7 +30,8 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=20, isNumpy=True):
         selectedParents1, selectedParents2 = selectParentsWithTorneio(population, populationFitness, tour)
         newPopulation = applyCrossover(selectedParents1, selectedParents2, tr, sequenceIndividual)
 
-        newPopulation = applyMutation(newPopulation, tm, tp)
+        # newPopulation = applyMutation(newPopulation, tm, tp)
+        newPopulation = applyMutationPercentageForEachField(newPopulation, tm, tp)
         newPopulationFitness = calcFitness(i+1, newPopulation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
         
         # print('\n\n Saving new generated items of geração ', i)

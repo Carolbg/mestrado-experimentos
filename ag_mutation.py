@@ -2,6 +2,53 @@ from random import sample, random, uniform, seed
 import math
 from ag_utils import *
 
+def applyMutationPercentageForEachField(childPopulation, tm, tp):
+    print('\n\n@@@@ Mutacao @@@@@')
+    sequenceChild = [i for i in range(len(childPopulation))]
+    
+    numberChildrenToMutate = int(tm * tp /100)
+    individualsToMutateValue = sample(sequenceChild, numberChildrenToMutate)
+    individualsToMutatePresentOrNot = sample(sequenceChild, numberChildrenToMutate)
+    print('Individuos para mutacao valor', individualsToMutateValue)
+    print('Individuos para mutacao presente', individualsToMutatePresentOrNot)
+    
+    mutatedIndividualsValue = [applyMutationValue(childPopulation[i], sequenceChild) for i in individualsToMutateValue]
+    mutatedIndividualsPresent = [applyMutationPresentOrNot(childPopulation[i], sequenceChild) for i in individualsToMutatePresentOrNot]
+
+    childPopulation[individualsToMutateValue] = mutatedIndividualsValue
+    childPopulation[individualsToMutatePresentOrNot] = mutatedIndividualsPresent
+
+    return childPopulation
+
+def applyMutationValue(individuo, sequenceChild):
+    initialSeed = uniform(0, 5000)
+    seed(initialSeed)
+
+    # print('#### before individuo', individuo)
+    geneToMutate = randomInt(0, 11)
+    # print('geneToMutate', geneToMutate)
+    
+    individuo[geneToMutate] = mutateGene(individuo, geneToMutate, 1)
+    # print('####  after individuo', individuo)
+    
+    return individuo
+
+def applyMutationPresentOrNot(individuo, sequenceChild):
+    initialSeed = uniform(0, 5000)
+    seed(initialSeed)
+
+    # print('#### before individuo', individuo)
+    
+    #0 e 1 nao tem presente ou nao, sempre eh presente
+    geneToMutate = randomInt(2, 11)
+    # print('geneToMutate', geneToMutate)
+    
+    individuo[geneToMutate] = mutateGene(individuo, geneToMutate, 0)
+    # print('####  after individuo', individuo)
+    
+    return individuo
+
+
 def applyMutation(childPopulation, tm, tp):
     print('\n\n@@@@ Mutacao')
     sequenceChild = [i for i in range(len(childPopulation))]
@@ -40,7 +87,7 @@ def mutateGene(individuo, geneIndex, subGene):
     print('@@@ original', geneToMutate, 'geneIndex', geneIndex)
     if geneIndex >= 2:
         newValue= mutateGeneLayers(geneToMutate, geneIndex, subGene)
-        # print('@@@ mutated', newValue)
+        print('@@@ mutated', newValue)
         return newValue
     else:
         newValue = randomInt(1, 6)

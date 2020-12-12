@@ -73,12 +73,14 @@ def crossover1point(parent1, parent2, tr, sequence):
     return child1, child2
 
 def applyCrossover(parents1, parents2, tr, sequence):
-    print('\n\n@@@@ Crossover 2 ptos')
+    
     numberChildren = len(parents1)
     # print('numberChildren', numberChildren)
-
-    # children1, children2 =  map(list,zip(*[crossover1point(parents1[i], parents2[i], tr, sequence) for i in range(numberChildren)]))
-    children1, children2 =  map(list,zip(*[crossover2points(parents1[i], parents2[i], tr, sequence) for i in range(numberChildren)]))
+    print('\n\n@@@@ Crossover 1 ponto')
+    children1, children2 =  map(list,zip(*[crossover1point(parents1[i], parents2[i], tr, sequence) for i in range(numberChildren)]))
+    
+    # print('\n\n@@@@ Crossover 2 pontos')
+    # children1, children2 =  map(list,zip(*[crossover2points(parents1[i], parents2[i], tr, sequence) for i in range(numberChildren)]))
 
     # print('children1[0]', children1[0])
     childrenPopulation = np.concatenate((children1, children2))
