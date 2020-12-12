@@ -7,7 +7,9 @@ from ag_fitness import *
 from ag_reinsercao import *
 import ag_cacheConfig
 
-def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True):
+def main(tp=10, tour=2, tr=80, numberIterations=10, tm=20, isNumpy=True):
+    startAll = timeit.default_timer()
+
     print('tp, tour, tr, numberIterations, tm, isNumpy', tp, tour, tr, numberIterations, tm, isNumpy)
     trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion = prepareCNN(isNumpy)
     ag_cacheConfig.initCache()
@@ -44,6 +46,9 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True):
     bestParent, bestParentFitness = findBestIndividuo(population, populationFitness)
     print('bestParent, bestParentFitness', bestParent, bestParentFitness)
 
+    endAll = timeit.default_timer()
+    timeAll = endAll-startAll
+    print('timeAll = ', timeAll)
     return population, populationFitness
 
 main()
