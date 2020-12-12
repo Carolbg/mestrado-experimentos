@@ -1,0 +1,1648 @@
+tp, tour, tr, numberIterations, tm, isNumpy 10 2 80 10 50 True
+isNumpy True
+Load dataset
+Lidando com numpy data
+shuffleSeed 1
+n_epochs 30 max_epochs_stop 10
+device =  cpu
+
+PrepareDataFromNumpy arrays
+getFilesName
+Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites
+readFilesByPatient saudaveis
+readFilesByPatient doentes
+
+Split Healthy Dataset
+Total dados 38
+Quantidade de dados para treinamento 26
+Quantidade de dados para teste 6
+Quantidade de dados para validacao 6
+trainPatients ['T0189', 'T0196', 'T0193', 'T0220', 'T0199', 'T0217', 'T0188', 'T0224', 'T0216', 'T0211', 'T0259', 'T0194', 'T0200', 'T0239', 'T0236', 'T0272', 'T0201', 'T0226', 'T0195', 'T0221', 'T0238', 'T0237', 'T0234', 'T0275', 'T0222', 'T0261']
+validationPatients ['T0243', 'T0276', 'T0191', 'T0219', 'T0244', 'T0212']
+testPatients ['T0218', 'T0233', 'T0208', 'T0190', 'T0225', 'T0177']
+imagens do trainDataset 128
+imagens do testDataset 30
+imagens do validationDataset 30
+train (128, 3, 224, 224)
+test (30, 3, 224, 224)
+validation (30, 3, 224, 224)
+
+Split Cancer Dataset
+Total dados 38
+Quantidade de dados para treinamento 26
+Quantidade de dados para teste 6
+Quantidade de dados para validacao 6
+trainPatients ['T0267', 'T0255', 'T0138', 'T0286', 'T0198', 'T0246', 'T0192', 'T0258', 'T0202', 'T0209', 'T0241', 'T0179', 'T0287', 'T0213', 'T0203', 'T0210', 'T0240', 'T0270', 'T0180', 'T0264', 'T0269', 'T0282', 'T0281', 'T0277', 'T0273', 'T0256']
+validationPatients ['T0266', 'T0245', 'T0263', 'T0260', 'T0181', 'T0204']
+testPatients ['T0257', 'T0278', 'T0285', 'T0268', 'T0283', 'T0271']
+imagens do trainDataset 129
+imagens do testDataset 29
+imagens do validationDataset 30
+train (129, 3, 224, 224)
+test (29, 3, 224, 224)
+validation (30, 3, 224, 224)
+
+Total de dados para treinamento 257
+
+Total de dados para teste 59
+
+Total de dados para validacao 60
+prepareNumpyDatasetBalancedData
+Sem aumento de dados
+com testValidationTransform Compose(
+    Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+)
+   category  Treinamento  Validação  Teste
+0  Saudável          128         30     30
+1    Doente          129         30     29
+
+
+@@@@ Init pop
+
+
+@@@@ Calculando fitness
+
+Best epoch: 1 with loss: 0.76 and acc: 43.33%
+2848.01 total seconds elapsed. 142.40 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.779661            0.758621                  0.8       0.77193
+TestLoader Losses 0.4663928327924114
+
+Best epoch: 29 with loss: 0.70 and acc: 50.00%
+4139.79 total seconds elapsed. 137.99 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.508475                 0.0                  1.0           0.0
+TestLoader Losses 0.6967558012170306
+
+Best epoch: 43 with loss: 0.69 and acc: 50.00%
+6120.46 total seconds elapsed. 122.41 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.491525                 1.0                  0.0      0.659091
+TestLoader Losses 0.6933503979343479
+
+Best epoch: 5 with loss: 0.69 and acc: 50.00%
+1438.72 total seconds elapsed. 143.87 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.508475                 0.0                  1.0           0.0
+TestLoader Losses 0.693762178138151
+
+Best epoch: 1 with loss: 0.70 and acc: 45.00%
+5328.53 total seconds elapsed. 106.57 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.813559            0.931034                  0.7      0.830769
+TestLoader Losses 0.47816031868174924
+
+Best epoch: 0 with loss: 0.70 and acc: 41.67%
+4153.24 total seconds elapsed. 138.44 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.813559            0.931034                  0.7      0.830769
+TestLoader Losses 0.5245754405603571
+
+Best epoch: 7 with loss: 0.69 and acc: 50.00%
+6121.93 total seconds elapsed. 122.44 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.508475                 0.0                  1.0           0.0
+TestLoader Losses 0.6930096361596706
+
+Best epoch: 0 with loss: 0.70 and acc: 50.00%
+1434.58 total seconds elapsed. 143.46 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.508475                 0.0                  1.0           0.0
+TestLoader Losses 0.6938147019531767
+
+Best epoch: 6 with loss: 0.69 and acc: 43.33%
+5312.23 total seconds elapsed. 106.24 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.711864            0.551724             0.866667      0.653061
+TestLoader Losses 0.634003161373785
+
+Best epoch: 0 with loss: 0.69 and acc: 45.00%
+6125.68 total seconds elapsed. 122.51 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.779661            0.862069                  0.7      0.793651
+TestLoader Losses 0.6331113536479109
+
+
+ $$$$$$$$ Geração  0
+population =  [[list([3]) list([5]) list([0, 4]) list([1, 0.10139105657606326])
+  list([0, 4]) list([1, 0.5870169384171694]) list([1, 5])
+  list([1, 0.07675400400468728]) list([1, 12])
+  list([0, 0.5807942093628529]) list([0, 6])
+  list([0, 0.5608880316698223])]
+ [list([2]) list([5]) list([1, 4]) list([0, 0.18393375291747843])
+  list([1, 8]) list([0, 0.5745023717806333]) list([0, 3])
+  list([1, 0.42294221611810684]) list([1, 4])
+  list([0, 0.4670814691577414]) list([0, 11])
+  list([0, 0.18552440687123734])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 3]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([1, 8]) list([0, 0.3405324388122252])]
+ [list([1]) list([1]) list([0, 4]) list([0, 0.41504434378716976])
+  list([1, 12]) list([1, 0.2689828034471679]) list([1, 4])
+  list([0, 0.06332614082862222]) list([0, 7])
+  list([0, 0.47532215801462385]) list([0, 6])
+  list([1, 0.5240821663384239])]
+ [list([3]) list([3]) list([0, 11]) list([1, 0.13555541034515575])
+  list([1, 7]) list([0, 0.5851444198438023]) list([1, 4])
+  list([0, 0.42890291103428446]) list([1, 7])
+  list([0, 0.4523252776247077]) list([0, 10])
+  list([0, 0.3638644853257405])]
+ [list([6]) list([1]) list([1, 10]) list([0, 0.3035793373939731])
+  list([1, 10]) list([1, 0.35654245906219095]) list([1, 6])
+  list([1, 0.5150912535613972]) list([0, 3])
+  list([0, 0.46485558210839534]) list([1, 4])
+  list([0, 0.25552807847647924])]
+ [list([5]) list([5]) list([1, 5]) list([1, 0.4445554428664712])
+  list([0, 7]) list([0, 0.1349268042916581]) list([0, 3])
+  list([0, 0.45782196924115914]) list([0, 12])
+  list([1, 0.5962664293663059]) list([0, 4])
+  list([0, 0.07210442387605966])]
+ [list([4]) list([3]) list([1, 10]) list([1, 0.2773142235542598])
+  list([0, 11]) list([0, 0.0206347745307766]) list([1, 3])
+  list([1, 0.5806717210856107]) list([0, 6])
+  list([0, 0.2906696051125835]) list([0, 12])
+  list([1, 0.2786021344558444])]
+ [list([5]) list([5]) list([0, 3]) list([1, 0.32933948326169793])
+  list([1, 10]) list([1, 0.37944203288640727]) list([1, 5])
+  list([1, 0.5857675137961215]) list([0, 11])
+  list([1, 0.32218661113888214]) list([1, 3])
+  list([0, 0.369512793095379])]
+ [list([4]) list([5]) list([1, 8]) list([1, 0.41332824138278246])
+  list([0, 9]) list([1, 0.18417985556325733]) list([1, 9])
+  list([0, 0.13307859951318055]) list([1, 10])
+  list([1, 0.006400680931889368]) list([0, 3])
+  list([1, 0.5005128672047024])]]
+populationFitness =  [0.49152542 0.50847458 0.77966102 0.50847458 0.81355932 0.50847458
+ 0.77966102 0.50847458 0.71186441 0.81355932]
+
+multiplos individiduos com maxValue =  2
+bestParent, bestParentFitness [list([3]) list([3]) list([0, 11]) list([1, 0.13555541034515575])
+ list([1, 7]) list([0, 0.5851444198438023]) list([1, 4])
+ list([0, 0.42890291103428446]) list([1, 7]) list([0, 0.4523252776247077])
+ list([0, 10]) list([0, 0.3638644853257405])] 0.8135593220338984
+
+
+@@@@ Selecao
+
+
+@@@@ Crossover 2 ptos
+
+
+@@@@ Mutacao
+@@@ original [1, 8] geneIndex 10
+@@@ mutated [0, 8]
+@@@ original [0, 0.47532215801462385] geneIndex 9
+@@@ mutated [0, 0.4833032007589724]
+@@@ original [1, 4] geneIndex 6
+@@@ mutated [0, 4]
+@@@ original [1, 0.5240821663384239] geneIndex 11
+@@@ mutated [0, 0.5240821663384239]
+@@@ original [0, 0.41504434378716976] geneIndex 3
+@@@ mutated [0, 0.17556530538430692]
+
+
+@@@@ Calculando fitness
+
+achei cache 0.5084745762711864  individuo =  1 [list([6]) list([1]) list([1, 10]) list([0, 0.3035793373939731])
+ list([1, 10]) list([1, 0.35654245906219095]) list([1, 6])
+ list([1, 0.5150912535613972]) list([0, 3]) list([0, 0.46485558210839534])
+ list([1, 4]) list([0, 0.25552807847647924])] 
+ fitness =  0.5084745762711864
+
+achei cache 0.5084745762711864  individuo =  8 [list([1]) list([1]) list([0, 4]) list([0, 0.41504434378716976])
+ list([1, 12]) list([1, 0.2689828034471679]) list([1, 4])
+ list([0, 0.06332614082862222]) list([0, 7])
+ list([0, 0.47532215801462385]) list([0, 6]) list([0, 0.5240821663384239])] 
+ fitness =  0.5084745762711864
+
+achei cache 0.5084745762711864  individuo =  2 [list([1]) list([1]) list([0, 4]) list([0, 0.41504434378716976])
+ list([1, 12]) list([1, 0.2689828034471679]) list([1, 4])
+ list([0, 0.06332614082862222]) list([0, 7]) list([0, 0.4833032007589724])
+ list([0, 6]) list([1, 0.5240821663384239])] 
+ fitness =  0.5084745762711864
+
+achei cache 0.5084745762711864  individuo =  9 [list([4]) list([3]) list([1, 10]) list([1, 0.2773142235542598])
+ list([0, 11]) list([0, 0.0206347745307766]) list([1, 3])
+ list([1, 0.5806717210856107]) list([0, 6]) list([0, 0.2906696051125835])
+ list([0, 12]) list([1, 0.2786021344558444])] 
+ fitness =  0.5084745762711864
+
+Best epoch: 0 with loss: 0.69 and acc: 46.67%
+1626.99 total seconds elapsed. 81.35 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0   0.79661            0.793103                  0.8      0.793103
+TestLoader Losses 0.5017384937254049
+
+achei cache 0.5084745762711864  individuo =  6 [list([6]) list([1]) list([1, 10]) list([0, 0.3035793373939731])
+ list([1, 10]) list([1, 0.35654245906219095]) list([1, 6])
+ list([1, 0.5150912535613972]) list([0, 3]) list([0, 0.46485558210839534])
+ list([1, 4]) list([0, 0.25552807847647924])] 
+ fitness =  0.5084745762711864
+
+Best epoch: 1 with loss: 0.71 and acc: 46.67%
+2345.77 total seconds elapsed. 78.19 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.779661            0.689655             0.866667      0.754717
+TestLoader Losses 0.5578464461585223
+
+Best epoch: 0 with loss: 0.70 and acc: 43.33%
+2351.40 total seconds elapsed. 78.38 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0   0.79661            0.793103                  0.8      0.793103
+TestLoader Losses 0.4847522044585923
+
+achei cache 0.5084745762711864  individuo =  7 [list([1]) list([1]) list([0, 4]) list([0, 0.17556530538430692])
+ list([1, 12]) list([1, 0.2689828034471679]) list([1, 4])
+ list([0, 0.06332614082862222]) list([0, 7]) list([0, 0.4833032007589724])
+ list([0, 6]) list([1, 0.5240821663384239])] 
+ fitness =  0.5084745762711864
+
+Best epoch: 49 with loss: 0.70 and acc: 50.00%
+3522.29 total seconds elapsed. 70.45 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.508475                 0.0                  1.0           0.0
+TestLoader Losses 0.6955414343688447
+
+
+@@@@ Reinsercao
+
+
+ $$$$$$$$ Geração  1
+population =  [[list([3]) list([3]) list([0, 11]) list([1, 0.13555541034515575])
+  list([1, 7]) list([0, 0.5851444198438023]) list([1, 4])
+  list([0, 0.42890291103428446]) list([1, 7])
+  list([0, 0.4523252776247077]) list([0, 10])
+  list([0, 0.3638644853257405])]
+ [list([4]) list([3]) list([1, 8]) list([1, 0.41332824138278246])
+  list([0, 9]) list([1, 0.18417985556325733]) list([1, 9])
+  list([0, 0.13307859951318055]) list([1, 10])
+  list([1, 0.006400680931889368]) list([0, 3])
+  list([1, 0.5005128672047024])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 3]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([3]) list([0, 11]) list([1, 0.13555541034515575])
+  list([1, 7]) list([0, 0.5851444198438023]) list([0, 4])
+  list([0, 0.42890291103428446]) list([1, 7])
+  list([0, 0.4523252776247077]) list([0, 10])
+  list([0, 0.3638644853257405])]
+ [list([6]) list([1]) list([1, 10]) list([0, 0.3035793373939731])
+  list([1, 10]) list([1, 0.35654245906219095]) list([1, 6])
+  list([1, 0.5150912535613972]) list([0, 3])
+  list([0, 0.46485558210839534]) list([1, 4])
+  list([0, 0.25552807847647924])]
+ [list([1]) list([1]) list([0, 4]) list([0, 0.41504434378716976])
+  list([1, 12]) list([1, 0.2689828034471679]) list([1, 4])
+  list([0, 0.06332614082862222]) list([0, 7])
+  list([0, 0.4833032007589724]) list([0, 6])
+  list([1, 0.5240821663384239])]
+ [list([4]) list([5]) list([1, 10]) list([1, 0.2773142235542598])
+  list([0, 11]) list([0, 0.0206347745307766]) list([1, 3])
+  list([1, 0.5806717210856107]) list([0, 6])
+  list([0, 0.2906696051125835]) list([0, 12])
+  list([1, 0.2786021344558444])]
+ [list([6]) list([1]) list([1, 10]) list([0, 0.3035793373939731])
+  list([1, 10]) list([1, 0.35654245906219095]) list([1, 6])
+  list([1, 0.5150912535613972]) list([0, 3])
+  list([0, 0.46485558210839534]) list([1, 4])
+  list([0, 0.25552807847647924])]
+ [list([1]) list([1]) list([0, 4]) list([0, 0.17556530538430692])
+  list([1, 12]) list([1, 0.2689828034471679]) list([1, 4])
+  list([0, 0.06332614082862222]) list([0, 7])
+  list([0, 0.4833032007589724]) list([0, 6])
+  list([1, 0.5240821663384239])]
+ [list([1]) list([1]) list([0, 4]) list([0, 0.41504434378716976])
+  list([1, 12]) list([1, 0.2689828034471679]) list([1, 4])
+  list([0, 0.06332614082862222]) list([0, 7])
+  list([0, 0.47532215801462385]) list([0, 6])
+  list([0, 0.5240821663384239])]]
+populationFitness =  [0.81355932 0.79661017 0.79661017 0.77966102 0.50847458 0.50847458
+ 0.50847458 0.50847458 0.50847458 0.50847458]
+bestParent, bestParentFitness [list([3]) list([3]) list([0, 11]) list([1, 0.13555541034515575])
+ list([1, 7]) list([0, 0.5851444198438023]) list([1, 4])
+ list([0, 0.42890291103428446]) list([1, 7]) list([0, 0.4523252776247077])
+ list([0, 10]) list([0, 0.3638644853257405])] 0.8135593220338984
+
+
+@@@@ Selecao
+
+
+@@@@ Crossover 2 ptos
+
+
+@@@@ Mutacao
+@@@ original [1, 3] geneIndex 4
+@@@ mutated [1, 9]
+@@@ original [0, 4] geneIndex 6
+@@@ mutated [0, 3]
+@@@ original [1, 0.006400680931889368] geneIndex 9
+@@@ mutated [1, 0.10307475736305134]
+@@@ original [3] geneIndex 0
+@@@ mutated [6]
+@@@ original [1] geneIndex 0
+@@@ mutated [6]
+
+
+@@@@ Calculando fitness
+
+Best epoch: 9 with loss: 0.70 and acc: 50.00%
+1416.98 total seconds elapsed. 141.70 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.491525                 1.0                  0.0      0.659091
+TestLoader Losses 0.6945309396517478
+
+Best epoch: 0 with loss: 0.68 and acc: 50.00%
+1417.50 total seconds elapsed. 141.75 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.491525                 1.0                  0.0      0.659091
+TestLoader Losses 0.6954524345317129
+
+Best epoch: 7 with loss: 0.69 and acc: 50.00%
+1441.76 total seconds elapsed. 144.18 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.508475                 0.0                  1.0           0.0
+TestLoader Losses 0.696088638346074
+
+Best epoch: 0 with loss: 0.71 and acc: 45.00%
+2410.48 total seconds elapsed. 120.52 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.830508            0.827586             0.833333      0.827586
+TestLoader Losses 0.4281811198945773
+
+achei cache 0.7966101694915254  individuo =  1 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 3]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7966101694915254
+
+achei cache 0.7796610169491526  individuo =  8 [list([3]) list([3]) list([0, 11]) list([1, 0.13555541034515575])
+ list([1, 7]) list([0, 0.5851444198438023]) list([0, 4])
+ list([0, 0.42890291103428446]) list([1, 7]) list([0, 0.4523252776247077])
+ list([0, 10]) list([0, 0.3638644853257405])] 
+ fitness =  0.7796610169491526
+
+Best epoch: 24 with loss: 0.69 and acc: 50.00%
+3233.17 total seconds elapsed. 107.77 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.610169                 1.0             0.233333      0.716049
+TestLoader Losses 0.6853557360374322
+
+Best epoch: 18 with loss: 0.69 and acc: 50.00%
+3275.00 total seconds elapsed. 109.17 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.491525                 1.0                  0.0      0.659091
+TestLoader Losses 0.693208592422938
+
+Best epoch: 18 with loss: 0.69 and acc: 50.00%
+3274.25 total seconds elapsed. 109.14 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.491525                 1.0                  0.0      0.659091
+TestLoader Losses 0.693208592422938
+
+Best epoch: 0 with loss: 0.69 and acc: 43.33%
+3234.47 total seconds elapsed. 107.82 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0   0.79661            0.793103                  0.8      0.793103
+TestLoader Losses 0.48367009223517726
+
+
+@@@@ Reinsercao
+
+
+ $$$$$$$$ Geração  2
+population =  [[list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([3]) list([0, 11]) list([1, 0.13555541034515575])
+  list([1, 7]) list([0, 0.5851444198438023]) list([1, 4])
+  list([0, 0.42890291103428446]) list([1, 7])
+  list([0, 0.4523252776247077]) list([0, 10])
+  list([0, 0.3638644853257405])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 3]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([4]) list([3]) list([1, 8]) list([1, 0.41332824138278246])
+  list([0, 9]) list([1, 0.18417985556325733]) list([1, 9])
+  list([0, 0.13307859951318055]) list([1, 10])
+  list([1, 0.10307475736305134]) list([0, 3])
+  list([1, 0.5005128672047024])]
+ [list([3]) list([3]) list([0, 11]) list([1, 0.13555541034515575])
+  list([1, 7]) list([0, 0.5851444198438023]) list([0, 4])
+  list([0, 0.42890291103428446]) list([1, 7])
+  list([0, 0.4523252776247077]) list([0, 10])
+  list([0, 0.3638644853257405])]
+ [list([6]) list([3]) list([0, 11]) list([1, 0.13555541034515575])
+  list([1, 7]) list([0, 0.5851444198438023]) list([1, 4])
+  list([0, 0.06332614082862222]) list([0, 7])
+  list([0, 0.4523252776247077]) list([0, 10])
+  list([0, 0.3638644853257405])]
+ [list([1]) list([1]) list([0, 4]) list([0, 0.41504434378716976])
+  list([1, 12]) list([1, 0.2689828034471679]) list([1, 4])
+  list([0, 0.42890291103428446]) list([1, 7])
+  list([0, 0.47532215801462385]) list([0, 6])
+  list([0, 0.5240821663384239])]
+ [list([3]) list([3]) list([0, 4]) list([0, 0.41504434378716976])
+  list([1, 12]) list([1, 0.2689828034471679]) list([1, 4])
+  list([0, 0.06332614082862222]) list([1, 7])
+  list([0, 0.4523252776247077]) list([0, 10])
+  list([0, 0.3638644853257405])]
+ [list([6]) list([1]) list([0, 11]) list([1, 0.13555541034515575])
+  list([1, 7]) list([0, 0.5851444198438023]) list([1, 4])
+  list([0, 0.42890291103428446]) list([0, 7])
+  list([0, 0.4833032007589724]) list([0, 6])
+  list([1, 0.5240821663384239])]
+ [list([1]) list([1]) list([0, 11]) list([1, 0.13555541034515575])
+  list([1, 7]) list([0, 0.5851444198438023]) list([0, 3])
+  list([0, 0.42890291103428446]) list([0, 7])
+  list([0, 0.4833032007589724]) list([0, 6])
+  list([1, 0.5240821663384239])]]
+populationFitness =  [0.83050847 0.81355932 0.79661017 0.79661017 0.77966102 0.61016949
+ 0.50847458 0.49152542 0.49152542 0.49152542]
+bestParent, bestParentFitness [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 0.8305084745762712
+
+
+@@@@ Selecao
+
+
+@@@@ Crossover 2 ptos
+
+
+@@@@ Mutacao
+@@@ original [3] geneIndex 1
+@@@ mutated [2]
+@@@ original [0, 0.5851444198438023] geneIndex 5
+@@@ mutated [1, 0.5851444198438023]
+@@@ original [0, 12] geneIndex 6
+@@@ mutated [0, 8]
+@@@ original [1, 0.546016659398461] geneIndex 9
+@@@ mutated [0, 0.546016659398461]
+@@@ original [3] geneIndex 1
+@@@ mutated [1]
+
+
+@@@@ Calculando fitness
+
+achei cache 0.7966101694915254  individuo =  4 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 3]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7966101694915254
+
+Best epoch: 0 with loss: 0.69 and acc: 46.67%
+1939.51 total seconds elapsed. 96.98 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0   0.79661            0.896552                  0.7        0.8125
+TestLoader Losses 0.5428416274361691
+
+achei cache 0.4915254237288136  individuo =  2 [list([6]) list([1]) list([0, 11]) list([1, 0.13555541034515575])
+ list([1, 7]) list([0, 0.5851444198438023]) list([1, 4])
+ list([0, 0.06332614082862222]) list([0, 7]) list([0, 0.4523252776247077])
+ list([0, 10]) list([0, 0.3638644853257405])] 
+ fitness =  0.4915254237288136
+
+achei cache 0.7966101694915254  individuo =  9 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 3]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7966101694915254
+
+Best epoch: 1 with loss: 0.70 and acc: 48.33%
+1941.29 total seconds elapsed. 97.06 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.745763            0.965517             0.533333      0.788732
+TestLoader Losses 0.5329045638189478
+
+Best epoch: 0 with loss: 0.69 and acc: 45.00%
+1946.15 total seconds elapsed. 97.31 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.762712            0.655172             0.866667      0.730769
+TestLoader Losses 0.47287553447788044
+
+achei cache 0.8305084745762712  individuo =  1 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+Best epoch: 26 with loss: 0.69 and acc: 50.00%
+2583.23 total seconds elapsed. 86.11 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.491525                 1.0                  0.0      0.659091
+TestLoader Losses 0.6937351883467981
+
+achei cache 0.8305084745762712  individuo =  6 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+Best epoch: 1 with loss: 0.70 and acc: 46.67%
+2580.17 total seconds elapsed. 86.01 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.610169            0.965517             0.266667      0.708861
+TestLoader Losses 0.6128387026867624
+
+
+@@@@ Reinsercao
+
+
+ $$$$$$$$ Geração  3
+population =  [[list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 3]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 3]) list([1, 0.18417985556325733]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([0, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 3]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([4]) list([2]) list([1, 8]) list([1, 0.41332824138278246])
+  list([0, 9]) list([0, 0.14100663375968822]) list([1, 9])
+  list([0, 0.13307859951318055]) list([1, 10])
+  list([1, 0.10307475736305134]) list([0, 3])
+  list([1, 0.5005128672047024])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([1, 7]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([3]) list([0, 11]) list([1, 0.13555541034515575])
+  list([1, 7]) list([1, 0.5851444198438023]) list([1, 4])
+  list([0, 0.42890291103428446]) list([1, 7])
+  list([0, 0.4523252776247077]) list([0, 10])
+  list([0, 0.3638644853257405])]
+ [list([6]) list([1]) list([0, 11]) list([1, 0.13555541034515575])
+  list([1, 7]) list([0, 0.5851444198438023]) list([1, 4])
+  list([0, 0.06332614082862222]) list([0, 7])
+  list([0, 0.4523252776247077]) list([0, 10])
+  list([0, 0.3638644853257405])]]
+populationFitness =  [0.83050847 0.83050847 0.83050847 0.79661017 0.79661017 0.79661017
+ 0.76271186 0.74576271 0.61016949 0.49152542]
+
+multiplos individiduos com maxValue =  3
+bestParent, bestParentFitness [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 0.8305084745762712
+
+
+@@@@ Selecao
+
+
+@@@@ Crossover 2 ptos
+
+
+@@@@ Mutacao
+@@@ original [1, 3] geneIndex 4
+@@@ mutated [0, 3]
+@@@ original [0, 8] geneIndex 10
+@@@ mutated [0, 9]
+@@@ original [2] geneIndex 1
+@@@ mutated [3]
+@@@ original [0, 0.2989667142355493] geneIndex 3
+@@@ mutated [1, 0.2989667142355493]
+@@@ original [0, 0.3405324388122252] geneIndex 11
+@@@ mutated [0, 0.06885020917895823]
+
+
+@@@@ Calculando fitness
+
+achei cache 0.8305084745762712  individuo =  5 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  6 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 9]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+Best epoch: 1 with loss: 0.69 and acc: 45.00%
+1371.98 total seconds elapsed. 68.60 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.677966            0.965517                  0.4      0.746667
+TestLoader Losses 0.6600745451652398
+
+Best epoch: 0 with loss: 0.71 and acc: 46.67%
+1963.68 total seconds elapsed. 65.46 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0   0.79661            0.724138             0.866667      0.777778
+TestLoader Losses 0.4741929441185321
+
+achei cache 0.7966101694915254  individuo =  4 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 3]) list([1, 0.18417985556325733]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([0, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7966101694915254
+
+Best epoch: 1 with loss: 0.77 and acc: 41.67%
+1372.96 total seconds elapsed. 68.65 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.779661            0.965517                  0.6      0.811594
+TestLoader Losses 0.4561606574866731
+
+achei cache 0.8305084745762712  individuo =  7 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  3 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  8 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  9 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.06885020917895823])] 
+ fitness =  0.8305084745762712
+
+
+@@@@ Reinsercao
+
+
+ $$$$$$$$ Geração  4
+population =  [[list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 9]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.06885020917895823])]
+ [list([3]) list([3]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 3]) list([1, 0.18417985556325733]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([0, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([0, 3]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]]
+populationFitness =  [0.83050847 0.83050847 0.83050847 0.83050847 0.83050847 0.83050847
+ 0.83050847 0.79661017 0.79661017 0.77966102]
+
+multiplos individiduos com maxValue =  7
+bestParent, bestParentFitness [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 0.8305084745762712
+
+
+@@@@ Selecao
+
+
+@@@@ Crossover 2 ptos
+
+
+@@@@ Mutacao
+@@@ original [1, 0.546016659398461] geneIndex 9
+@@@ mutated [0, 0.546016659398461]
+@@@ original [1, 9] geneIndex 4
+@@@ mutated [0, 9]
+@@@ original [0, 0.2989667142355493] geneIndex 3
+@@@ mutated [1, 0.2989667142355493]
+@@@ original [0, 0.14100663375968822] geneIndex 5
+@@@ mutated [1, 0.14100663375968822]
+@@@ original [1, 9] geneIndex 4
+@@@ mutated [1, 3]
+
+
+@@@@ Calculando fitness
+
+achei cache 0.8305084745762712  individuo =  4 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.7966101694915254  individuo =  1 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 3]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7966101694915254
+
+achei cache 0.7966101694915254  individuo =  8 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 3]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7966101694915254
+
+achei cache 0.7966101694915254  individuo =  6 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 3]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7966101694915254
+
+Best epoch: 1 with loss: 0.73 and acc: 46.67%
+1419.57 total seconds elapsed. 70.98 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.830508            0.931034             0.733333       0.84375
+TestLoader Losses 0.46280155444549304
+
+Best epoch: 1 with loss: 0.73 and acc: 46.67%
+1418.05 total seconds elapsed. 70.90 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.830508            0.931034             0.733333       0.84375
+TestLoader Losses 0.46280155444549304
+
+achei cache 0.7796610169491526  individuo =  7 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([0, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.06885020917895823])] 
+ fitness =  0.7796610169491526
+
+achei cache 0.8305084745762712  individuo =  2 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([0, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+Best epoch: 1 with loss: 0.73 and acc: 46.67%
+1418.93 total seconds elapsed. 70.95 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.830508            0.931034             0.733333       0.84375
+TestLoader Losses 0.46280155444549304
+
+achei cache 0.8305084745762712  individuo =  5 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+
+@@@@ Reinsercao
+
+
+ $$$$$$$$ Geração  5
+population =  [[list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([1, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([0, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([1, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([1, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.06885020917895823])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 3]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 3]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 3]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]]
+populationFitness =  [0.83050847 0.83050847 0.83050847 0.83050847 0.83050847 0.83050847
+ 0.83050847 0.79661017 0.79661017 0.79661017]
+
+multiplos individiduos com maxValue =  7
+bestParent, bestParentFitness [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 0.8305084745762712
+
+
+@@@@ Selecao
+
+
+@@@@ Crossover 2 ptos
+
+
+@@@@ Mutacao
+@@@ original [0, 12] geneIndex 6
+@@@ mutated [1, 12]
+@@@ original [2] geneIndex 1
+@@@ mutated [2]
+@@@ original [0, 0.4251470433041661] geneIndex 7
+@@@ mutated [1, 0.4251470433041661]
+@@@ original [1, 3] geneIndex 4
+@@@ mutated [0, 3]
+@@@ original [1, 0.2989667142355493] geneIndex 3
+@@@ mutated [0, 0.2989667142355493]
+
+
+@@@@ Calculando fitness
+
+achei cache 0.7966101694915254  individuo =  2 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 3]) list([0, 0.14100663375968822]) list([0, 12])
+ list([1, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.06885020917895823])] 
+ fitness =  0.7966101694915254
+
+achei cache 0.8305084745762712  individuo =  4 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  6 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([1, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.06885020917895823])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  0 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+Best epoch: 0 with loss: 0.70 and acc: 45.00%
+1628.85 total seconds elapsed. 81.44 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.779661            0.965517                  0.6      0.811594
+TestLoader Losses 0.4998836295079377
+
+achei cache 0.8305084745762712  individuo =  1 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+Best epoch: 0 with loss: 0.70 and acc: 45.00%
+1629.73 total seconds elapsed. 81.49 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.779661            0.965517                  0.6      0.811594
+TestLoader Losses 0.4998836295079377
+
+Best epoch: 1 with loss: 0.80 and acc: 41.67%
+1649.26 total seconds elapsed. 82.46 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.779661            0.931034             0.633333       0.80597
+TestLoader Losses 0.5094756751747455
+
+Best epoch: 0 with loss: 0.70 and acc: 45.00%
+1630.59 total seconds elapsed. 81.53 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.779661            0.965517                  0.6      0.811594
+TestLoader Losses 0.4998836295079377
+
+achei cache 0.8305084745762712  individuo =  7 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([1, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+
+@@@@ Reinsercao
+
+
+ $$$$$$$$ Geração  6
+population =  [[list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([1, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.06885020917895823])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([1, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 3]) list([0, 0.14100663375968822]) list([0, 12])
+  list([1, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.06885020917895823])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([1, 0.14100663375968822]) list([1, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([0, 3]) list([1, 0.14100663375968822]) list([1, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([1, 0.14100663375968822]) list([1, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]]
+populationFitness =  [0.83050847 0.83050847 0.83050847 0.83050847 0.83050847 0.83050847
+ 0.79661017 0.77966102 0.77966102 0.77966102]
+
+multiplos individiduos com maxValue =  6
+bestParent, bestParentFitness [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 0.8305084745762712
+
+
+@@@@ Selecao
+
+
+@@@@ Crossover 2 ptos
+
+
+@@@@ Mutacao
+@@@ original [0, 9] geneIndex 8
+@@@ mutated [0, 6]
+@@@ original [1, 0.14100663375968822] geneIndex 5
+@@@ mutated [0, 0.14100663375968822]
+@@@ original [1, 9] geneIndex 4
+@@@ mutated [0, 9]
+@@@ original [1, 0.546016659398461] geneIndex 9
+@@@ mutated [1, 0.46414389898057723]
+@@@ original [3] geneIndex 0
+@@@ mutated [4]
+
+
+@@@@ Calculando fitness
+
+achei cache 0.7796610169491526  individuo =  2 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([0, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.46414389898057723])
+ list([0, 8]) list([0, 0.06885020917895823])] 
+ fitness =  0.7796610169491526
+
+achei cache 0.8305084745762712  individuo =  0 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  8 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.06885020917895823])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  1 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.7796610169491526  individuo =  9 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([0, 3]) list([1, 0.14100663375968822]) list([1, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7796610169491526
+
+achei cache 0.8305084745762712  individuo =  5 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.46414389898057723])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+Best epoch: 0 with loss: 0.70 and acc: 45.00%
+1192.20 total seconds elapsed. 59.61 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.762712             0.62069                  0.9          0.72
+TestLoader Losses 0.4821697175502777
+
+achei cache 0.8305084745762712  individuo =  7 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([1, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  4 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  3 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+
+@@@@ Reinsercao
+
+
+ $$$$$$$$ Geração  7
+population =  [[list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9])
+  list([1, 0.46414389898057723]) list([0, 8])
+  list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([1, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.06885020917895823])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([0, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9])
+  list([1, 0.46414389898057723]) list([0, 8])
+  list([0, 0.06885020917895823])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([0, 3]) list([1, 0.14100663375968822]) list([1, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]]
+populationFitness =  [0.83050847 0.83050847 0.83050847 0.83050847 0.83050847 0.83050847
+ 0.83050847 0.83050847 0.77966102 0.77966102]
+
+multiplos individiduos com maxValue =  8
+bestParent, bestParentFitness [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 0.8305084745762712
+
+
+@@@@ Selecao
+
+
+@@@@ Crossover 2 ptos
+
+
+@@@@ Mutacao
+@@@ original [0, 8] geneIndex 10
+@@@ mutated [0, 4]
+@@@ original [0, 0.4251470433041661] geneIndex 7
+@@@ mutated [1, 0.4251470433041661]
+@@@ original [1, 9] geneIndex 4
+@@@ mutated [0, 9]
+@@@ original [1, 9] geneIndex 4
+@@@ mutated [0, 9]
+@@@ original [1, 0.2989667142355493] geneIndex 3
+@@@ mutated [0, 0.2989667142355493]
+
+
+@@@@ Calculando fitness
+
+achei cache 0.8305084745762712  individuo =  3 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 4]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.7796610169491526  individuo =  2 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([0, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([1, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7796610169491526
+
+achei cache 0.8305084745762712  individuo =  1 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.06885020917895823])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  9 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  0 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.7796610169491526  individuo =  8 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([0, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7796610169491526
+
+achei cache 0.7796610169491526  individuo =  5 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([0, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7796610169491526
+
+achei cache 0.7796610169491526  individuo =  7 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([0, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7796610169491526
+
+achei cache 0.8305084745762712  individuo =  6 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.7796610169491526  individuo =  4 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([0, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.46414389898057723])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7796610169491526
+
+
+@@@@ Reinsercao
+
+
+ $$$$$$$$ Geração  8
+population =  [[list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.06885020917895823])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 4]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([0, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([1, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([0, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9])
+  list([1, 0.46414389898057723]) list([0, 8])
+  list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([0, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([0, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]]
+populationFitness =  [0.83050847 0.83050847 0.83050847 0.83050847 0.83050847 0.83050847
+ 0.77966102 0.77966102 0.77966102 0.77966102]
+
+multiplos individiduos com maxValue =  6
+bestParent, bestParentFitness [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 0.8305084745762712
+
+
+@@@@ Selecao
+
+
+@@@@ Crossover 2 ptos
+
+
+@@@@ Mutacao
+@@@ original [2] geneIndex 1
+@@@ mutated [3]
+@@@ original [0, 9] geneIndex 8
+@@@ mutated [1, 9]
+@@@ original [0, 0.3405324388122252] geneIndex 11
+@@@ mutated [1, 0.3405324388122252]
+@@@ original [0, 0.3405324388122252] geneIndex 11
+@@@ mutated [0, 0.15441435077798094]
+@@@ original [0, 9] geneIndex 8
+@@@ mutated [0, 6]
+
+
+@@@@ Calculando fitness
+
+achei cache 0.8305084745762712  individuo =  2 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  1 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([1, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  9 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.15441435077798094])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.7966101694915254  individuo =  0 [list([3]) list([3]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.06885020917895823])] 
+ fitness =  0.7966101694915254
+
+achei cache 0.8305084745762712  individuo =  8 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  4 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+Best epoch: 1 with loss: 0.71 and acc: 41.67%
+1190.91 total seconds elapsed. 59.55 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.711864            0.965517             0.466667      0.767123
+TestLoader Losses 0.5896453958446697
+
+achei cache 0.7796610169491526  individuo =  3 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([0, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.7796610169491526
+
+achei cache 0.8305084745762712  individuo =  5 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.06885020917895823])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  7 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+
+@@@@ Reinsercao
+
+
+ $$$$$$$$ Geração  9
+population =  [[list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([1, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.06885020917895823])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.15441435077798094])]
+ [list([3]) list([3]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.06885020917895823])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([0, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]]
+populationFitness =  [0.83050847 0.83050847 0.83050847 0.83050847 0.83050847 0.83050847
+ 0.83050847 0.83050847 0.79661017 0.77966102]
+
+multiplos individiduos com maxValue =  8
+bestParent, bestParentFitness [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 0.8305084745762712
+
+
+@@@@ Selecao
+
+
+@@@@ Crossover 2 ptos
+
+
+@@@@ Mutacao
+@@@ original [0, 0.06885020917895823] geneIndex 11
+@@@ mutated [1, 0.06885020917895823]
+@@@ original [0, 6] geneIndex 8
+@@@ mutated [0, 4]
+@@@ original [0, 12] geneIndex 6
+@@@ mutated [1, 12]
+@@@ original [0, 0.2989667142355493] geneIndex 3
+@@@ mutated [1, 0.2989667142355493]
+@@@ original [1, 0.546016659398461] geneIndex 9
+@@@ mutated [1, 0.08603791727139627]
+
+
+@@@@ Calculando fitness
+
+achei cache 0.8305084745762712  individuo =  1 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  8 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([1, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  4 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  2 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  9 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+ list([0, 0.4251470433041661]) list([0, 4]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.15441435077798094])] 
+ fitness =  0.8305084745762712
+
+achei cache 0.8305084745762712  individuo =  6 [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.08603791727139627])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+Best epoch: 13 with loss: 0.69 and acc: 50.00%
+1865.93 total seconds elapsed. 93.30 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.542373            0.068966                  1.0      0.129032
+TestLoader Losses 0.7104437219894538
+
+Best epoch: 13 with loss: 0.69 and acc: 50.00%
+1866.81 total seconds elapsed. 93.34 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.542373            0.068966                  1.0      0.129032
+TestLoader Losses 0.7104437219894538
+
+achei cache 0.8305084745762712  individuo =  7 [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 
+ fitness =  0.8305084745762712
+
+Best epoch: 13 with loss: 0.69 and acc: 41.67%
+3496.80 total seconds elapsed. 116.56 seconds per epoch.
+
+Testing result
+    test_acc  test_sensitividade  test_especificidade  test_f1Score
+0  0.728814             0.62069             0.833333      0.692308
+TestLoader Losses 0.5316247980473405
+
+
+@@@@ Reinsercao
+
+Final population
+
+population =  [[list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([1, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9])
+  list([1, 0.08603791727139627]) list([0, 8])
+  list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+  list([0, 0.4251470433041661]) list([0, 9]) list([1, 0.546016659398461])
+  list([0, 8]) list([1, 0.3405324388122252])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([0, 8])
+  list([0, 0.4251470433041661]) list([0, 4]) list([1, 0.546016659398461])
+  list([0, 8]) list([0, 0.15441435077798094])]
+ [list([3]) list([3]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([1, 12])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([1, 0.06885020917895823])]
+ [list([3]) list([2]) list([0, 12]) list([0, 0.2989667142355493])
+  list([1, 9]) list([0, 0.14100663375968822]) list([1, 12])
+  list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+  list([0, 8]) list([1, 0.3405324388122252])]]
+populationFitness =  [0.83050847 0.83050847 0.83050847 0.83050847 0.83050847 0.83050847
+ 0.83050847 0.83050847 0.72881356 0.54237288]
+
+multiplos individiduos com maxValue =  8
+bestParent, bestParentFitness [list([3]) list([2]) list([0, 12]) list([1, 0.2989667142355493])
+ list([1, 9]) list([0, 0.14100663375968822]) list([0, 12])
+ list([0, 0.4251470433041661]) list([0, 6]) list([1, 0.546016659398461])
+ list([0, 8]) list([0, 0.3405324388122252])] 0.8305084745762712
+timeAll =  27242.243029400997
