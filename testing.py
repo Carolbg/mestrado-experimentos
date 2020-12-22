@@ -64,8 +64,8 @@ def evaluate(model, test_loader, criterion, n_classes, resultsPlotName, device):
             #print('target.data', target.data)
             # Multiply average loss times the number of examples in batch
             losses += loss.item() * data.size(0)
-            allTestingPredicted = np.concatenate((allTestingPredicted, pred.numpy()), axis=0)
-            allTestingTarget = np.concatenate((allTestingTarget, target.numpy()), axis=0)
+            allTestingPredicted = np.concatenate((allTestingPredicted, pred.cpu().numpy()), axis=0)
+            allTestingTarget = np.concatenate((allTestingTarget, target.cpu().numpy()), axis=0)
             
     test_acc, test_especificidade, test_sensitividade, test_f1Score, cmTest = calcMetrics(allTestingTarget, allTestingPredicted)
     history = pd.DataFrame({

@@ -76,8 +76,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             
 
             # Neste cenario, 0 eh doente e 1 saudavel
-            allTrainingPredicted = np.concatenate((allTrainingPredicted, pred.numpy()), axis=0)
-            allTrainingTarget = np.concatenate((allTrainingTarget, labels.numpy()), axis=0)
+            
+            allTrainingPredicted = np.concatenate((allTrainingPredicted, pred.cpu().numpy()), axis=0)
+            allTrainingTarget = np.concatenate((allTrainingTarget, labels.cpu().numpy()), axis=0)
             
         # After training loops ends, start validation
         # Se quiser diminuir a LR
@@ -111,8 +112,8 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                 val_running_corrects += torch.sum(pred == target.data)
 
                 # Neste cenario, 0 eh doente e 1 saudavel
-                allValidationPredicted = np.concatenate((allValidationPredicted, pred.numpy()), axis=0)
-                allValidationTarget = np.concatenate((allValidationTarget, target.numpy()), axis=0)
+                allValidationPredicted = np.concatenate((allValidationPredicted, pred.cpu().numpy()), axis=0)
+                allValidationTarget = np.concatenate((allValidationTarget, target.cpu().numpy()), axis=0)
         
             # Calculate average losses
             train_loss = train_loss / len(trainLoader.dataset)
@@ -130,15 +131,15 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
 
             # Print training and validation results
             
-            print(
-                f'\nEpoch: {epoch} \tTraining Loss: {train_loss:.4f} \t\tValidation Loss: {valid_loss:.4f}'
-            )
-            print(
-                f'\t\tTraining Accuracy: {100 * train_acc:.2f}%\t Validation Accuracy: {100 * validation_acc:.2f}%'
-            )
-            print(
-                f'\t\tTraining F1-Score: {train_f1Score:.2f}\t Validation F1-Score: {validation_f1Score:.2f} \n'
-            )
+            # print(
+            #     f'\nEpoch: {epoch} \tTraining Loss: {train_loss:.4f} \t\tValidation Loss: {valid_loss:.4f}'
+            # )
+            # print(
+            #     f'\t\tTraining Accuracy: {100 * train_acc:.2f}%\t Validation Accuracy: {100 * validation_acc:.2f}%'
+            # )
+            # print(
+            #     f'\t\tTraining F1-Score: {train_f1Score:.2f}\t Validation F1-Score: {validation_f1Score:.2f} \n'
+            # )
 
             # Save the model if validation loss decreases
             if valid_loss > valid_loss_min + deltaError:
@@ -203,9 +204,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                             'validation_f1Score', 'valid_loss'])
     
     #print('Trained model', model)
-    print('\nHistorico treinamento e validação \n', history)
+    # print('\nHistorico treinamento e validação \n', history)
 
-    history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
+    # history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
     
 
     # fig = plt.figure()
