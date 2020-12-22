@@ -76,8 +76,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             
 
             # Neste cenario, 0 eh doente e 1 saudavel
-            allTrainingPredicted = np.concatenate((allTrainingPredicted, pred.numpy()), axis=0)
-            allTrainingTarget = np.concatenate((allTrainingTarget, labels.numpy()), axis=0)
+            
+            allTrainingPredicted = np.concatenate((allTrainingPredicted, pred.cpu().numpy()), axis=0)
+            allTrainingTarget = np.concatenate((allTrainingTarget, labels.cpu().numpy()), axis=0)
             
         # After training loops ends, start validation
         # Se quiser diminuir a LR
@@ -111,8 +112,8 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                 val_running_corrects += torch.sum(pred == target.data)
 
                 # Neste cenario, 0 eh doente e 1 saudavel
-                allValidationPredicted = np.concatenate((allValidationPredicted, pred.numpy()), axis=0)
-                allValidationTarget = np.concatenate((allValidationTarget, target.numpy()), axis=0)
+                allValidationPredicted = np.concatenate((allValidationPredicted, pred.cpu().numpy()), axis=0)
+                allValidationTarget = np.concatenate((allValidationTarget, target.cpu().numpy()), axis=0)
         
             # Calculate average losses
             train_loss = train_loss / len(trainLoader.dataset)

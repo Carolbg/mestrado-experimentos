@@ -5,20 +5,22 @@ from ag_mutation import *
 from ag_cnnInit import *
 from ag_fitness import *
 from ag_reinsercao import *
-import ag_cacheConfig
+# import ag_cacheConfig
 
-def main(tp=10, tour=2, tr=80, numberIterations=10, tm=20, isNumpy=True):
+from cacheClass import CacheClass
+
+def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True):
     startAll = timeit.default_timer()
 
     print('tp, tour, tr, numberIterations, tm, isNumpy', tp, tour, tr, numberIterations, tm, isNumpy)
     trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion = prepareCNN(isNumpy)
-    ag_cacheConfig.initCache()
+    # ag_cacheConfig.initCache()
+    cacheConfigClass = CacheClass()
     sequenceIndividual = [i for i in range(12)]
     
     population = initializePopulation(tp)
-    populationFitness = calcFitness(0, population, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
-    
-    ag_cacheConfig.savePopulationToCache(population, populationFitness)
+    populationFitness = calcFitness(0, population, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass)
+    cacheConfigClass.savePopulationToCache(population, populationFitness)
     # print('\ncacheStore = ', ag_cacheConfig.cacheStore)
 
     for i in range(numberIterations):
@@ -30,12 +32,12 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=20, isNumpy=True):
         selectedParents1, selectedParents2 = selectParentsWithTorneio(population, populationFitness, tour)
         newPopulation = applyCrossover(selectedParents1, selectedParents2, tr, sequenceIndividual)
 
-        # newPopulation = applyMutation(newPopulation, tm, tp)
-        newPopulation = applyMutationPercentageForEachField(newPopulation, tm, tp)
-        newPopulationFitness = calcFitness(i+1, newPopulation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
+        newPopulation = applyMutation(newPopulation, tm, tp)
+        # newPopulation = applyMutationPercentageForEachField(newPopulation, tm, tp)
+        newPopulationFitness = calcFitness(i+1, newPopulation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass)
         
         # print('\n\n Saving new generated items of geração ', i)
-        ag_cacheConfig.savePopulationToCache(newPopulation, newPopulationFitness)
+        cacheConfigClass.savePopulationToCache(newPopulation, newPopulationFitness)
 
         population, populationFitness = selectNewGenerationDecrescente(bestParent, bestParentFitness, newPopulation, newPopulationFitness)
         
@@ -52,4 +54,3 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=20, isNumpy=True):
     print('timeAll = ', timeAll)
     return population, populationFitness
 
-main()
