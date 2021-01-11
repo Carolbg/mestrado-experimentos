@@ -1,4 +1,3 @@
-from handleTXTDataset import createDataLoaders
 from prepareModel import prepareTrainingLoss, prepareTrainingOptimizer, prepareVGG16ModelWithTXT
 from training import train
 from testing import evaluate
@@ -15,7 +14,6 @@ def mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=T
     #DATASET STEPS:
     print('isNumpy', isNumpy)
     print('Load dataset')
-    #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
     if isNumpy:
         trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation)
     else:

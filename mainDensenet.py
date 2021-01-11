@@ -1,4 +1,3 @@
-from handleTXTDataset import createDataLoaders #prepareDataFromTXT, splitDataset, prepareNumpyDataset, getCommonArgs
 from prepareModel import prepareTrainingLoss, prepareTrainingOptimizer, prepareDensenetModelWithTXT
 from training import train
 from testing import evaluate
@@ -16,7 +15,6 @@ def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNu
     
     #DATASET STEPS:
     print('Load dataset')
-    #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
     if isNumpy:
         trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation)
     else:
