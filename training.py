@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn.functional as F
-from utils import calcMetrics
+from utils import calcMetrics, convertToNumpy
 import matplotlib.pyplot as plt
 
 def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName,
@@ -76,9 +76,11 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             
 
             # Neste cenario, 0 eh doente e 1 saudavel
-            
-            allTrainingPredicted = np.concatenate((allTrainingPredicted, pred.cpu().numpy()), axis=0)
-            allTrainingTarget = np.concatenate((allTrainingTarget, labels.cpu().numpy()), axis=0)
+            numpyPred = convertToNumpy(device, pred)
+            numpyLabels = convertToNumpy(device, labels)
+
+            allTrainingPredicted = np.concatenate((allTrainingPredicted, numpyPred), axis=0)
+            allTrainingTarget = np.concatenate((allTrainingTarget, numpyLabels), axis=0)
             
         # After training loops ends, start validation
         # Se quiser diminuir a LR
@@ -112,8 +114,11 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                 val_running_corrects += torch.sum(pred == target.data)
 
                 # Neste cenario, 0 eh doente e 1 saudavel
-                allValidationPredicted = np.concatenate((allValidationPredicted, pred.cpu().numpy()), axis=0)
-                allValidationTarget = np.concatenate((allValidationTarget, target.cpu().numpy()), axis=0)
+                numpyPred = convertToNumpy(device, pred)
+                numpyLabels = convertToNumpy(device, labels)
+                
+                allValidationPredicted = np.concatenate((allValidationPredicted, numpyPred), axis=0)
+                allValidationTarget = np.concatenate((allValidationTarget, numpyLabels), axis=0)
         
             # Calculate average losses
             train_loss = train_loss / len(trainLoader.dataset)
@@ -206,7 +211,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
     #print('Trained model', model)
     # print('\nHistorico treinamento e validação \n', history)
 
-    # history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
+    history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
     
 
     # fig = plt.figure()

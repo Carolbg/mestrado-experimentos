@@ -55,3 +55,10 @@ def saveCsvConfusionMatrix(confusionMatrix, resultsPlotName):
         cm_writer.writerow(['-','0 Saudavel', '1 Doente'])
         cm_writer.writerow(['0', tn, fn])
         cm_writer.writerow(['1',fp, tp])
+
+def convertToNumpy(device, data):
+    if device == 'cpu':
+        print('usando cpu')
+        return data.numpy()
+    print('usando gpu')
+    return data.cpu().numpy()

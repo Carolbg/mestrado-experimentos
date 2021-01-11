@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import torch
-from utils import calcMetrics
+from utils import calcMetrics, convertToNumpy
 
 dataClasses = ('Saudavel', 'Doente')
 
@@ -64,8 +64,10 @@ def evaluate(model, test_loader, criterion, n_classes, resultsPlotName, device):
             #print('target.data', target.data)
             # Multiply average loss times the number of examples in batch
             losses += loss.item() * data.size(0)
-            allTestingPredicted = np.concatenate((allTestingPredicted, pred.cpu().numpy()), axis=0)
-            allTestingTarget = np.concatenate((allTestingTarget, target.cpu().numpy()), axis=0)
+            numpyPred = convertToNumpy(device, pred)
+            numpyTarget = convertToNumpy(device, target)
+            allTestingPredicted = np.concatenate((allTestingPredicted, numpyPred), axis=0)
+            allTestingTarget = np.concatenate((allTestingTarget, numpyTarget), axis=0)
             
     test_acc, test_especificidade, test_sensitividade, test_f1Score, cmTest = calcMetrics(allTestingTarget, allTestingPredicted)
     history = pd.DataFrame({

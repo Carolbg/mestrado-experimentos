@@ -18,6 +18,37 @@ def applyMedianFilterDataset(dataset, nameFile):
            plotFilteredImage(dataset[i], filteredImage, nameFile+str(i))
     return np.array(filteredDataset)
 
+def createAllDataList(saudaveis, doentes):
+    allData=[]
+    for patientId in saudaveis:
+        # Para cada paciente
+        values = saudaveis[patientId]
+        for image in values:
+            allData.append(image)
+    
+    for patientId in doentes:
+        # Para cada paciente
+        values = doentes[patientId]
+        for image in values:
+            allData.append(image)
+    print('allData.shape', np.array(allData).shape)
+    return allData
+
+def getTopValue(saudaveisDictionaryData, doentesDictionaryData):
+    allDataList = createAllDataList(saudaveisDictionaryData, doentesDictionaryData )
+    top = np.max(allDataList)
+
+    print('top', top)
+    return top
+
+def getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData):
+    allDataList = createAllDataList(saudaveisDictionaryData, doentesDictionaryData )
+    std = np.std(allDataList)
+    mean = np.mean(allDataList)
+    
+    print('mean, std', mean, std)
+    return mean, std
+
 def getMaxMinValue(dataset):
     flattenDataset = dataset.flatten()
     indices = np.argpartition(flattenDataset, -100)[-100:] 
@@ -88,3 +119,5 @@ def preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData):
     deltaT = top10mean - min10mean
     print('deltaT = ', deltaT)
     return filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean
+
+    

@@ -8,7 +8,7 @@ import torch
 import pandas as pd
 from plots import plotTransformedImages, plotTestTransformedImages, plotAllSubsetImages
 from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray 
-from preprocessing import preprocessDictionaryDataset
+from preprocessing import preprocessDictionaryDataset, getMeanStdEntireBase, getTopValue
 from utilsParams import getCommonArgs
 from skimage import transform
 import cv2
@@ -17,23 +17,27 @@ def mainPrepareDictionaryData(dataAugmentation):
     print('Lidando com txt data')
     
     shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
-    saudaveisDictionaryData, doentesDictionaryData = mainReadData()
+    saudaveisRawDictionaryData, doentesRawDictionaryData = mainReadData()
     
-    filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
+    # filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
+    topOverAll = getTopValue(saudaveisRawDictionaryData, doentesRawDictionaryData)
+    saudaveisDictionaryData, doentesDictionaryData = prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, topOverAll)
+
+    mean, std = getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData)
 
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
     
-    trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
+    # trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
     
-    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation)
+    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation, mean, std )
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device
 
 def mainReadData():
     print('\nprepareDataFromTXT')
     txt_saudaveis_files, txt_doentes_files= getFilesName()
-    saudaveisDictionaryData = readFilesByPatient(txt_saudaveis_files, 'saudaveis')
-    doentesDictionaryData = readFilesByPatient(txt_doentes_files, 'doentes')
-    return saudaveisDictionaryData, doentesDictionaryData
+    saudaveisRawDictionaryData = readFilesByPatient(txt_saudaveis_files, 'saudaveis')
+    doentesRawDictionaryData = readFilesByPatient(txt_doentes_files, 'doentes')
+    return saudaveisRawDictionaryData, doentesRawDictionaryData
 
 def getFilesName():
     print('getFilesName')
@@ -58,17 +62,7 @@ def readFilesByPatient(txt_files, patientClass):
         patientId = fileName.split('.')[0]
         inputData = np.loadtxt(txt_files[i], dtype='f', delimiter=' ')
         #print('antes inputData', inputData.shape)
-        #inputData = preProcessingWithRatio(inputData, i, patientClass)
-        #Stack the data to simulate 3d image
-        inputData = np.stack((inputData,)*3, axis=2)
-        #print('inputData', inputData.shape)
-        inputData = np.transpose(inputData, (2, 0, 1))
-        #isso porque o tensor tem formato C, H, W
-        #conforme toTensor: 
-        # Converts a PIL Image or numpy.ndarray (H x W x C) in the range [0, 255] 
-        # to a torch.FloatTensor of shape (C x H x W) in the range [0.0, 1.0] 
-        #print('depois inputData', inputData.shape)
-        
+
         if patientId in dataAsDictionary.keys(): 
             dataAsDictionary[patientId].append(inputData)
         else:
@@ -76,25 +70,68 @@ def readFilesByPatient(txt_files, patientClass):
             dataAsDictionary[patientId].append(inputData)
     return dataAsDictionary
 
-def preProcessingWithRatio(image, i, type):
-    numpyImage = image
+def prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, topOverAll):
+    saudaveisDictionaryData = saudaveisRawDictionaryData.copy()
+    for patientId in saudaveisRawDictionaryData:
+        # Para cada paciente
+        values = saudaveisRawDictionaryData[patientId]
+        imagesParsed = []
+        for image in values:
+            inputData = preProcessingWithRatio(image, topOverAll)
+            inputData = convertToCorrectDimmensions(inputData)
+            imagesParsed.append(inputData)
 
-    flattenDataset = numpyImage.flatten()
-    indices = np.argpartition(flattenDataset, -100)[-100:] 
-    topValues = flattenDataset[indices]
-    topValues = np.mean(topValues)
-    #print('topValues', topValues, ' size ', topValues.size)
-    # # scale by ratio of 255/max to increase to fully dynamic range
-    numpyImage = ((255/topValues)*numpyImage).clip(0,255)
-    #numpyImage2 = ((255/max)*numpyImage)
-    #print('numpyImage min = ', numpyImage.min(), 'max = ', numpyImage.max())
-    #print('numpyImage2 min = ', numpyImage2.min(), 'max = ', numpyImage2.max())
-    #print('numpyImage', numpyImage.shape)
-    # print('numpyImage', numpyImage.shape)
-    # imOut = cv2.cvtColor(numpyImage, cv2.COLOR_GRAY2RGB)
-    # print('imOut', imOut)
+        saudaveisDictionaryData[patientId] = imagesParsed
+        # print('saudaveisDictionaryData[patientId]', len(saudaveisDictionaryData[patientId]))
+        # print('saudaveisRawDictionaryData[patientId]', len(saudaveisRawDictionaryData[patientId]))
+
+    doentesDictionaryData = doentesRawDictionaryData.copy()
+    for patientId in doentesRawDictionaryData:
+        # Para cada paciente
+        values = doentesRawDictionaryData[patientId]
+        imagesParsed = []
+        for image in values:
+            inputData = preProcessingWithRatio(image, topOverAll)
+            inputData = convertToCorrectDimmensions(inputData)
+            imagesParsed.append(inputData)
+
+        doentesDictionaryData[patientId] = imagesParsed
+        # print('doentesDictionaryData[patientId]', len(doentesDictionaryData[patientId]))
+        # print('doentesRawDictionaryData[patientId]', len(doentesRawDictionaryData[patientId]))
+    return saudaveisDictionaryData, doentesDictionaryData
+
+def convertToCorrectDimmensions(inputData):
+    #Stack the data to simulate 3d image
+    inputData = np.stack((inputData,)*3, axis=2)
+    # print('1 inputData', inputData.shape)
+    # print('min',np.min(inputData))
+    # print('max',np.max(inputData))
+    
+    inputData = np.transpose(inputData, (2, 0, 1))
+    # print('2 inputData', inputData.shape)
+    #isso porque o tensor tem formato C, H, W
+    #conforme toTensor: 
+    # Converts a PIL Image or numpy.ndarray (H x W x C) in the range [0, 255] 
+    # to a torch.FloatTensor of shape (C x H x W) in the range [0.0, 1.0] 
+    #print('depois inputData', inputData.shape)
+    return inputData
+
+def preProcessingWithRatio(numpyImage, topOverAll):
+    #Converte para inteiro entre 0-255
+    numpyImage = ((255/topOverAll)*numpyImage).clip(0,255)
+    # print('preprocessing - antes', numpyImage.shape)
+    # print('min',np.min(numpyImage))
+    # print('max',np.max(numpyImage))
+
+    numpyImage = np.round(numpyImage)
     numpyImage = numpyImage.astype(np.uint8)
-    #plotTestTransformedImages(numpyImage, type + '_preProcessedImage'+ str(i))
+    # print('dp', numpyImage.shape)
+    # print('min',np.min(numpyImage))
+    # print('max',np.max(numpyImage))
+    
+    #converte para 0-1
+    numpyImage = numpyImage/255
+    
     return numpyImage
 
 def splitData(shuffleSeed, saudaveisData, doentesData):
@@ -365,7 +402,7 @@ def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
     # print('min validation', dataValidation.min())
     return dataTrain, dataTest, dataValidation
 
-def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size, dataAugmentation):
+def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size, dataAugmentation, mean, std ):
     print('prepareNumpyDatasetBalancedData')
 
     #The data augmentation step conveys four types of image data generation: 
@@ -386,15 +423,15 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
         transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
+        transforms.Normalize([mean,mean, mean], [std, std, std])  
     ])
     
     testValidationTransform = transforms.Compose([
     #     transforms.Resize((224, 224)),
-    #     transforms.ToTensor(),
+        # transforms.ToTensor(),
     #     transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
     #     #transforms.Lambda(lambda x: torch.cat([x/topMean, x/topMean, x/topMean], 0)),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
+        transforms.Normalize([mean, mean, mean], [std, std, std])  
     ])
     
     if dataAugmentation:
@@ -420,8 +457,8 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
-        # plotTransformedImages(images, i, 'transformed_train')
-        # plotAllSubsetImages(images, 'transformed_train'+str(i))
+        plotTransformedImages(images, i, 'transformed_train', mean, std)
+        # plotAllSubsetImages(images, 'transformed_train'+str(i), mean, std)
         i = i+1
 
     i=0
@@ -430,8 +467,8 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
-        # plotTransformedImages(images, i, 'transformed_test')
-        # plotAllSubsetImages(images, 'transformed_test'+str(i))
+        plotTransformedImages(images, i, 'transformed_test', mean, std)
+        # plotAllSubsetImages(images, 'transformed_test'+str(i), mean, std)
         i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -440,8 +477,8 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
-        # plotTransformedImages(images, i, 'transformed_validation')
-        # plotAllSubsetImages(images, 'transformed_validation'+str(i))
+        plotTransformedImages(images, i, 'transformed_validation',  mean, std)
+        # plotAllSubsetImages(images, 'transformed_validation'+str(i), mean, std)
         i = i+1
 
     cat_df = pd.DataFrame({
