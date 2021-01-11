@@ -53,7 +53,6 @@ def getFilesName():
     txt_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.txt"))
     txt_doentes_files = sorted(glob.glob(folder+"/1Doente/*.txt"))
 
-
     return txt_saudaveis_files, txt_doentes_files
 
 def readFilesByPatient(txt_files, patientClass):
@@ -86,10 +85,13 @@ def prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, maxValue,
             inputData = preProcessingWithRatio(image, maxValue, minValue)
             inputData = convertToCorrectDimmensions(inputData)
             imagesParsed.append(inputData)
+            # print('inputData', inputData.shape)
 
         saudaveisDictionaryData[patientId] = imagesParsed
         # print('saudaveisDictionaryData[patientId]', len(saudaveisDictionaryData[patientId]))
         # print('saudaveisRawDictionaryData[patientId]', len(saudaveisRawDictionaryData[patientId]))
+    # print('size saudaveisRawDictionaryData', len(list(saudaveisRawDictionaryData.keys())), len(list(saudaveisRawDictionaryData.values())))
+    # print('size saudaveisDictionaryData', len(list(saudaveisDictionaryData.keys())), len(list(saudaveisDictionaryData.values())))
 
     doentesDictionaryData = doentesRawDictionaryData.copy()
     for patientId in doentesRawDictionaryData:
@@ -99,11 +101,15 @@ def prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, maxValue,
         for image in values:
             inputData = preProcessingWithRatio(image, maxValue, minValue)
             inputData = convertToCorrectDimmensions(inputData)
+            # print('inputData', inputData.shape)
             imagesParsed.append(inputData)
 
         doentesDictionaryData[patientId] = imagesParsed
         # print('doentesDictionaryData[patientId]', len(doentesDictionaryData[patientId]))
         # print('doentesRawDictionaryData[patientId]', len(doentesRawDictionaryData[patientId]))
+    # print('size doentesRawDictionaryData', len(list(doentesRawDictionaryData.keys())), len(list(doentesRawDictionaryData.values())))
+    # print('size doentesDictionaryData', len(list(doentesDictionaryData.keys())), len(list(doentesDictionaryData.values())))
+
     return saudaveisDictionaryData, doentesDictionaryData
 
 def convertToCorrectDimmensions(inputData):
@@ -169,19 +175,19 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     return trainData, trainTarget, testData, testTarget, validationData, validationTarget
 
 def createSplitDataset(shuffleSeed, saudaveisDataset, doentesDataset):
-    #print('len(saudaveisDataset)', len(saudaveisDataset))
-    #print('len(doentesDataset)', len(doentesDataset))
+    # print('len(saudaveisDataset)', len(saudaveisDataset))
+    # print('len(doentesDataset)', len(doentesDataset))
     saudaveisTarget = np.full(len(saudaveisDataset), 0)
     doentesTarget = np.full(len(doentesDataset), 1)
-    #print('saudaveisTarget', saudaveisTarget)
-    #print('doentesTarget', doentesTarget)
+    # print('saudaveisTarget', saudaveisTarget)
+    # print('doentesTarget', doentesTarget)
 
     allData = np.concatenate((saudaveisDataset, doentesDataset), axis=0)
     #print('allData', allData)
-    #print('len(allData)', len(allData))
+    # print('len(allData)', len(allData))
     allTarget = np.concatenate((saudaveisTarget, doentesTarget), axis=0)
     #print('allTarget', allTarget)
-    #print('len(allTarget)', len(allTarget))
+    # print('len(allTarget)', len(allTarget))
 
     indicesValidation = list(range(len(allTarget)))
     #print('indicesValidation 1', indicesValidation)
@@ -463,7 +469,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
-        plotTransformedImages(images, i, 'transformed_train', mean, std)
+        # plotTransformedImages(images, i, 'transformed_train', mean, std)
         # plotAllSubsetImages(images, 'transformed_train'+str(i), mean, std)
         i = i+1
 
@@ -473,7 +479,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
-        plotTransformedImages(images, i, 'transformed_test', mean, std)
+        # plotTransformedImages(images, i, 'transformed_test', mean, std)
         # plotAllSubsetImages(images, 'transformed_test'+str(i), mean, std)
         i = i+1
 
@@ -483,7 +489,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
-        plotTransformedImages(images, i, 'transformed_validation',  mean, std)
+        # plotTransformedImages(images, i, 'transformed_validation',  mean, std)
         # plotAllSubsetImages(images, 'transformed_validation'+str(i), mean, std)
         i = i+1
 

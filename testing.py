@@ -6,8 +6,6 @@ from utils import calcMetrics, convertToNumpy
 dataClasses = ('Saudavel', 'Doente')
 
 def accuracy(output, target):
-    """Compute the topk accuracy(s)"""
-
     with torch.no_grad():
         batch_size = target.size(0)
         # Find the predicted classes and transpose
@@ -24,19 +22,7 @@ def accuracy(output, target):
         return pred #res, pred
 
 def evaluate(model, test_loader, criterion, n_classes, resultsPlotName, device):
-    """Measure the performance of a trained PyTorch model
-
-    Params
-    --------
-        model (PyTorch model): trained cnn for inference
-        test_loader (PyTorch DataLoader): test dataloader
-        topk (tuple of ints): accuracy to measure
-
-    Returns
-    --------
-        results (DataFrame): results for each category
-
-    """
+    print('testing')
 
     #classes = []
     losses = 0.0
@@ -64,8 +50,9 @@ def evaluate(model, test_loader, criterion, n_classes, resultsPlotName, device):
             #print('target.data', target.data)
             # Multiply average loss times the number of examples in batch
             losses += loss.item() * data.size(0)
-            numpyPred = convertToNumpy(device, pred)
-            numpyTarget = convertToNumpy(device, target)
+            numpyPred = convertToNumpy(pred)
+            numpyTarget = convertToNumpy(target)
+
             allTestingPredicted = np.concatenate((allTestingPredicted, numpyPred), axis=0)
             allTestingTarget = np.concatenate((allTestingTarget, numpyTarget), axis=0)
             

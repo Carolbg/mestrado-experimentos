@@ -76,9 +76,11 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             
 
             # Neste cenario, 0 eh doente e 1 saudavel
-            numpyPred = convertToNumpy(device, pred)
-            numpyLabels = convertToNumpy(device, labels)
-
+            numpyPred = convertToNumpy(pred)
+            numpyLabels = convertToNumpy(labels)
+            # print('0 allValidationTarget', len(allValidationTarget))
+            # print('0 allValidationPredicted', len(allValidationPredicted))
+            
             allTrainingPredicted = np.concatenate((allTrainingPredicted, numpyPred), axis=0)
             allTrainingTarget = np.concatenate((allTrainingTarget, numpyLabels), axis=0)
             
@@ -114,11 +116,11 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                 val_running_corrects += torch.sum(pred == target.data)
 
                 # Neste cenario, 0 eh doente e 1 saudavel
-                numpyPred = convertToNumpy(device, pred)
-                numpyLabels = convertToNumpy(device, labels)
+                numpyPred = convertToNumpy(pred)
+                numpyTarget = convertToNumpy(target)
                 
                 allValidationPredicted = np.concatenate((allValidationPredicted, numpyPred), axis=0)
-                allValidationTarget = np.concatenate((allValidationTarget, numpyLabels), axis=0)
+                allValidationTarget = np.concatenate((allValidationTarget, numpyTarget), axis=0)
         
             # Calculate average losses
             train_loss = train_loss / len(trainLoader.dataset)
@@ -126,6 +128,8 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
 
             # Calculate average accuracy
             train_acc, train_especificidade, train_sensitividade, train_f1Score, cmTrain = calcMetrics(allTrainingTarget, allTrainingPredicted)
+            # print('1 allValidationTarget', len(allValidationTarget))
+            # print('1 allValidationPredicted', len(allValidationPredicted))
             validation_acc, validation_especificidade, validation_sensitividade, validation_f1Score, cmValidation = calcMetrics(allValidationTarget, allValidationPredicted)
 
             history.append([
