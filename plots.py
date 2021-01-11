@@ -143,17 +143,17 @@ def plotTestTransformedImages(numpyImage, name):
 
 
 def plotAllSubsetImages(images, typeImg, mean, std):
-    
+    print('mean', mean, 'std', std)
     numberImages = images.shape
     print('shape',numberImages[0])
     for i in range(numberImages[0]):
         numpyImage = np.transpose(images[i], (1, 2, 0))
         
-        # numpyImage = numpyImage.numpy()
+        numpyImage = numpyImage.numpy()
         # #Removendo a normalização
-        # mean = np.array([mean, mean, mean])
-        # std = np.array([std, std, std])
-        # numpyImage = std * numpyImage + mean
+        meanArray = np.array([mean, mean, mean])
+        stdArray = np.array([std, std, std])
+        numpyImage = stdArray * numpyImage + meanArray
 
         fig = plt.figure(figsize=(10, 4))
         fig.subplots_adjust(wspace=0.3)
