@@ -41,13 +41,19 @@ def mainReadData():
 
 def getFilesName():
     print('getFilesName')
-    folder = 'Imagens_TXT_Estaticas_Balanceadas_allData'
-    print('folder = Imagens_TXT_Estaticas_Balanceadas_allData')
-    txt_saudaveis_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/*.txt"))
-    txt_doentes_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/*.txt"))
-    #txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
-    #txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
+
+    # folder = 'Imagens_TXT_Estaticas_Balanceadas_allData'
+    # print('folder = Imagens_TXT_Estaticas_Balanceadas_allData')
+    # txt_saudaveis_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/*.txt"))
+    # txt_doentes_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/*.txt"))
     
+    #GDRIVE RUNNING
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_allData'
+    print(folder)
+    txt_saudaveis_files = sorted(glob.glob(folder+"/0Saudaveis/*.txt"))
+    txt_doentes_files = sorted(glob.glob(folder+"/1Doentes/*.txt"))
+
+
     return txt_saudaveis_files, txt_doentes_files
 
 def readFilesByPatient(txt_files, patientClass):
