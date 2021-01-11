@@ -50,8 +50,8 @@ def getFilesName():
     #GDRIVE RUNNING
     folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_allData'
     print(folder)
-    txt_saudaveis_files = sorted(glob.glob(folder+"/0Saudaveis/*.txt"))
-    txt_doentes_files = sorted(glob.glob(folder+"/1Doentes/*.txt"))
+    txt_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.txt"))
+    txt_doentes_files = sorted(glob.glob(folder+"/1Doente/*.txt"))
 
 
     return txt_saudaveis_files, txt_doentes_files
