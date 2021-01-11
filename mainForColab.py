@@ -15,24 +15,22 @@ def main(resultsPlotName, experimentType, typeLR=1, dataAugmentation=False):
     print('experimentType', experimentType, ' dataAugmentation ',dataAugmentation, ' typeLR ', typeLR)
 
     try:
-        model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, False)
-        del model
+        mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, False)
+        
         gc.collect()
         torch.cuda.empty_cache()
     except Exception as e:
         print('Error in vgg', e)
 
     try:
-        model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, False)
-        del model
+        mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, False)
         gc.collect()
         torch.cuda.empty_cache()
     except Exception as e:
         print('Error in resnet', e)
 
     try: 
-        model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, False)
-        del model
+        mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, False)
         gc.collect()
         torch.cuda.empty_cache()
     except Exception as e:
