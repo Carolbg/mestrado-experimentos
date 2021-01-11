@@ -8,7 +8,7 @@ import torch
 import pandas as pd
 from plots import plotTransformedImages, plotTestTransformedImages, plotAllSubsetImages
 from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray 
-from preprocessing import preprocessDictionaryDataset, getMeanStdEntireBase, getTopValue
+from preprocessing import preprocessDictionaryDataset, getMeanStdEntireBase, getMaxMinValueFromDataDic
 from utilsParams import getCommonArgs
 from skimage import transform
 import cv2
@@ -20,8 +20,8 @@ def mainPrepareDictionaryData(dataAugmentation):
     saudaveisRawDictionaryData, doentesRawDictionaryData = mainReadData()
     
     # filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
-    topOverAll = getTopValue(saudaveisRawDictionaryData, doentesRawDictionaryData)
-    saudaveisDictionaryData, doentesDictionaryData = prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, topOverAll)
+    maxValue, minValue = getMaxMinValueFromDataDic(saudaveisRawDictionaryData, doentesRawDictionaryData)
+    saudaveisDictionaryData, doentesDictionaryData = prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, maxValue, minValue)
 
     mean, std = getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData)
 
@@ -70,14 +70,14 @@ def readFilesByPatient(txt_files, patientClass):
             dataAsDictionary[patientId].append(inputData)
     return dataAsDictionary
 
-def prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, topOverAll):
+def prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, maxValue, minValue):
     saudaveisDictionaryData = saudaveisRawDictionaryData.copy()
     for patientId in saudaveisRawDictionaryData:
         # Para cada paciente
         values = saudaveisRawDictionaryData[patientId]
         imagesParsed = []
         for image in values:
-            inputData = preProcessingWithRatio(image, topOverAll)
+            inputData = preProcessingWithRatio(image, maxValue, minValue)
             inputData = convertToCorrectDimmensions(inputData)
             imagesParsed.append(inputData)
 
@@ -91,7 +91,7 @@ def prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, topOverAl
         values = doentesRawDictionaryData[patientId]
         imagesParsed = []
         for image in values:
-            inputData = preProcessingWithRatio(image, topOverAll)
+            inputData = preProcessingWithRatio(image, maxValue, minValue)
             inputData = convertToCorrectDimmensions(inputData)
             imagesParsed.append(inputData)
 
@@ -116,9 +116,9 @@ def convertToCorrectDimmensions(inputData):
     #print('depois inputData', inputData.shape)
     return inputData
 
-def preProcessingWithRatio(numpyImage, topOverAll):
+def preProcessingWithRatio(numpyImage, maxValue, minValue):
     #Converte para inteiro entre 0-255
-    numpyImage = ((255/topOverAll)*numpyImage).clip(0,255)
+    numpyImage = ((numpyImage-minValue) * 255 / (maxValue - minValue)).clip(0,255)
     # print('preprocessing - antes', numpyImage.shape)
     # print('min',np.min(numpyImage))
     # print('max',np.max(numpyImage))

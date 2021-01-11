@@ -34,18 +34,19 @@ def createAllDataList(saudaveis, doentes):
     print('allData.shape', np.array(allData).shape)
     return allData
 
-def getTopValue(saudaveisDictionaryData, doentesDictionaryData):
+def getMaxMinValueFromDataDic(saudaveisDictionaryData, doentesDictionaryData):
     allDataList = createAllDataList(saudaveisDictionaryData, doentesDictionaryData )
-    top = np.max(allDataList)
+    maxValue = np.max(allDataList)
+    minValue = np.min(allDataList)
 
-    print('top', top)
-    return top
+    print('maxValue', maxValue, 'minValue', minValue)
+    return maxValue, minValue
 
 def getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData):
     allDataList = createAllDataList(saudaveisDictionaryData, doentesDictionaryData )
     std = np.std(allDataList)
     mean = np.mean(allDataList)
-    
+
     print('mean, std', mean, std)
     return mean, std
 
