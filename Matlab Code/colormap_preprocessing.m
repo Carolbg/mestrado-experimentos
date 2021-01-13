@@ -492,8 +492,8 @@ for i = 1:sizeSaudaveis
     subplot(1,2,2)
     histogram(RGB);
   
-    folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '.png');
-    saveas(gcf, folderSaudaveis)
+%     folderSaudaveis = strcat('saudaveis/', nomeSaudaveis(i, :), '.png');
+%     saveas(gcf, folderSaudaveis)
     
     %Saving original image
     numpyRGB = py.numpy.array(RGB);
@@ -593,15 +593,16 @@ for i = 1:sizeDoentes
     subplot(1,2,2)
     histogram(RGB);
     
-    folderDoentes = strcat('doentes/', nomeDoentes(i, :), '.png');
-    saveas(gcf, folderDoentes)
+%     folderDoentes = strcat('doentes/', nomeDoentes(i, :), '.png');
+%     saveas(gcf, folderDoentes)
     
     numpyRGB = py.numpy.array(RGB);
-    folderDoentes = strcat('../../Imagens_numpy_array_allData_rgb_double/1Doentes/', nomeDoentes(i, :));
+    folderDoentes = strcat('../../Imagens_numpy_array_allData_rgb/1Doentes/', nomeDoentes(i, :));
     py.numpy.save(folderDoentes, numpyRGB);
     
-     dataAugment(img, RGB, nomeDoentes, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_rgb_double')
+%     dataAugment(img, RGB, nomeDoentes, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_rgb_double')
     
+
 %     %getting mean
 %     I = img;
 %     RGBParsed = RGB;

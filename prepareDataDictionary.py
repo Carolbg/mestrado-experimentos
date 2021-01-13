@@ -153,20 +153,21 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     numberValidacaoDoentes = math.floor((totalPatientsDoentesDataset - numberTrainDoentes)/2)
 
     print('\nSplit Healthy Dataset')
-    saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData, numberTrainDoentes, numberValidacaoDoentes)
+    # saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData, numberTrainDoentes, numberValidacaoDoentes)
     
     # To force specific patients
-    # saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
-    # saudaveisIndTeste = ['T0218','T0233','T0208','T0190','T0225','T0177']
-    # saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244','T0212']
+    saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
+    saudaveisIndTeste = ['T0218','T0233','T0208','T0190','T0225','T0177']
+    saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244','T0212']
     saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid, 'saudaveis')
     
     print('\nSplit Cancer Dataset')
-    doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
+    # doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
+
     # To force specific patients
-    # doentesIndTra= ['T0267','T0255','T0138','T0286','T0198','T0246','T0192','T0258','T0202','T0209','T0241','T0179','T0287','T0213','T0203','T0210','T0240','T0270','T0180','T0264','T0269','T0282','T0281','T0277','T0273','T0256']
-    # doentesIndTeste=['T0257','T0278','T0285','T0268','T0283','T0271']
-    # doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
+    doentesIndTra= ['T0267','T0255','T0138','T0286','T0198','T0246','T0192','T0258','T0202','T0209','T0241','T0179','T0287','T0213','T0203','T0210','T0240','T0270','T0180','T0264','T0269','T0282','T0281','T0277','T0273','T0256']
+    doentesIndTeste=['T0257','T0278','T0285','T0268','T0283','T0271']
+    doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
     doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid, 'doentes')
     
     trainData, trainTarget = createSplitDataset(shuffleSeed, saudaveisTrainDataset, doentesTrainDataset)
@@ -485,7 +486,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
         # plotTransformedImages(images, i, 'transformed_train', mean, std)
-        # plotAllSubsetImages(images, 'transformed_train'+str(i), mean, std)
+        plotAllSubsetImages(images, 'transformed_train'+str(i), mean, std)
         i = i+1
 
     i=0
@@ -495,7 +496,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
         # plotTransformedImages(images, i, 'transformed_test', mean, std)
-        # plotAllSubsetImages(images, 'transformed_test'+str(i), mean, std)
+        plotAllSubsetImages(images, 'transformed_test'+str(i), mean, std)
         i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -505,7 +506,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
         # plotTransformedImages(images, i, 'transformed_validation',  mean, std)
-        # plotAllSubsetImages(images, 'transformed_validation'+str(i), mean, std)
+        plotAllSubsetImages(images, 'transformed_validation'+str(i), mean, std)
         i = i+1
 
     cat_df = pd.DataFrame({
