@@ -219,13 +219,13 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     # print('type', type(keysArray))
 
     # To force specific patients
-    # trainPatients = indicesTreinamento
-    # testPatients = indicesTeste
-    # validationPatients = indicesValidacao
+    trainPatients = indicesTreinamento
+    testPatients = indicesTeste
+    validationPatients = indicesValidacao
 
-    trainPatients = keysArray[indicesTreinamento]
-    testPatients = keysArray[indicesTeste]
-    validationPatients = keysArray[indicesValidacao] 
+    # trainPatients = keysArray[indicesTreinamento]
+    # testPatients = keysArray[indicesTeste]
+    # validationPatients = keysArray[indicesValidacao] 
     
     print('trainPatients', trainPatients)
     print('validationPatients', validationPatients) 
@@ -486,7 +486,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
         # plotTransformedImages(images, i, 'transformed_train', mean, std)
-        plotAllSubsetImages(images, 'transformed_train'+str(i), mean, std)
+        # plotAllSubsetImages(images, 'transformed_train'+str(i), mean, std)
         i = i+1
 
     i=0
@@ -496,7 +496,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
         # plotTransformedImages(images, i, 'transformed_test', mean, std)
-        plotAllSubsetImages(images, 'transformed_test'+str(i), mean, std)
+        # plotAllSubsetImages(images, 'transformed_test'+str(i), mean, std)
         i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -506,7 +506,7 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
         # plotTransformedImages(images, i, 'transformed_validation',  mean, std)
-        plotAllSubsetImages(images, 'transformed_validation'+str(i), mean, std)
+        # plotAllSubsetImages(images, 'transformed_validation'+str(i), mean, std)
         i = i+1
 
     cat_df = pd.DataFrame({
