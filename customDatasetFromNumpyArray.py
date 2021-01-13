@@ -8,7 +8,7 @@ from plots import plotTransformedImages
 class CustomDatasetFromNumpyArray(Dataset):
     def __init__(self, data, target, transform=None):
         
-        #print('data',data)
+        # print('data shape',data.shape)
         self.data = torch.from_numpy(data).float()
         #print('self.data', self.data)
         self.target = torch.from_numpy(target)
