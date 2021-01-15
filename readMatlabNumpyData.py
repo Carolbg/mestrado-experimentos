@@ -52,16 +52,16 @@ def getFilesName():
     # folder = "Imagens_numpy_array_allData_rgb"
     # folder = "Imagens_numpy_array_allData_rgb_double"
     
-    folder='Imagens_numpy_array_allData_rgb'
-    print(folder)
-    numpy_saudaveis_files = sorted(glob.glob("../../../"+ folder+"/0Saudaveis/*.npy"))
-    numpy_doentes_files = sorted(glob.glob("../../../"+ folder+"/1Doentes/*.npy"))
+    # folder='Imagens_numpy_array_asCabıoglu_rgb'
+    # print(folder)
+    # numpy_saudaveis_files = sorted(glob.glob("../../../"+ folder+"/0Saudavel/*.npy"))
+    # numpy_doentes_files = sorted(glob.glob("../../../"+ folder+"/1Doente/*.npy"))
 
     #GDRIVE RUNNING
-    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_allData_rgb'
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb'
     print(folder)
-    numpy_saudaveis_files = sorted(glob.glob(folder+"/0Saudaveis/*.npy"))
-    numpy_doentes_files = sorted(glob.glob(folder+"/1Doentes/*.npy"))
+    numpy_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.npy"))
+    numpy_doentes_files = sorted(glob.glob(folder+"/1Doente/*.npy"))
 
     
     #If not reading from the script

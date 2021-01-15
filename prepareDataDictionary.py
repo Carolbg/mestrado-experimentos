@@ -48,7 +48,7 @@ def getFilesName():
     # txt_doentes_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu/1Doente/*.txt"))
     
     #GDRIVE RUNNING
-    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_asCabıoglu'
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDados'
     print(folder)
     txt_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.txt"))
     txt_doentes_files = sorted(glob.glob(folder+"/1Doente/*.txt"))
@@ -153,21 +153,21 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     numberValidacaoDoentes = math.floor((totalPatientsDoentesDataset - numberTrainDoentes)/2)
 
     print('\nSplit Healthy Dataset')
-    # saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData, numberTrainDoentes, numberValidacaoDoentes)
+    saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData, numberTrainDoentes, numberValidacaoDoentes)
     
     # To force specific patients
-    saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
-    saudaveisIndTeste = ['T0218','T0233','T0208','T0190','T0225','T0177']
-    saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244','T0212']
+    # saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
+    # saudaveisIndTeste = ['T0218','T0233','T0208','T0190','T0225','T0177']
+    # saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244','T0212']
     saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid, 'saudaveis')
     
     print('\nSplit Cancer Dataset')
-    # doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
+    doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
 
     # To force specific patients
-    doentesIndTra= ['T0267','T0255','T0138','T0286','T0198','T0246','T0192','T0258','T0202','T0209','T0241','T0179','T0287','T0213','T0203','T0210','T0240','T0270','T0180','T0264','T0269','T0282','T0281','T0277','T0273','T0256']
-    doentesIndTeste=['T0257','T0278','T0285','T0268','T0283','T0271']
-    doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
+    # doentesIndTra= ['T0267','T0255','T0138','T0286','T0198','T0246','T0192','T0258','T0202','T0209','T0241','T0179','T0287','T0213','T0203','T0210','T0240','T0270','T0180','T0264','T0269','T0282','T0281','T0277','T0273','T0256']
+    # doentesIndTeste=['T0257','T0278','T0285','T0268','T0283','T0271']
+    # doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
     doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid, 'doentes')
     
     trainData, trainTarget = createSplitDataset(shuffleSeed, saudaveisTrainDataset, doentesTrainDataset)
@@ -218,14 +218,14 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     # print('len', len(keysArray))
     # print('type', type(keysArray))
 
-    # To force specific patients
-    trainPatients = indicesTreinamento
-    testPatients = indicesTeste
-    validationPatients = indicesValidacao
+    # # To force specific patients
+    # trainPatients = indicesTreinamento
+    # testPatients = indicesTeste
+    # validationPatients = indicesValidacao
 
-    # trainPatients = keysArray[indicesTreinamento]
-    # testPatients = keysArray[indicesTeste]
-    # validationPatients = keysArray[indicesValidacao] 
+    trainPatients = keysArray[indicesTreinamento]
+    testPatients = keysArray[indicesTeste]
+    validationPatients = keysArray[indicesValidacao] 
     
     print('trainPatients', trainPatients)
     print('validationPatients', validationPatients) 
