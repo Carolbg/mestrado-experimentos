@@ -17,7 +17,7 @@
 
 %% Leitura imagens saudaveis
 
-nomeSaudaveis = '../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu/0Saudavel/';
+nomeSaudaveis = '../../Imagens_TXT_Estaticas_Balanceadas_allData_menosValidacaoRuim/0Saudavel/';
 cd(nomeSaudaveis);
 files=dir('*.txt');
 cd('../../Experimentos github/Matlab Code')
@@ -69,15 +69,15 @@ for i = 1:sizeSaudaveis
     subplot(1,2,2)
     histogram(RGB);
   
-    folderSaudaveis = strcat('mapSaudaveis/', fileName, '.png');
-    saveas(gcf, folderSaudaveis)
+%     folderSaudaveis = strcat('mapSaudaveis/', fileName, '.png');
+%     saveas(gcf, folderSaudaveis)
     
     %Saving original image
     numpyRGB = py.numpy.array(RGB);
-    folderSaudaveis = strcat('../../Imagens_numpy_array_asCabıoglu_rgb_double/0Saudavel/', fileName);
+    folderSaudaveis = strcat('../../Imagens_TXT_Estaticas_Balanceadas_allData_menosValidacaoRuim_rgb_DA/0Saudavel/', fileName);
     py.numpy.save(folderSaudaveis, numpyRGB);
 %     
-     dataAugment(img, RGB, fileName, i, 1, 'mapSaudaveis/', '0Saudavel','Imagens_numpy_array_asCabıoglu_rgb_double')
+     dataAugment(img, RGB, fileName, i, 2, 'mapSaudaveis/', '0Saudavel','Imagens_TXT_Estaticas_Balanceadas_allData_menosValidacaoRuim_rgb_DA')
 
     close all
 end
@@ -85,7 +85,7 @@ end
 %% Leitura imagens doentes
 
 
-nomeDoentes = '../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu/1Doente/';
+nomeDoentes = '../../Imagens_TXT_Estaticas_Balanceadas_allData_menosValidacaoRuim/1Doente/';
 cd(nomeDoentes);
 files=dir('*.txt');
 cd('../../Experimentos github/Matlab Code')
@@ -135,14 +135,14 @@ for i = 1:sizeDoentes
     subplot(1,2,2)
     histogram(RGB);
     
-    folderDoentes = strcat('mapDoentes/', fileName, '.png');
-    saveas(gcf, folderDoentes)
+%     folderDoentes = strcat('mapDoentes/', fileName, '.png');
+%     saveas(gcf, folderDoentes)
     
     numpyRGB = py.numpy.array(RGB);
-    folderDoentes = strcat('../../Imagens_numpy_array_asCabıoglu_rgb_double/1Doente/', fileName);
+    folderDoentes = strcat('../../Imagens_TXT_Estaticas_Balanceadas_allData_menosValidacaoRuim_rgb_DA/1Doente/', fileName);
     py.numpy.save(folderDoentes, numpyRGB);
     
-    dataAugment(img, RGB, fileName, i, 7, 'mapDoentes/', '1Doente', 'Imagens_numpy_array_asCabıoglu_rgb_double')
+    dataAugment(img, RGB, fileName, i, 2, 'mapDoentes/', '1Doente', 'Imagens_TXT_Estaticas_Balanceadas_allData_menosValidacaoRuim_rgb_DA')
     
     close all
 end
