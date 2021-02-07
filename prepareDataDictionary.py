@@ -13,6 +13,9 @@ from utilsParams import getCommonArgs
 from skimage import transform
 import cv2
 
+import gc
+import torch
+
 def mainPrepareDictionaryData(dataAugmentation):
     print('Lidando com txt data')
     
@@ -48,7 +51,7 @@ def getFilesName():
     # txt_doentes_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu/1Doente/*.txt"))
     
     #GDRIVE RUNNING
-    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_allData'
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu'
     print(folder)
     txt_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.txt"))
     txt_doentes_files = sorted(glob.glob(folder+"/1Doente/*.txt"))
@@ -154,25 +157,41 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
 
     print('\nSplit Healthy Dataset')
     saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData, numberTrainDoentes, numberValidacaoDoentes)
-    
+
     # To force specific patients
-    saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
-    saudaveisIndTeste = ['T0218','T0233','T0208','T0190','T0225','T0177']
-    # saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244','T0212']
-    saudaveisIndValid = ['T0243','T0191','T0219','T0244','T0212']
+    # saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
+    # saudaveisIndTeste = ['T0218','T0233','T0208','T0190','T0225','T0177']
+    # # saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244','T0212']
+    # saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244']
     saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid, 'saudaveis')
     
+    del numberTrainDoentes
+    del numberValidacaoDoentes
+    del saudaveisIndTra
+    del saudaveisIndTeste
+    del saudaveisIndValid
+
+    gc.collect()
+    torch.cuda.empty_cache()
+
     print('\nSplit Cancer Dataset')
     doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
 
     # To force specific patients
-    doentesIndTra= ['T0267','T0255','T0138','T0286','T0198','T0246','T0192','T0258','T0202','T0209','T0241','T0179','T0287','T0213','T0203','T0210','T0240','T0270','T0180','T0264','T0269','T0282','T0281','T0277','T0273','T0256']
-    doentesIndTeste=['T0257','T0278','T0285','T0268','T0283','T0271']
+    # doentesIndTra= ['T0267','T0255','T0138','T0286','T0198','T0246','T0192','T0258','T0202','T0209','T0241','T0179','T0287','T0213','T0203','T0210','T0240','T0270','T0180','T0264','T0269','T0282','T0281','T0277','T0273','T0256']
+    # doentesIndTeste=['T0257','T0278','T0285','T0268','T0283','T0271']
+    # # doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
     # doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
-    doentesIndValid=['T0266','T0263','T0260','T0181','T0204']
     doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid, 'doentes')
-    
+    del doentesIndTra
+    del doentesIndTeste
+    del doentesIndValid
+
+    gc.collect()
+    torch.cuda.empty_cache()
+
     trainData, trainTarget = createSplitDataset(shuffleSeed, saudaveisTrainDataset, doentesTrainDataset)
+    
     print('\nTotal de dados para treinamento', len(trainData))
     testData, testTarget = createSplitDataset(shuffleSeed, saudaveisTestDataset, doentesTestDataset)
     print('\nTotal de dados para teste', len(testData))
@@ -181,6 +200,9 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     #Trocando teste e validation
     #print('Dados de teste e validacao foram invertidos')
     #return trainData, trainTarget, validationData, validationTarget, testData, testTarget
+    gc.collect()
+    torch.cuda.empty_cache()
+    
     return trainData, trainTarget, testData, testTarget, validationData, validationTarget
 
 def createSplitDataset(shuffleSeed, saudaveisDataset, doentesDataset):
@@ -221,13 +243,13 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     # print('type', type(keysArray))
 
     # # To force specific patients
-    trainPatients = indicesTreinamento
-    testPatients = indicesTeste
-    validationPatients = indicesValidacao
+    # trainPatients = indicesTreinamento
+    # testPatients = indicesTeste
+    # validationPatients = indicesValidacao
 
-    # trainPatients = keysArray[indicesTreinamento]
-    # testPatients = keysArray[indicesTeste]
-    # validationPatients = keysArray[indicesValidacao] 
+    trainPatients = keysArray[indicesTreinamento]
+    testPatients = keysArray[indicesTeste]
+    validationPatients = keysArray[indicesValidacao] 
     
     print('trainPatients', trainPatients)
     print('validationPatients', validationPatients) 
@@ -310,11 +332,15 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     # print('imagens do mixedTestPatients', mixedTestPatients)
     print('imagens do testDataset', len(testDataset))
     print('imagens do validationDataset', len(validationDataset))
+    del dictionaryData
+    gc.collect()
+    torch.cuda.empty_cache()
 
     train, test, validation = np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
     # resizedTrained, resizedTest, resizedValidation = train, test, validation 
     resizedTrained, resizedTest, resizedValidation = resizeImages(train, test, validation)
-
+    gc.collect()
+    torch.cuda.empty_cache()
     # plotAllSubsetImages(resizedTrained, name+'train')
     # plotAllSubsetImages(resizedTest, name+'test')
     # plotAllSubsetImages(resizedValidation, name+'validation')
@@ -322,6 +348,10 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     print('train', resizedTrained.shape)
     print('test', resizedTest.shape)
     print('validation', resizedValidation.shape)
+    
+    gc.collect()
+    torch.cuda.empty_cache()
+
     return resizedTrained, resizedTest, resizedValidation
 
 def resizeImages(train, test, validation):
@@ -337,6 +367,9 @@ def resizeImages(train, test, validation):
     
     for i in range(validation.shape[0]):
         resizedValidation[i, :] = transform.resize(validation[i], (3, 224, 224))
+    
+    gc.collect()
+    torch.cuda.empty_cache()
     
     return resizedTrained, resizedTest, resizedValidation
 

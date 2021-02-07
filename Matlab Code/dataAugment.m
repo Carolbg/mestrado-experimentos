@@ -23,8 +23,8 @@ function dataAugment(img, RGB, nomePacientes, patientIndex, numberAltered, folde
         imAlteradaCor=imAlterada;
         figure;
         imagesc(imAlteradaCor);
-%         folderSaudaveis = strcat(folderImageName, nomePacientes, '_alt',string(i),'.png');
-%         saveas(gcf, folderSaudaveis)
+        folderSaudaveis = strcat(folderImageName, nomePacientes, '_alt',string(i),'.png');
+        saveas(gcf, folderSaudaveis)
 
         numpyRGB = py.numpy.array(imAlteradaCor);
         folderSaudaveis = strcat('../../',folderDirectory,'/',folderName,'/', nomePacientes, '_alt_', string(i));

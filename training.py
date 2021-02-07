@@ -212,8 +212,8 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                             'validation_acc', 'validation_sensitividade', 'validation_especificidade', 
                             'validation_f1Score', 'valid_loss'])
     
-    #print('Trained model', model)
-    # print('\nHistorico treinamento e validação \n', history)
+    # print('Trained model', model)
+    print('\nHistorico treinamento e validação \n', history)
 
     history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
     

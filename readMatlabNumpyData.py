@@ -13,17 +13,29 @@ from skimage import transform
 import cv2
 from prepareDataDictionary import prepareNumpyDatasetBalancedData, splitData, prepareImage
 from preprocessing import getMeanStdEntireBase, getMaxMinValueFromDataDic
+import gc
+import torch
 
 def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
     print('Lidando com numpy data')
     shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
     saudaveisDictionaryData, doentesDictionaryData = mainReadNumpyData()
-
+    gc.collect()
+    torch.cuda.empty_cache()
+    
     mean, std = getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData)
+    # mean = 0.45173378329850344
+    # std = 0.43497180299452515
 
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
+    gc.collect()
+    torch.cuda.empty_cache()
 
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation, mean, std)
+    
+    gc.collect()
+    torch.cuda.empty_cache()
+    
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device
 
 def mainReadNumpyData():
@@ -58,7 +70,7 @@ def getFilesName():
     # numpy_doentes_files = sorted(glob.glob("../../../"+ folder+"/1Doente/*.npy"))
 
     #GDRIVE RUNNING
-    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDados'
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu_DA'
     print(folder)
     numpy_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.npy"))
     numpy_doentes_files = sorted(glob.glob(folder+"/1Doente/*.npy"))
