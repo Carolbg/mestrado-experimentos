@@ -20,6 +20,8 @@ def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
     print('Lidando com numpy data')
     shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
     saudaveisDictionaryData, doentesDictionaryData = mainReadNumpyData()
+    print('len(saudaveisDictionaryData)', len(saudaveisDictionaryData))
+    print('len(doentesDictionaryData)', len(doentesDictionaryData))
     gc.collect()
     torch.cuda.empty_cache()
     

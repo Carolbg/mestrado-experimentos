@@ -4,6 +4,8 @@ from scipy import ndimage
 import matplotlib.pyplot as plt
 from plots import plotFilteredImage
 from math import sqrt
+import gc
+import torch
 
 def applyMedianFilter(image):
     filteredImage = ndimage.median_filter(image, size=3)
@@ -35,8 +37,17 @@ def createAllDataList(saudaveis, doentes):
     print('allData.shape', np.array(allData).shape)
     return allData
 
+def getAllValuesDictionary(dictionaryData):
+    allData=[]
+    for patientId in dictionaryData:
+        # Para cada paciente
+        values = dictionaryData[patientId]
+        for image in values:
+            allData.append(image)
+    return allData
+
 def getMinMaxFromSingleDic(dictionaryData):
-    dicValues = np.array(list(dictionaryData.values()))
+    dicValues = np.array(getAllValuesDictionary(dictionaryData))
     maxValue = np.max(dicValues)
     minValue = np.min(dicValues)
 
@@ -53,34 +64,59 @@ def getMaxMinValueFromDataDic(saudaveisDictionaryData, doentesDictionaryData):
     return maxValue, minValue
 
 def calcCount(dictionaryData):
-    dicValues = np.array(list(dictionaryData.values()))
+    print('inicio calcCont')
+    dicValues = np.array(getAllValuesDictionary(dictionaryData))
     shapeDim = (dicValues.flatten()).shape
+    print('shapeDim',shapeDim)
     count = shapeDim[0]
+    print('fim calcCont', count)
     return count
 
 def calcSumValues(dictionaryData):
-    dicValues = np.array(list(dictionaryData.values()))
-    sumValue = np.sum(dicValues)
+    dicValues = np.array(getAllValuesDictionary(dictionaryData))
+    flattedArray = (dicValues.flatten())
+    del dicValues
+
+    print('flattedArray', flattedArray.shape)
+    sumValue = np.sum(flattedArray)
+    print('sumValue', sumValue.shape)
     count = calcCount(dictionaryData)
+    
+    del flattedArray
+
     return [sumValue, count]
+
+def cleanMemory():
+    gc.collect()
+    torch.cuda.empty_cache()
 
 def getMean(saudaveisDictionaryData, doentesDictionaryData):
     print('getting mean')
     sumCountSaudaveis = calcSumValues(saudaveisDictionaryData)
+    # print('sumCountSaudaveis', sumCountSaudaveis)
     sumCountDoentes = calcSumValues(doentesDictionaryData)
-    
+    # print('sumCountDoentes', sumCountDoentes)
+
     allSum = sumCountSaudaveis[0] + sumCountDoentes[0]
     allCount = sumCountSaudaveis[1] + sumCountDoentes[1]
-    
+    # print('allSum', allSum)
+    # print('allCount', allCount)
     mean = allSum/allCount
+
+    cleanMemory()
 
     return mean
 
 def calcStdNumeradorSingleDic(dictionaryData, mean):
-    dicValues = np.array(list(dictionaryData.values()))
+    dicValues = np.array(getAllValuesDictionary(dictionaryData))
     subtraction = dicValues - mean
     squaredSubtration = np.power(subtraction, 2)
     sumSquared = np.sum(squaredSubtration)
+
+    del dicValues
+    del subtraction
+    del squaredSubtration
+
     return sumSquared
 
 def getStd(saudaveisDictionaryData, doentesDictionaryData, mean):
@@ -95,19 +131,22 @@ def getStd(saudaveisDictionaryData, doentesDictionaryData, mean):
     count = countSaudaveis+countDoentes
     
     std = sqrt(numerador/count)
+    
+    cleanMemory()
+    
     return std
 
 
 def getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData):
     mean = getMean(saudaveisDictionaryData, doentesDictionaryData)
     std = getStd(saudaveisDictionaryData, doentesDictionaryData, mean)
-
+    print('mean, std', mean, std)
+    
     # allDataList = createAllDataList(saudaveisDictionaryData, doentesDictionaryData )
     # std = np.std(allDataList)
     # mean = np.mean(allDataList)
     # print('np mean', mean, 'np std', std)
 
-    print('mean, std', mean, std)
     return mean, mean
 
 def getMaxMinValue(dataset):
