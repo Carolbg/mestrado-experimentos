@@ -12,7 +12,7 @@ from utilsParams import getCommonArgs
 from skimage import transform
 import cv2
 from prepareDataDictionary import prepareNumpyDatasetBalancedData, splitData, prepareImage
-from preprocessing import getMeanStdEntireBase, getMaxMinValueFromDataDic
+from preprocessing import getMeanStdEntireBase, getMaxMinValueFromDataDic, getMeanStdUsingDataLoader
 import gc
 import torch
 
@@ -25,9 +25,9 @@ def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
     gc.collect()
     torch.cuda.empty_cache()
     
-    mean, std = getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData)
-    # mean = 0.45173378329850344
-    # std = 0.43497180299452515
+    # mean, std = getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData)
+    mean = 0.4516 #73378329850344
+    std = 0.4363 #97180299452515
 
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
     gc.collect()
