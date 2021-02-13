@@ -156,7 +156,7 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     numberValidacaoDoentes = math.floor((totalPatientsDoentesDataset - numberTrainDoentes)/2)
 
     print('\nSplit Healthy Dataset')
-    saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData, numberTrainDoentes, numberValidacaoDoentes)
+    saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData)
 
     # To force specific patients
     # saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
@@ -170,6 +170,7 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     del saudaveisIndTra
     del saudaveisIndTeste
     del saudaveisIndValid
+    del saudaveisData
 
     gc.collect()
     torch.cuda.empty_cache()
@@ -186,17 +187,18 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     del doentesIndTra
     del doentesIndTeste
     del doentesIndValid
+    del doentesData
 
     gc.collect()
     torch.cuda.empty_cache()
 
     trainData, trainTarget = createSplitDataset(shuffleSeed, saudaveisTrainDataset, doentesTrainDataset)
     
-    print('\nTotal de dados para treinamento', len(trainData))
+    print('\nTotal de dados para treinamento', len(trainData), len(trainTarget))
     testData, testTarget = createSplitDataset(shuffleSeed, saudaveisTestDataset, doentesTestDataset)
-    print('\nTotal de dados para teste', len(testData))
+    print('\nTotal de dados para teste', len(testData), len(testTarget))
     validationData, validationTarget = createSplitDataset(shuffleSeed, saudaveisValidationDataset, doentesValidationDataset)
-    print('\nTotal de dados para validacao', len(validationData))
+    print('\nTotal de dados para validacao', len(validationData), len(validationTarget))
     #Trocando teste e validation
     #print('Dados de teste e validacao foram invertidos')
     #return trainData, trainTarget, validationData, validationTarget, testData, testTarget
