@@ -11,7 +11,7 @@ from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 from utilsParams import getCommonArgs
 from skimage import transform
 import cv2
-from prepareDataDictionary import prepareNumpyDatasetBalancedData, splitData, prepareImage
+from prepareDataDictionary import prepareNumpyDatasetBalancedData, splitData, prepareImage, splitDataSingleSet, joinSplittedSets
 from preprocessing import getMeanStdEntireBase, getMaxMinValueFromDataDic, getMeanStdUsingDataLoader
 import gc
 import torch
@@ -19,9 +19,10 @@ import torch
 def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
     print('Lidando com numpy data')
     shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
-    saudaveisDictionaryData, doentesDictionaryData = mainReadNumpyData()
-    print('len(saudaveisDictionaryData)', len(saudaveisDictionaryData))
-    print('len(doentesDictionaryData)', len(doentesDictionaryData))
+    
+    saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset, doentesTrainDataset, doentesTestDataset, doentesValidationDataset = mainReadNumpyData(shuffleSeed)
+    # print('len(saudaveisDictionaryData)', len(saudaveisDictionaryData))
+    # print('len(doentesDictionaryData)', len(doentesDictionaryData))
     gc.collect()
     torch.cuda.empty_cache()
     
@@ -29,7 +30,9 @@ def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
     mean = 0.4516 #73378329850344
     std = 0.4363 #97180299452515
 
-    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
+    # trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
+    trainData, trainTarget, testData, testTarget, validationData, validationTarget = joinSplittedSets(shuffleSeed, saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset, doentesTrainDataset, doentesTestDataset, doentesValidationDataset)
+    
     gc.collect()
     torch.cuda.empty_cache()
 
@@ -40,12 +43,20 @@ def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
     
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device
 
-def mainReadNumpyData():
+def mainReadNumpyData(shuffleSeed):
     print('\nPrepareDataFromNumpy arrays')
     numpy_saudaveis_files, numpy_doentes_files = getFilesName()
+
     saudaveisDictionaryData = readFilesByPatient(numpy_saudaveis_files, 'saudaveis')
+    saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = splitDataSingleSet(shuffleSeed, saudaveisDictionaryData)
+    del saudaveisDictionaryData
+
     doentesDictionaryData = readFilesByPatient(numpy_doentes_files, 'doentes')
-    return saudaveisDictionaryData, doentesDictionaryData
+    doentesTrainDataset, doentesTestDataset, doentesValidationDataset = splitDataSingleSet(shuffleSeed, doentesDictionaryData)
+    del doentesDictionaryData
+    
+    # return saudaveisDictionaryData, doentesDictionaryData
+    return saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset, doentesTrainDataset, doentesTestDataset, doentesValidationDataset
 
 def getFilesName():
     print('getFilesName')

@@ -149,6 +149,42 @@ def preProcessingWithRatio(numpyImage, maxValue, minValue):
     
     return numpyImage
 
+def splitDataSingleSet(shuffleSeed, data):
+
+    totalPatientsDataset = len(data.keys())
+    numberTrain = math.floor(totalPatientsDataset*0.70)
+    numberValidacao = math.floor((totalPatientsDataset - numberTrain)/2)
+
+    print('\nSplit Single Set Dataset')
+    indTra, indTeste, indValid = splitPatientsFromDictionary(shuffleSeed, data)
+
+    trainDataset, testDataset, validationDataset = prepareDatasetFromDictionary(data, indTra, indTeste, indValid, '')
+    
+    del data
+
+    gc.collect()
+    torch.cuda.empty_cache()
+
+    return trainDataset, testDataset, validationDataset
+
+def joinSplittedSets(shuffleSeed, saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset, doentesTrainDataset, doentesTestDataset, doentesValidationDataset):
+
+    trainData, trainTarget = createSplitDataset(shuffleSeed, saudaveisTrainDataset, doentesTrainDataset)
+    
+    print('\nTotal de dados para treinamento', len(trainData), len(trainTarget))
+    testData, testTarget = createSplitDataset(shuffleSeed, saudaveisTestDataset, doentesTestDataset)
+    print('\nTotal de dados para teste', len(testData), len(testTarget))
+    validationData, validationTarget = createSplitDataset(shuffleSeed, saudaveisValidationDataset, doentesValidationDataset)
+    print('\nTotal de dados para validacao', len(validationData), len(validationTarget))
+    #Trocando teste e validation
+    #print('Dados de teste e validacao foram invertidos')
+    #return trainData, trainTarget, validationData, validationTarget, testData, testTarget
+    gc.collect()
+    torch.cuda.empty_cache()
+    
+    return trainData, trainTarget, testData, testTarget, validationData, validationTarget
+
+
 def splitData(shuffleSeed, saudaveisData, doentesData):
 
     totalPatientsDoentesDataset = len(doentesData.keys())
@@ -338,23 +374,23 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     gc.collect()
     torch.cuda.empty_cache()
 
-    train, test, validation = np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
+    trainDataset, testDataset, validationDataset = np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
     # resizedTrained, resizedTest, resizedValidation = train, test, validation 
-    resizedTrained, resizedTest, resizedValidation = resizeImages(train, test, validation)
+    trainDataset, testDataset, validationDataset  = resizeImages(trainDataset, testDataset, validationDataset)
     gc.collect()
     torch.cuda.empty_cache()
     # plotAllSubsetImages(resizedTrained, name+'train')
     # plotAllSubsetImages(resizedTest, name+'test')
     # plotAllSubsetImages(resizedValidation, name+'validation')
 
-    print('train', resizedTrained.shape)
-    print('test', resizedTest.shape)
-    print('validation', resizedValidation.shape)
+    print('train', trainDataset.shape)
+    print('test', testDataset.shape)
+    print('validation', validationDataset.shape)
     
     gc.collect()
     torch.cuda.empty_cache()
 
-    return resizedTrained, resizedTest, resizedValidation
+    return trainDataset, testDataset, validationDataset 
 
 def resizeImages(train, test, validation):
     resizedTrained = np.zeros((train.shape[0], 3, 224, 224))
