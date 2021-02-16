@@ -22,7 +22,6 @@ def accuracy(output, target):
     return pred #res, pred
 
 def evaluate(model, test_loader, criterion, n_classes, resultsPlotName, device):
-    print('testing')
 
     #classes = []
     losses = 0.0
@@ -56,10 +55,10 @@ def evaluate(model, test_loader, criterion, n_classes, resultsPlotName, device):
             allTestingPredicted = np.concatenate((allTestingPredicted, numpyPred), axis=0)
             allTestingTarget = np.concatenate((allTestingTarget, numpyTarget), axis=0)
             
-    test_acc, test_especificidade, test_sensitividade, test_f1Score, cmTest = calcMetrics(allTestingTarget, allTestingPredicted)
+    test_acc, test_especificidade, test_sensitividade, test_f1Score, cmTest, test_precision = calcMetrics(allTestingTarget, allTestingPredicted)
     history = pd.DataFrame({
         'test_acc': [test_acc], 'test_sensitividade': [test_sensitividade], 
-        'test_especificidade': [test_especificidade], 'test_f1Score': [test_f1Score]})
+        'test_especificidade': [test_especificidade], 'test_precision': [test_precision], 'test_f1Score': [test_f1Score]})
     print('\nTesting result\n', history)
 
     history.to_csv('results_'+resultsPlotName+'.csv', index = False, header=True)

@@ -12,7 +12,7 @@ from utilsParams import getCommonArgs
 from skimage import transform
 import cv2
 from prepareDataDictionary import prepareNumpyDatasetBalancedData, splitData, prepareImage
-from preprocessing import getMeanStdEntireBase, getMaxMinValueFromDataDic, getMeanStdUsingDataLoader
+from preprocessing import getMeanStdEntireBase, getMaxMinValueFromDataDic
 import gc
 import torch
 

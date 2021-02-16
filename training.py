@@ -75,12 +75,8 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             running_corrects += torch.sum(pred == labels.data)
             running_loss += loss.item()
             
-
-            # Neste cenario, 0 eh doente e 1 saudavel
             numpyPred = convertToNumpy(pred)
             numpyLabels = convertToNumpy(labels)
-            # print('0 allValidationTarget', len(allValidationTarget))
-            # print('0 allValidationPredicted', len(allValidationPredicted))
             
             allTrainingPredicted = np.concatenate((allTrainingPredicted, numpyPred), axis=0)
             allTrainingTarget = np.concatenate((allTrainingTarget, numpyLabels), axis=0)
@@ -128,15 +124,14 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             valid_loss = valid_loss / len(validLoader.dataset)
 
             # Calculate average accuracy
-            train_acc, train_especificidade, train_sensitividade, train_f1Score, cmTrain = calcMetrics(allTrainingTarget, allTrainingPredicted)
-            # print('1 allValidationTarget', len(allValidationTarget))
-            # print('1 allValidationPredicted', len(allValidationPredicted))
-            validation_acc, validation_especificidade, validation_sensitividade, validation_f1Score, cmValidation = calcMetrics(allValidationTarget, allValidationPredicted)
+            train_acc, train_especificidade, train_sensitividade, train_f1Score, cmTrain, train_precision = calcMetrics(allTrainingTarget, allTrainingPredicted)
+            
+            validation_acc, validation_especificidade, validation_sensitividade, validation_f1Score, cmValidation, validation_precision = calcMetrics(allValidationTarget, allValidationPredicted)
 
             history.append([
-                train_acc, train_sensitividade, train_especificidade, train_f1Score, train_loss,
+                train_acc, train_sensitividade, train_especificidade, train_precision, train_f1Score, train_loss,
                 validation_acc, validation_sensitividade, validation_especificidade, 
-                validation_f1Score, valid_loss 
+                validation_precision, validation_f1Score, valid_loss 
             ])
 
             # Print training and validation results
@@ -171,9 +166,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                         history,
                         columns=[
                             'train_acc', 'train_sensitividade', 'train_especificidade', 
-                            'train_f1Score', 'train_loss',
+                            'train_precision', 'train_f1Score', 'train_loss', 
                             'validation_acc', 'validation_sensitividade', 'validation_especificidade', 
-                            'validation_f1Score', 'valid_loss'
+                            'validation_precision', 'validation_f1Score', 'valid_loss'
                         ])
                     break
             elif valid_loss < valid_loss_min:
@@ -204,9 +199,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
     # Format history
     history = pd.DataFrame(history, columns=[
                             'train_acc', 'train_sensitividade', 'train_especificidade', 
-                            'train_f1Score', 'train_loss',
+                            'train_precision', 'train_f1Score', 'train_loss', 
                             'validation_acc', 'validation_sensitividade', 'validation_especificidade', 
-                            'validation_f1Score', 'valid_loss'])
+                            'validation_precision', 'validation_f1Score', 'valid_loss'])
     
     print('\nHistorico treinamento e validação \n', history)
 
