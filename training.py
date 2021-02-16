@@ -53,19 +53,20 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
 
             optimizer.zero_grad()
 
-            # Predicted outputs are log probabilities
-            output = model(inputs)
+            with torch.set_grad_enabled(True):
+                # Predicted outputs are log probabilities
+                output = model(inputs)
 
-            # Loss and backpropagation of gradients
-            # The losses are averaged across observations for each minibatch.
-            loss = criterion(output, labels)
-            
-            loss.backward()
-            # Update the parameters
-            optimizer.step()
+                # Loss and backpropagation of gradients
+                # The losses are averaged across observations for each minibatch.
+                loss = criterion(output, labels)
+                
+                loss.backward()
+                # Update the parameters
+                optimizer.step()
 
-            # Calculate accuracy by finding max log probability
-            _, pred = torch.max(output, 1)
+                # Calculate accuracy by finding max log probability
+                _, pred = torch.max(output, 1)
 
             # Track train loss by multiplying average loss by number of examples in batch
             train_loss += loss.item() * inputs.size(0)
@@ -165,11 +166,6 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                         f'{total_time:.2f} total seconds elapsed. {total_time / (epoch+1):.2f} seconds per epoch.'
                     )
 
-                    # Load the best state dict
-                    #model.load_state_dict(torch.load(save_file_name))
-                    # Attach the optimizer
-                    #model.optimizer = optimizer
-
                     # Format history
                     history = pd.DataFrame(
                         history,
@@ -212,25 +208,9 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                             'validation_acc', 'validation_sensitividade', 'validation_especificidade', 
                             'validation_f1Score', 'valid_loss'])
     
-    # print('Trained model', model)
     print('\nHistorico treinamento e validação \n', history)
 
     history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
-    
-
-    # fig = plt.figure()
-    # plt.plot(running_corrects_history, label='Training accuracy')
-    # plt.plot(val_running_corrects_history, label='Validation accuracy')
-    # plt.legend()
-    # #plt.show()
-    # fig.savefig('Corrects history.png')
-
-    # fig = plt.figure()
-    # plt.plot(running_loss_history, label='traininig loss')
-    # plt.plot(val_running_loss_history, label='validation loss')
-    # plt.legend()
-    # #plt.show()
-    # fig.savefig('Loss history.png')
 
     return model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation
 
