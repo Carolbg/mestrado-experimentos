@@ -65,18 +65,13 @@ def getMaxMinValueFromDataDic(saudaveisDictionaryData, doentesDictionaryData):
     
     maxValue = np.max(minMaxValues)
     minValue = np.min(minMaxValues)
-    
-    print('calculated min max')
 
     return maxValue, minValue
 
 def calcCount(dictionaryData):
-    print('inicio calcCont')
     dicValues = np.array(getAllValuesDictionary(dictionaryData))
     shapeDim = (dicValues.flatten()).shape
-    print('shapeDim',shapeDim)
     count = shapeDim[0]
-    print('fim calcCont', count)
     return count
 
 def calcSumValues(dictionaryData):
@@ -84,9 +79,7 @@ def calcSumValues(dictionaryData):
     flattedArray = (dicValues.flatten())
     del dicValues
 
-    print('flattedArray', flattedArray.shape)
     sumValue = np.sum(flattedArray)
-    print('sumValue', sumValue.shape)
     count = calcCount(dictionaryData)
     
     del flattedArray
@@ -100,14 +93,10 @@ def cleanMemory():
 def getMean(saudaveisDictionaryData, doentesDictionaryData):
     print('getting mean')
     sumCountSaudaveis = calcSumValues(saudaveisDictionaryData)
-    # print('sumCountSaudaveis', sumCountSaudaveis)
     sumCountDoentes = calcSumValues(doentesDictionaryData)
-    # print('sumCountDoentes', sumCountDoentes)
 
     allSum = sumCountSaudaveis[0] + sumCountDoentes[0]
     allCount = sumCountSaudaveis[1] + sumCountDoentes[1]
-    # print('allSum', allSum)
-    # print('allCount', allCount)
     mean = allSum/allCount
 
     cleanMemory()
@@ -132,7 +121,6 @@ def getStd(saudaveisDictionaryData, doentesDictionaryData, mean):
     sumSquaredSaudaveis = calcStdNumeradorSingleDic(saudaveisDictionaryData, mean)
     sumSquaredDoentes = calcStdNumeradorSingleDic(doentesDictionaryData, mean)
     numerador = sumSquaredDoentes + sumSquaredSaudaveis
-    # print('numerador', numerador)
     countSaudaveis = calcCount(saudaveisDictionaryData)
     countDoentes = calcCount(doentesDictionaryData)
     count = countSaudaveis+countDoentes
@@ -149,51 +137,20 @@ def getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData, soma=0)
     std = getStd(saudaveisDictionaryData, doentesDictionaryData, mean)
     print('mean, std', mean, std)
     
-    allDataList = createAllDataList(saudaveisDictionaryData, doentesDictionaryData )
-    std = np.std(allDataList)
-    mean = np.mean(allDataList)
-    print('np mean', mean, 'np std', std)
+    # allDataList = createAllDataList(saudaveisDictionaryData, doentesDictionaryData )
+    # std = np.std(allDataList)
+    # mean = np.mean(allDataList)
+    # print('np mean', mean, 'np std', std)
 
     return mean, mean
-
-def getMeanStdUsingDataLoader(saudaveisDictionaryData, doentesDictionaryData):
-    print('getMeanStdUsingDataLoader')
-    # size = len(saudaveisDictionaryData)
-    # part1 = int(size/2)
-
-    # valuespt1 = list(saudaveisDictionaryData.values())
-    # valuespt1 = valuespt1[0:part1]
-    # parsedValues = [item for sublist in valuespt1 for item in sublist]
-    # parsedValues = np.array(parsedValues)
-    # target = [1]*len(parsedValues)
-    # target = np.array(target)
-    # saudaveisDataset = CustomDatasetFromNumpyArray(parsedValues, target)
-
-    # # valuespt2 = saudaveisDictionaryData.values()[part1:2*part1]
-    # # valuespt3 = saudaveisDictionaryData.values()[2*part1:]
-    
-    # # doentesDataset = CustomDatasetFromNumpyArray(dataTrain, dataTargetTrain, trainTransform)
-
-    # # allDataList = createAllDataList(saudaveisDictionaryData, doentesDictionaryData )
-    # # std = np.std(allDataList)
-    # # mean = np.mean(allDataList)
-    # # print('np mean', mean, 'np std', std)
-
-    # return mean, mean
-
-
 
 def getMaxMinValue(dataset):
     flattenDataset = dataset.flatten()
     indices = np.argpartition(flattenDataset, -100)[-100:] 
-    #print('indices', indices)
     topValues = flattenDataset[indices]
-    #print('topValues', topValues)
 
     indices = np.argpartition(flattenDataset, 100)[:100]
-    #print('indices', indices)
     minValuesValues = flattenDataset[indices]
-    #print('minValuesValues', minValuesValues)
     minMean = np.mean(minValuesValues)
     print('minMean', minMean)
         

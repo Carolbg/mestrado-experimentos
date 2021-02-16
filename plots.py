@@ -171,6 +171,7 @@ def plotAllSubsetImages(images, typeImg, mean, std):
         plt.hist(numpyImage.flatten())
         plt.xticks(np.arange(0, 2.25, 0.25))
         fig.savefig(typeImg + '_imagens_histograma_' + str(i) +'.png')
+        plt.pause(0.001)
 
 def plotTransformedImages(images, i, typeImg, mean, std):
 
@@ -224,6 +225,7 @@ def plotTransformedImages(images, i, typeImg, mean, std):
     # plt.xticks(np.arange(0, 2.25, 0.1))
 
     fig.savefig(typeImg + '_imagens_histograma_' + str(i) +'.png')
+    plt.pause(0.001)
 
 def plotHistogram(image, i):
     fig = plt.figure()
