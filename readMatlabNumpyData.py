@@ -50,14 +50,14 @@ def mainReadNumpyData():
 def getFilesName():
     print('getFilesName')
     # If reading from the script
-    # numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array_allData/0Saudaveis/*.npy")
-    # numpy_doentes_files = glob.glob("../../Imagens_numpy_array_allData/1Doentes/*.npy")
+    # numpy_saudaveis_files = glob.glob("../../../Imagens_numpy_array_allData/0Saudaveis/*.npy")
+    # numpy_doentes_files = glob.glob("../../../Imagens_numpy_array_allData/1Doentes/*.npy")
     
-    # numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array_allData_semAumentoDados/0Saudaveis/*.npy")
-    # numpy_doentes_files = glob.glob("../../Imagens_numpy_array_allData_semAumentoDados/1Doentes/*.npy")
+    # numpy_saudaveis_files = glob.glob("../../../Imagens_numpy_array_allData_semAumentoDados/0Saudaveis/*.npy")
+    # numpy_doentes_files = glob.glob("../../../Imagens_numpy_array_allData_semAumentoDados/1Doentes/*.npy")
     
-    # numpy_saudaveis_files = glob.glob("../../Imagens_numpy_array_allData_asMinMax/0Saudaveis/*.npy")
-    # numpy_doentes_files = glob.glob("../../Imagens_numpy_array_allData_asMinMax/1Doentes/*.npy")
+    # numpy_saudaveis_files = glob.glob("../../../Imagens_numpy_array_allData_asMinMax/0Saudaveis/*.npy")
+    # numpy_doentes_files = glob.glob("../../../Imagens_numpy_array_allData_asMinMax/1Doentes/*.npy")
     # folder = "Imagens_numpy_array_allData_semAumentoDados"
     
     # folder="Imagens_numpy_array_allData_entireDatabase_MinMax"
