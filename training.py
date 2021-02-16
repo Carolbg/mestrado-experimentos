@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn.functional as F
-from utils import calcMetrics
+from utils import calcMetrics, convertToNumpy
 import matplotlib.pyplot as plt
 
 def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName,
@@ -76,9 +76,13 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
             
 
             # Neste cenario, 0 eh doente e 1 saudavel
+            numpyPred = convertToNumpy(pred)
+            numpyLabels = convertToNumpy(labels)
+            # print('0 allValidationTarget', len(allValidationTarget))
+            # print('0 allValidationPredicted', len(allValidationPredicted))
             
-            allTrainingPredicted = np.concatenate((allTrainingPredicted, pred.cpu().numpy()), axis=0)
-            allTrainingTarget = np.concatenate((allTrainingTarget, labels.cpu().numpy()), axis=0)
+            allTrainingPredicted = np.concatenate((allTrainingPredicted, numpyPred), axis=0)
+            allTrainingTarget = np.concatenate((allTrainingTarget, numpyLabels), axis=0)
             
         # After training loops ends, start validation
         # Se quiser diminuir a LR
@@ -112,8 +116,11 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                 val_running_corrects += torch.sum(pred == target.data)
 
                 # Neste cenario, 0 eh doente e 1 saudavel
-                allValidationPredicted = np.concatenate((allValidationPredicted, pred.cpu().numpy()), axis=0)
-                allValidationTarget = np.concatenate((allValidationTarget, target.cpu().numpy()), axis=0)
+                numpyPred = convertToNumpy(pred)
+                numpyTarget = convertToNumpy(target)
+                
+                allValidationPredicted = np.concatenate((allValidationPredicted, numpyPred), axis=0)
+                allValidationTarget = np.concatenate((allValidationTarget, numpyTarget), axis=0)
         
             # Calculate average losses
             train_loss = train_loss / len(trainLoader.dataset)
@@ -121,6 +128,8 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
 
             # Calculate average accuracy
             train_acc, train_especificidade, train_sensitividade, train_f1Score, cmTrain = calcMetrics(allTrainingTarget, allTrainingPredicted)
+            # print('1 allValidationTarget', len(allValidationTarget))
+            # print('1 allValidationPredicted', len(allValidationPredicted))
             validation_acc, validation_especificidade, validation_sensitividade, validation_f1Score, cmValidation = calcMetrics(allValidationTarget, allValidationPredicted)
 
             history.append([
@@ -203,10 +212,10 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                             'validation_acc', 'validation_sensitividade', 'validation_especificidade', 
                             'validation_f1Score', 'valid_loss'])
     
-    #print('Trained model', model)
-    # print('\nHistorico treinamento e validação \n', history)
+    # print('Trained model', model)
+    print('\nHistorico treinamento e validação \n', history)
 
-    # history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
+    history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
     
 
     # fig = plt.figure()

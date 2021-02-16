@@ -142,13 +142,19 @@ def plotTestTransformedImages(numpyImage, name):
     fig.savefig(name +'.png')
 
 
-def plotAllSubsetImages(images, typeImg):
-    
+def plotAllSubsetImages(images, typeImg, mean, std):
+    print('mean', mean, 'std', std)
     numberImages = images.shape
     print('shape',numberImages[0])
     for i in range(numberImages[0]):
         numpyImage = np.transpose(images[i], (1, 2, 0))
-    
+        
+        numpyImage = numpyImage.numpy()
+        # #Removendo a normalização
+        meanArray = np.array([mean, mean, mean])
+        stdArray = np.array([std, std, std])
+        numpyImage = stdArray * numpyImage + meanArray
+
         fig = plt.figure(figsize=(10, 4))
         fig.subplots_adjust(wspace=0.3)
         
@@ -166,7 +172,7 @@ def plotAllSubsetImages(images, typeImg):
         plt.xticks(np.arange(0, 2.25, 0.25))
         fig.savefig(typeImg + '_imagens_histograma_' + str(i) +'.png')
 
-def plotTransformedImages(images, i, typeImg):
+def plotTransformedImages(images, i, typeImg, mean, std):
 
     inputs = images[0]
 
@@ -174,10 +180,10 @@ def plotTransformedImages(images, i, typeImg):
     inputs = inputs.permute(1, 2, 0)
     numpyImage = inputs.numpy()
     #Removendo a normalização
-    mean = np.array([0.485, 0.456, 0.406])
-    std = np.array([0.229, 0.224, 0.225])
+    mean = np.array([mean, mean, mean])
+    std = np.array([std, std, std])
     numpyImage = std * numpyImage + mean
-    numpyImage = np.clip(numpyImage, 0, 1)
+    # numpyImage = np.clip(numpyImage, 0, 1)
 
     print('1 - min', np.min(numpyImage))
     print('1 - max', np.max(numpyImage))
@@ -203,8 +209,8 @@ def plotTransformedImages(images, i, typeImg):
     #print('teste', numpyImage.shape)
     teste = numpyImage[:, :, 0]
     #print('teste', teste.shape)
-    plt.hist(numpyImage.flatten(), range=[-3,3])
-    plt.xticks(np.arange(-3, 3, 0.5))
+    plt.hist(numpyImage.flatten(), range=[0,1])
+    plt.xticks(np.arange(0, 1, 0.1))
     # plt.hist(teste, range=[0,2])
     # plt.xticks(np.arange(0, 2.25, 0.25))
 

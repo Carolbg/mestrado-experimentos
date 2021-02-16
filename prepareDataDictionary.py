@@ -8,42 +8,54 @@ import torch
 import pandas as pd
 from plots import plotTransformedImages, plotTestTransformedImages, plotAllSubsetImages
 from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray 
-from preprocessing import preprocessDictionaryDataset
+from preprocessing import preprocessDictionaryDataset, getMeanStdEntireBase, getMaxMinValueFromDataDic
 from utilsParams import getCommonArgs
 from skimage import transform
 import cv2
+
+import gc
+import torch
 
 def mainPrepareDictionaryData(dataAugmentation):
     print('Lidando com txt data')
     
     shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
-    saudaveisDictionaryData, doentesDictionaryData = mainReadData()
+    saudaveisRawDictionaryData, doentesRawDictionaryData = mainReadData()
     
-    filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
+    # filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
+    maxValue, minValue = getMaxMinValueFromDataDic(saudaveisRawDictionaryData, doentesRawDictionaryData)
+    saudaveisDictionaryData, doentesDictionaryData = prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, maxValue, minValue)
+
+    mean, std = getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData)
 
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
     
-    trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
+    # trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
     
-    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation)
+    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation, mean, std )
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device
 
 def mainReadData():
     print('\nprepareDataFromTXT')
     txt_saudaveis_files, txt_doentes_files= getFilesName()
-    saudaveisDictionaryData = readFilesByPatient(txt_saudaveis_files, 'saudaveis')
-    doentesDictionaryData = readFilesByPatient(txt_doentes_files, 'doentes')
-    return saudaveisDictionaryData, doentesDictionaryData
+    saudaveisRawDictionaryData = readFilesByPatient(txt_saudaveis_files, 'saudaveis')
+    doentesRawDictionaryData = readFilesByPatient(txt_doentes_files, 'doentes')
+    return saudaveisRawDictionaryData, doentesRawDictionaryData
 
 def getFilesName():
     print('getFilesName')
-    folder = 'Imagens_TXT_Estaticas_Balanceadas_allData'
-    print('folder = Imagens_TXT_Estaticas_Balanceadas_allData')
-    txt_saudaveis_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/0Saudavel/*.txt"))
-    txt_doentes_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_allData/1Doente/*.txt"))
-    #txt_saudaveis_files = glob.glob("../poucas_Imagens/10Saudavel/*.txt")
-    #txt_doentes_files = glob.glob("../poucas_Imagens/11Doente/*.txt")
+
+    # folder = 'Imagens_TXT_Estaticas_Balanceadas_asCabıoglu'
+    # print('folder = Imagens_TXT_Estaticas_Balanceadas_asCabıoglu')
+    # txt_saudaveis_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu/0Saudavel/*.txt"))
+    # txt_doentes_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu/1Doente/*.txt"))
     
+    #GDRIVE RUNNING
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu'
+    print(folder)
+    txt_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.txt"))
+    txt_doentes_files = sorted(glob.glob(folder+"/1Doente/*.txt"))
+
     return txt_saudaveis_files, txt_doentes_files
 
 def readFilesByPatient(txt_files, patientClass):
@@ -58,17 +70,7 @@ def readFilesByPatient(txt_files, patientClass):
         patientId = fileName.split('.')[0]
         inputData = np.loadtxt(txt_files[i], dtype='f', delimiter=' ')
         #print('antes inputData', inputData.shape)
-        #inputData = preProcessingWithRatio(inputData, i, patientClass)
-        #Stack the data to simulate 3d image
-        inputData = np.stack((inputData,)*3, axis=2)
-        #print('inputData', inputData.shape)
-        inputData = np.transpose(inputData, (2, 0, 1))
-        #isso porque o tensor tem formato C, H, W
-        #conforme toTensor: 
-        # Converts a PIL Image or numpy.ndarray (H x W x C) in the range [0, 255] 
-        # to a torch.FloatTensor of shape (C x H x W) in the range [0.0, 1.0] 
-        #print('depois inputData', inputData.shape)
-        
+
         if patientId in dataAsDictionary.keys(): 
             dataAsDictionary[patientId].append(inputData)
         else:
@@ -76,69 +78,149 @@ def readFilesByPatient(txt_files, patientClass):
             dataAsDictionary[patientId].append(inputData)
     return dataAsDictionary
 
-def preProcessingWithRatio(image, i, type):
-    numpyImage = image
+def prepareImage(saudaveisRawDictionaryData, doentesRawDictionaryData, maxValue, minValue):
+    saudaveisDictionaryData = saudaveisRawDictionaryData.copy()
+    for patientId in saudaveisRawDictionaryData:
+        # Para cada paciente
+        values = saudaveisRawDictionaryData[patientId]
+        imagesParsed = []
+        for image in values:
+            inputData = preProcessingWithRatio(image, maxValue, minValue)
+            inputData = convertToCorrectDimmensions(inputData)
+            imagesParsed.append(inputData)
+            # print('inputData', inputData.shape)
 
-    flattenDataset = numpyImage.flatten()
-    indices = np.argpartition(flattenDataset, -100)[-100:] 
-    topValues = flattenDataset[indices]
-    topValues = np.mean(topValues)
-    #print('topValues', topValues, ' size ', topValues.size)
-    # # scale by ratio of 255/max to increase to fully dynamic range
-    numpyImage = ((255/topValues)*numpyImage).clip(0,255)
-    #numpyImage2 = ((255/max)*numpyImage)
-    #print('numpyImage min = ', numpyImage.min(), 'max = ', numpyImage.max())
-    #print('numpyImage2 min = ', numpyImage2.min(), 'max = ', numpyImage2.max())
-    #print('numpyImage', numpyImage.shape)
-    # print('numpyImage', numpyImage.shape)
-    # imOut = cv2.cvtColor(numpyImage, cv2.COLOR_GRAY2RGB)
-    # print('imOut', imOut)
+        saudaveisDictionaryData[patientId] = imagesParsed
+        # print('saudaveisDictionaryData[patientId]', len(saudaveisDictionaryData[patientId]))
+        # print('saudaveisRawDictionaryData[patientId]', len(saudaveisRawDictionaryData[patientId]))
+    # print('size saudaveisRawDictionaryData', len(list(saudaveisRawDictionaryData.keys())), len(list(saudaveisRawDictionaryData.values())))
+    # print('size saudaveisDictionaryData', len(list(saudaveisDictionaryData.keys())), len(list(saudaveisDictionaryData.values())))
+
+    doentesDictionaryData = doentesRawDictionaryData.copy()
+    for patientId in doentesRawDictionaryData:
+        # Para cada paciente
+        values = doentesRawDictionaryData[patientId]
+        imagesParsed = []
+        for image in values:
+            inputData = preProcessingWithRatio(image, maxValue, minValue)
+            inputData = convertToCorrectDimmensions(inputData)
+            # print('inputData', inputData.shape)
+            imagesParsed.append(inputData)
+
+        doentesDictionaryData[patientId] = imagesParsed
+        # print('doentesDictionaryData[patientId]', len(doentesDictionaryData[patientId]))
+        # print('doentesRawDictionaryData[patientId]', len(doentesRawDictionaryData[patientId]))
+    # print('size doentesRawDictionaryData', len(list(doentesRawDictionaryData.keys())), len(list(doentesRawDictionaryData.values())))
+    # print('size doentesDictionaryData', len(list(doentesDictionaryData.keys())), len(list(doentesDictionaryData.values())))
+
+    return saudaveisDictionaryData, doentesDictionaryData
+
+def convertToCorrectDimmensions(inputData):
+    #Stack the data to simulate 3d image
+    inputData = np.stack((inputData,)*3, axis=2)
+    # print('1 inputData', inputData.shape)
+    # print('min',np.min(inputData))
+    # print('max',np.max(inputData))
+    
+    inputData = np.transpose(inputData, (2, 0, 1))
+    # print('2 inputData', inputData.shape)
+    #isso porque o tensor tem formato C, H, W
+    #conforme toTensor: 
+    # Converts a PIL Image or numpy.ndarray (H x W x C) in the range [0, 255] 
+    # to a torch.FloatTensor of shape (C x H x W) in the range [0.0, 1.0] 
+    #print('depois inputData', inputData.shape)
+    return inputData
+
+def preProcessingWithRatio(numpyImage, maxValue, minValue):
+    #Converte para inteiro entre 0-255
+    numpyImage = ((numpyImage-minValue) * 255 / (maxValue - minValue)).clip(0,255)
+    # print('preprocessing - antes', numpyImage.shape)
+    # print('min',np.min(numpyImage))
+    # print('max',np.max(numpyImage))
+
+    numpyImage = np.round(numpyImage)
     numpyImage = numpyImage.astype(np.uint8)
-    #plotTestTransformedImages(numpyImage, type + '_preProcessedImage'+ str(i))
+    # print('dp', numpyImage.shape)
+    # print('min',np.min(numpyImage))
+    # print('max',np.max(numpyImage))
+    
+    #converte para 0-1
+    numpyImage = numpyImage/255
+    
     return numpyImage
 
 def splitData(shuffleSeed, saudaveisData, doentesData):
+
+    totalPatientsDoentesDataset = len(doentesData.keys())
+    numberTrainDoentes = math.floor(totalPatientsDoentesDataset*0.70)
+    numberValidacaoDoentes = math.floor((totalPatientsDoentesDataset - numberTrainDoentes)/2)
+
     print('\nSplit Healthy Dataset')
     saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData)
-    
-    saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
-    saudaveisIndTeste = ['T0218','T0233','T0208','T0190','T0225','T0177']
-    saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244','T0212']
+
+    # To force specific patients
+    # saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
+    # saudaveisIndTeste = ['T0218','T0233','T0208','T0190','T0225','T0177']
+    # # saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244','T0212']
+    # saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244']
     saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid, 'saudaveis')
     
+    del numberTrainDoentes
+    del numberValidacaoDoentes
+    del saudaveisIndTra
+    del saudaveisIndTeste
+    del saudaveisIndValid
+    del saudaveisData
+
+    gc.collect()
+    torch.cuda.empty_cache()
+
     print('\nSplit Cancer Dataset')
     doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
-    
-    doentesIndTra= ['T0267','T0255','T0138','T0286','T0198','T0246','T0192','T0258','T0202','T0209','T0241','T0179','T0287','T0213','T0203','T0210','T0240','T0270','T0180','T0264','T0269','T0282','T0281','T0277','T0273','T0256']
-    doentesIndTeste=['T0257','T0278','T0285','T0268','T0283','T0271']
-    doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
+
+    # To force specific patients
+    # doentesIndTra= ['T0267','T0255','T0138','T0286','T0198','T0246','T0192','T0258','T0202','T0209','T0241','T0179','T0287','T0213','T0203','T0210','T0240','T0270','T0180','T0264','T0269','T0282','T0281','T0277','T0273','T0256']
+    # doentesIndTeste=['T0257','T0278','T0285','T0268','T0283','T0271']
+    # # doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
+    # doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
     doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid, 'doentes')
-    
+    del doentesIndTra
+    del doentesIndTeste
+    del doentesIndValid
+    del doentesData
+
+    gc.collect()
+    torch.cuda.empty_cache()
+
     trainData, trainTarget = createSplitDataset(shuffleSeed, saudaveisTrainDataset, doentesTrainDataset)
-    print('\nTotal de dados para treinamento', len(trainData))
+    
+    print('\nTotal de dados para treinamento', len(trainData), len(trainTarget))
     testData, testTarget = createSplitDataset(shuffleSeed, saudaveisTestDataset, doentesTestDataset)
-    print('\nTotal de dados para teste', len(testData))
+    print('\nTotal de dados para teste', len(testData), len(testTarget))
     validationData, validationTarget = createSplitDataset(shuffleSeed, saudaveisValidationDataset, doentesValidationDataset)
-    print('\nTotal de dados para validacao', len(validationData))
+    print('\nTotal de dados para validacao', len(validationData), len(validationTarget))
     #Trocando teste e validation
     #print('Dados de teste e validacao foram invertidos')
     #return trainData, trainTarget, validationData, validationTarget, testData, testTarget
+    gc.collect()
+    torch.cuda.empty_cache()
+    
     return trainData, trainTarget, testData, testTarget, validationData, validationTarget
 
 def createSplitDataset(shuffleSeed, saudaveisDataset, doentesDataset):
-    #print('len(saudaveisDataset)', len(saudaveisDataset))
-    #print('len(doentesDataset)', len(doentesDataset))
+    # print('len(saudaveisDataset)', len(saudaveisDataset))
+    # print('len(doentesDataset)', len(doentesDataset))
     saudaveisTarget = np.full(len(saudaveisDataset), 0)
     doentesTarget = np.full(len(doentesDataset), 1)
-    #print('saudaveisTarget', saudaveisTarget)
-    #print('doentesTarget', doentesTarget)
+    # print('saudaveisTarget', saudaveisTarget)
+    # print('doentesTarget', doentesTarget)
 
     allData = np.concatenate((saudaveisDataset, doentesDataset), axis=0)
     #print('allData', allData)
-    #print('len(allData)', len(allData))
+    # print('len(allData)', len(allData))
     allTarget = np.concatenate((saudaveisTarget, doentesTarget), axis=0)
     #print('allTarget', allTarget)
-    #print('len(allTarget)', len(allTarget))
+    # print('len(allTarget)', len(allTarget))
 
     indicesValidation = list(range(len(allTarget)))
     #print('indicesValidation 1', indicesValidation)
@@ -162,9 +244,14 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     # print('len', len(keysArray))
     # print('type', type(keysArray))
 
-    trainPatients = indicesTreinamento#keysArray[indicesTreinamento]
-    testPatients = indicesTeste#keysArray[indicesTeste]
-    validationPatients = indicesValidacao#keysArray[indicesValidacao] 
+    # # To force specific patients
+    # trainPatients = indicesTreinamento
+    # testPatients = indicesTeste
+    # validationPatients = indicesValidacao
+
+    trainPatients = keysArray[indicesTreinamento]
+    testPatients = keysArray[indicesTeste]
+    validationPatients = keysArray[indicesValidacao] 
     
     print('trainPatients', trainPatients)
     print('validationPatients', validationPatients) 
@@ -247,11 +334,15 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     # print('imagens do mixedTestPatients', mixedTestPatients)
     print('imagens do testDataset', len(testDataset))
     print('imagens do validationDataset', len(validationDataset))
+    del dictionaryData
+    gc.collect()
+    torch.cuda.empty_cache()
 
     train, test, validation = np.array(trainDataset), np.array(testDataset), np.array(validationDataset)
     # resizedTrained, resizedTest, resizedValidation = train, test, validation 
     resizedTrained, resizedTest, resizedValidation = resizeImages(train, test, validation)
-
+    gc.collect()
+    torch.cuda.empty_cache()
     # plotAllSubsetImages(resizedTrained, name+'train')
     # plotAllSubsetImages(resizedTest, name+'test')
     # plotAllSubsetImages(resizedValidation, name+'validation')
@@ -259,6 +350,10 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     print('train', resizedTrained.shape)
     print('test', resizedTest.shape)
     print('validation', resizedValidation.shape)
+    
+    gc.collect()
+    torch.cuda.empty_cache()
+
     return resizedTrained, resizedTest, resizedValidation
 
 def resizeImages(train, test, validation):
@@ -275,13 +370,20 @@ def resizeImages(train, test, validation):
     for i in range(validation.shape[0]):
         resizedValidation[i, :] = transform.resize(validation[i], (3, 224, 224))
     
+    gc.collect()
+    torch.cuda.empty_cache()
+    
     return resizedTrained, resizedTest, resizedValidation
 
-def splitPatientsFromDictionary(shuffleSeed, dictionaryData):
+def splitPatientsFromDictionary(shuffleSeed, dictionaryData, numberTrain=None, numberValidacao=None):
     print('Total dados', len(dictionaryData))
     totalPatientsDataset = len(dictionaryData.keys())
-    trainPatientsDataset = math.floor(totalPatientsDataset*0.70)
-    testPatientsDataset = math.floor((totalPatientsDataset - trainPatientsDataset)/2)
+    if numberTrain == None:
+        trainPatientsDataset = math.floor(totalPatientsDataset*0.70)
+        validationPatientsDataset = math.floor((totalPatientsDataset - trainPatientsDataset)/2)
+    else: 
+        trainPatientsDataset = numberTrain
+        validationPatientsDataset = numberValidacao
     #validationPatientsTotal = totalPatientsDataset - trainPatientsDataset - testPatientsDataset
 
     indicesDataset = list(range(totalPatientsDataset))
@@ -289,8 +391,8 @@ def splitPatientsFromDictionary(shuffleSeed, dictionaryData):
     np.random.shuffle(indicesDataset)
 
     indicesTreinamento = indicesDataset[:trainPatientsDataset] 
-    indicesTeste = indicesDataset[trainPatientsDataset:trainPatientsDataset+testPatientsDataset]
-    indicesValidacao = indicesDataset[trainPatientsDataset+testPatientsDataset:]
+    indicesValidacao = indicesDataset[trainPatientsDataset:trainPatientsDataset+validationPatientsDataset]
+    indicesTeste= indicesDataset[trainPatientsDataset+validationPatientsDataset:]
     
     print('Quantidade de dados para treinamento',len(indicesTreinamento))
     print('Quantidade de dados para teste',len(indicesTeste))
@@ -365,7 +467,7 @@ def minMaxNormalization(dataTrain, dataTest, dataValidation, deltaT, min10mean):
     # print('min validation', dataValidation.min())
     return dataTrain, dataTest, dataValidation
 
-def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size, dataAugmentation):
+def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTargetTest, dataValidation, dataTargetValidation, batch_size, dataAugmentation, mean, std ):
     print('prepareNumpyDatasetBalancedData')
 
     #The data augmentation step conveys four types of image data generation: 
@@ -386,15 +488,15 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
         transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards  # Imagenet standards
+        transforms.Normalize([mean,mean, mean], [std, std, std])  
     ])
     
     testValidationTransform = transforms.Compose([
     #     transforms.Resize((224, 224)),
-    #     transforms.ToTensor(),
+        # transforms.ToTensor(),
     #     transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
     #     #transforms.Lambda(lambda x: torch.cat([x/topMean, x/topMean, x/topMean], 0)),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Imagenet standards
+        transforms.Normalize([mean, mean, mean], [std, std, std])  
     ])
     
     if dataAugmentation:
@@ -420,8 +522,8 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTraining[0] = resultLabelsTraining[0] + np.count_nonzero(l == 0)
         resultLabelsTraining[1] = resultLabelsTraining[1] + np.count_nonzero(l == 1)
-        # plotTransformedImages(images, i, 'transformed_train')
-        # plotAllSubsetImages(images, 'transformed_train'+str(i))
+        # plotTransformedImages(images, i, 'transformed_train', mean, std)
+        # plotAllSubsetImages(images, 'transformed_train'+str(i), mean, std)
         i = i+1
 
     i=0
@@ -430,8 +532,8 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsTesting[0] = resultLabelsTesting[0] + np.count_nonzero(l == 0)
         resultLabelsTesting[1] = resultLabelsTesting[1] + np.count_nonzero(l == 1)
-        # plotTransformedImages(images, i, 'transformed_test')
-        # plotAllSubsetImages(images, 'transformed_test'+str(i))
+        # plotTransformedImages(images, i, 'transformed_test', mean, std)
+        # plotAllSubsetImages(images, 'transformed_test'+str(i), mean, std)
         i = i+1
 
     resultLabelsValidation = torch.zeros(2, dtype=torch.long)
@@ -440,8 +542,8 @@ def prepareNumpyDatasetBalancedData(dataTrain, dataTargetTrain, dataTest, dataTa
         l = labels.numpy()
         resultLabelsValidation[0] = resultLabelsValidation[0] + np.count_nonzero(l == 0)
         resultLabelsValidation[1] = resultLabelsValidation[1] + np.count_nonzero(l == 1)
-        # plotTransformedImages(images, i, 'transformed_validation')
-        # plotAllSubsetImages(images, 'transformed_validation'+str(i))
+        # plotTransformedImages(images, i, 'transformed_validation',  mean, std)
+        # plotAllSubsetImages(images, 'transformed_validation'+str(i), mean, std)
         i = i+1
 
     cat_df = pd.DataFrame({

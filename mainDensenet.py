@@ -1,4 +1,3 @@
-from handleTXTDataset import createDataLoaders #prepareDataFromTXT, splitDataset, prepareNumpyDataset, getCommonArgs
 from prepareModel import prepareTrainingLoss, prepareTrainingOptimizer, prepareDensenetModelWithTXT
 from training import train
 from testing import evaluate
@@ -7,6 +6,8 @@ from plots import plotData, plotTestingAcc
 from prepareDataDictionary import mainPrepareDictionaryData
 from utils import saveCsvConfusionMatrix
 from readMatlabNumpyData import mainPrepareDictionaryDataFromNumpy
+import gc
+import torch
 
 def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True):
     print('\n\nTESTES COM DENSENET\n\n')
@@ -16,21 +17,27 @@ def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNu
     
     #DATASET STEPS:
     print('Load dataset')
-    #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
     if isNumpy:
         trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation)
     else:
         trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryData(dataAugmentation)
-    
+    gc.collect()
+    torch.cuda.empty_cache()
+
     #PREPARE MODEL STEPS:
     print('\nPrepare model')
     model = prepareDensenetModelWithTXT(experimentType, device)
     criterion = prepareTrainingLoss()
     optimizer = prepareTrainingOptimizer(model, typeLR)
-
+    gc.collect()
+    torch.cuda.empty_cache()
+    
     print('Train model')
     model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation = train(model, criterion,
         optimizer, trainLoader, validationLoader, resultsPlotName, max_epochs_stop, n_epochs, device)
+    
+    gc.collect()
+    torch.cuda.empty_cache()
 
     print('\nConfusion matrix Train\n', cmTrain)
     print('\nConfusion matrix Validation\n', cmValidation)
@@ -44,6 +51,8 @@ def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNu
     historyTest, cmTest = evaluate(model, testLoader, criterion, n_classes, resultsPlotName, device)
     print('\nConfusion matrix Test\n', cmTest)
     saveCsvConfusionMatrix(cmTest, resultsPlotName)
-
+    gc.collect()
+    torch.cuda.empty_cache()
+    
     return model, history, historyTest, cmTrain, cmValidation,cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df
     

@@ -11,16 +11,33 @@ from customDatasetFromNumpyArray import CustomDatasetFromNumpyArray
 from utilsParams import getCommonArgs
 from skimage import transform
 import cv2
-from prepareDataDictionary import prepareNumpyDatasetBalancedData, splitData
+from prepareDataDictionary import prepareNumpyDatasetBalancedData, splitData, prepareImage
+from preprocessing import getMeanStdEntireBase, getMaxMinValueFromDataDic, getMeanStdUsingDataLoader
+import gc
+import torch
 
 def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
     print('Lidando com numpy data')
     shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
     saudaveisDictionaryData, doentesDictionaryData = mainReadNumpyData()
+    print('len(saudaveisDictionaryData)', len(saudaveisDictionaryData))
+    print('len(doentesDictionaryData)', len(doentesDictionaryData))
+    gc.collect()
+    torch.cuda.empty_cache()
     
-    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
+    # mean, std = getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData)
+    mean = 0.4516 #73378329850344
+    std = 0.4363 #97180299452515
 
-    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation)
+    trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
+    gc.collect()
+    torch.cuda.empty_cache()
+
+    trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation, mean, std)
+    
+    gc.collect()
+    torch.cuda.empty_cache()
+    
     return trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device
 
 def mainReadNumpyData():
@@ -49,16 +66,16 @@ def getFilesName():
     # folder = "Imagens_numpy_array_allData_rgb"
     # folder = "Imagens_numpy_array_allData_rgb_double"
     
-    folder='Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites'
-    print(folder)
-    numpy_saudaveis_files = sorted(glob.glob("../../../"+ folder+"/0Saudaveis/*.npy"))
-    numpy_doentes_files = sorted(glob.glob("../../../"+ folder+"/1Doentes/*.npy"))
+    # folder='Imagens_numpy_array_asCabıoglu_rgb'
+    # print(folder)
+    # numpy_saudaveis_files = sorted(glob.glob("../../../"+ folder+"/0Saudavel/*.npy"))
+    # numpy_doentes_files = sorted(glob.glob("../../../"+ folder+"/1Doente/*.npy"))
 
     #GDRIVE RUNNING
-    # folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_allData_entireDatabase_MinMax_extrapolandoLimites'
-    # print(folder)
-    # numpy_saudaveis_files = sorted(glob.glob(folder+"/0Saudaveis/*.npy"))
-    # numpy_doentes_files = sorted(glob.glob(folder+"/1Doentes/*.npy"))
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDados'
+    print(folder)
+    numpy_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.npy"))
+    numpy_doentes_files = sorted(glob.glob(folder+"/1Doente/*.npy"))
 
     
     #If not reading from the script
@@ -91,3 +108,4 @@ def readFilesByPatient(numpy_files_name, patientClass):
             dataAsDictionary[patientId] = []
             dataAsDictionary[patientId].append(inputData)
     return dataAsDictionary
+

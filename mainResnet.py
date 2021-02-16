@@ -1,4 +1,3 @@
-from handleTXTDataset import createDataLoaders#prepareDataFromTXT, splitDataset, prepareNumpyDataset, getCommonArgs
 from prepareModel import prepareTrainingLoss, prepareTrainingOptimizer, prepareResnetModelWithTXT
 from training import train
 from testing import evaluate
@@ -8,6 +7,10 @@ from prepareDataDictionary import mainPrepareDictionaryData
 from utils import saveCsvConfusionMatrix
 from readMatlabNumpyData import mainPrepareDictionaryDataFromNumpy
 
+import gc
+import torch
+
+
 def mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True):
     print('\n\nTESTES COM RESNET\n\n')
 
@@ -15,12 +18,14 @@ def mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNump
     #DATASET STEPS:
     print('isNumpy', isNumpy)
     print('Load dataset')
-    #trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs = createDataLoaders()
     if isNumpy:
         trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation)
     else:
         trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryData(dataAugmentation)
     
+    gc.collect()
+    torch.cuda.empty_cache()
+
     #PREPARE MODEL STEPS:
     print('\nPrepare model')
     model = prepareResnetModelWithTXT(experimentType, device)
@@ -32,6 +37,9 @@ def mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNump
     checkpoint_path = 'resnet-txt-teste.pth'
     model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation = train(model, criterion,
         optimizer, trainLoader, validationLoader, resultsPlotName, max_epochs_stop, n_epochs, device)
+    
+    gc.collect()
+    torch.cuda.empty_cache()
 
     print('\nConfusion matrix Train\n', cmTrain)
     print('\nConfusion matrix Validation\n', cmValidation)
@@ -46,5 +54,8 @@ def mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNump
     print('\nConfusion matrix Test\n', cmTest)
     saveCsvConfusionMatrix(cmTest, resultsPlotName)
     
+    gc.collect()
+    torch.cuda.empty_cache()
+
     return model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df 
     

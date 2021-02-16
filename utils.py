@@ -1,5 +1,6 @@
 from sklearn.metrics import confusion_matrix, f1_score
 import csv
+import torch
 
 # def calculateConfusionMatrix(y_true,y_pred):
 #     confMatrix = confusion_matrix(y_true, y_pred, labels=[0,1])
@@ -55,3 +56,12 @@ def saveCsvConfusionMatrix(confusionMatrix, resultsPlotName):
         cm_writer.writerow(['-','0 Saudavel', '1 Doente'])
         cm_writer.writerow(['0', tn, fn])
         cm_writer.writerow(['1',fp, tp])
+
+def convertToNumpy(data):
+    hasGpu = torch.cuda.is_available()
+    # print('111 hasGpu', hasGpu)
+    if not hasGpu:
+        # print('usando cpu')
+        return data.numpy()
+    # print('usando gpu')
+    return data.cpu().numpy()
