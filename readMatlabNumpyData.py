@@ -72,7 +72,9 @@ def getFilesName():
     # numpy_doentes_files = sorted(glob.glob("../../../"+ folder+"/1Doente/*.npy"))
 
     #GDRIVE RUNNING
-    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDados'
+    # Imagens_numpy_array_asCabıoglu_rgb_aumentoDados
+    # Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu_DA
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu_DA'
     print(folder)
     numpy_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.npy"))
     numpy_doentes_files = sorted(glob.glob(folder+"/1Doente/*.npy"))
