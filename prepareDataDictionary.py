@@ -51,7 +51,7 @@ def getFilesName():
     # txt_doentes_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu/1Doente/*.txt"))
     
     #GDRIVE RUNNING
-    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu'
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_frontalImages'
     print(folder)
     txt_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.txt"))
     txt_doentes_files = sorted(glob.glob(folder+"/1Doente/*.txt"))
@@ -194,11 +194,6 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     print('\nSplit Healthy Dataset')
     saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid = splitPatientsFromDictionary(shuffleSeed, saudaveisData)
 
-    # To force specific patients
-    # saudaveisIndTra = ['T0189','T0196','T0193','T0220','T0199','T0217','T0188','T0224','T0216','T0211','T0259','T0194','T0200','T0239','T0236','T0272','T0201','T0226','T0195','T0221','T0238','T0237','T0234','T0275','T0222','T0261']
-    # saudaveisIndTeste = ['T0218','T0233','T0208','T0190','T0225','T0177']
-    # # saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244','T0212']
-    # saudaveisIndValid = ['T0243','T0276','T0191','T0219','T0244']
     saudaveisTrainDataset, saudaveisTestDataset, saudaveisValidationDataset = prepareDatasetFromDictionary(saudaveisData, saudaveisIndTra, saudaveisIndTeste, saudaveisIndValid, 'saudaveis')
     
     del numberTrainDoentes
@@ -214,11 +209,6 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     print('\nSplit Cancer Dataset')
     doentesIndTra, doentesIndTeste, doentesIndValid = splitPatientsFromDictionary(shuffleSeed, doentesData)
 
-    # To force specific patients
-    # doentesIndTra= ['T0267','T0255','T0138','T0286','T0198','T0246','T0192','T0258','T0202','T0209','T0241','T0179','T0287','T0213','T0203','T0210','T0240','T0270','T0180','T0264','T0269','T0282','T0281','T0277','T0273','T0256']
-    # doentesIndTeste=['T0257','T0278','T0285','T0268','T0283','T0271']
-    # # doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
-    # doentesIndValid=['T0266','T0245','T0263','T0260','T0181','T0204']
     doentesTrainDataset, doentesTestDataset, doentesValidationDataset = prepareDatasetFromDictionary(doentesData, doentesIndTra, doentesIndTeste, doentesIndValid, 'doentes')
     del doentesIndTra
     del doentesIndTeste
@@ -235,55 +225,32 @@ def splitData(shuffleSeed, saudaveisData, doentesData):
     print('\nTotal de dados para teste', len(testData), len(testTarget))
     validationData, validationTarget = createSplitDataset(shuffleSeed, saudaveisValidationDataset, doentesValidationDataset)
     print('\nTotal de dados para validacao', len(validationData), len(validationTarget))
-    #Trocando teste e validation
-    #print('Dados de teste e validacao foram invertidos')
-    #return trainData, trainTarget, validationData, validationTarget, testData, testTarget
+    
     gc.collect()
     torch.cuda.empty_cache()
     
     return trainData, trainTarget, testData, testTarget, validationData, validationTarget
 
 def createSplitDataset(shuffleSeed, saudaveisDataset, doentesDataset):
-    # print('len(saudaveisDataset)', len(saudaveisDataset))
-    # print('len(doentesDataset)', len(doentesDataset))
     saudaveisTarget = np.full(len(saudaveisDataset), 0)
     doentesTarget = np.full(len(doentesDataset), 1)
-    # print('saudaveisTarget', saudaveisTarget)
-    # print('doentesTarget', doentesTarget)
 
     allData = np.concatenate((saudaveisDataset, doentesDataset), axis=0)
-    #print('allData', allData)
-    # print('len(allData)', len(allData))
+    
     allTarget = np.concatenate((saudaveisTarget, doentesTarget), axis=0)
-    #print('allTarget', allTarget)
-    # print('len(allTarget)', len(allTarget))
-
+    
     indicesValidation = list(range(len(allTarget)))
-    #print('indicesValidation 1', indicesValidation)
     np.random.seed(shuffleSeed)
     np.random.shuffle(indicesValidation)
-    #print('indicesValidation 2', indicesValidation)
 
     allData = allData[indicesValidation]
-    #print('allData', allData)
-    #print('len(allData)', len(allData))
     allTarget = allTarget[indicesValidation]
-    #print('allTarget', allTarget)
-    #print('len(allTarget)', len(allTarget))
 
     return allData, allTarget
 
 def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTeste, indicesValidacao, name):
     dictKeys = dictionaryData.keys()
     keysArray = np.array(list(dictKeys))
-    # print('keysArray', keysArray)
-    # print('len', len(keysArray))
-    # print('type', type(keysArray))
-
-    # # To force specific patients
-    # trainPatients = indicesTreinamento
-    # testPatients = indicesTeste
-    # validationPatients = indicesValidacao
 
     trainPatients = keysArray[indicesTreinamento]
     testPatients = keysArray[indicesTeste]
@@ -292,8 +259,6 @@ def prepareDatasetFromDictionary(dictionaryData, indicesTreinamento, indicesTest
     print('trainPatients', trainPatients)
     print('validationPatients', validationPatients) 
     print('testPatients', testPatients)
-    # print('originalmente testPatients', testPatients)
-    # print('originalmente validationPatients', validationPatients)
     
     trainDataset = []
     # testDataset = []
