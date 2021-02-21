@@ -25,9 +25,9 @@ def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
     gc.collect()
     torch.cuda.empty_cache()
     
-    # mean, std = getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData)
-    mean = 0.4516 #73378329850344
-    std = 0.4363 #97180299452515
+    mean, std = getMeanStdEntireBase(saudaveisDictionaryData, doentesDictionaryData)
+    # mean = 0.4516 #73378329850344
+    # std = 0.4363 #97180299452515
 
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
     gc.collect()
