@@ -1,6 +1,7 @@
-from sklearn.metrics import confusion_matrix, f1_score, precision_score
+from sklearn.metrics import confusion_matrix, f1_score, precision_score, roc_curve, auc
 import csv
 import torch
+from plots import plotAUC
 
 # def calculateConfusionMatrix(y_true,y_pred):
 #     confMatrix = confusion_matrix(y_true, y_pred, labels=[0,1])
@@ -47,6 +48,16 @@ def calcSensitividade(tp, fn):
 def calcAcc(tn, fp, fn, tp):
     acc = (tp+tn)/(tn + fp + fn + tp)
     return acc
+
+def calcROC(target, predicted, modelName):
+    fpr, tpr, thresholds = roc_curve(target, predicted)
+    print('fpr, tpr, thresholds', fpr, tpr, thresholds)
+    roc_auc = auc(fpr, tpr)
+    print('roc_auc', roc_auc)
+
+    plotAUC(fpr, tpr, roc_auc, modelName)
+    
+    return roc_auc, fpr, tpr, thresholds
 
 def saveCsvConfusionMatrix(confusionMatrix, resultsPlotName):
     tn, fp, fn, tp = confusionMatrix.ravel()
