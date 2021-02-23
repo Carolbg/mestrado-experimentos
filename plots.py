@@ -29,6 +29,7 @@ def plotLosses(history, model):
     }
     plotComparative(history, 'train_loss', 'valid_loss', saveName, xlabel, ylabel, title, labels)
 
+
 def plotAcc(history, model):
     xlabel = 'Época'
     ylabel = 'Acurácia'
@@ -77,16 +78,40 @@ def plotF1Score(history, model):
     plotComparative(history, 'train_f1Score', 'validation_f1Score', saveName, xlabel, ylabel, title, labels)   
 
 
+def plotSingleSet(data, saveName, xlabel, ylabel, title, labels):
+    fig = plt.figure(figsize=(8, 2))
+    plt.plot(data, label=labels)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    fig.savefig(saveName + '.png')
+
+def plotF1ScoreSingleSet(history, model):
+    xlabel = 'Epoch'
+    ylabel = 'F1Score'
+    title = 'F1Score validation'
+    saveName = 'plotSingleF1Score' + model
+    plotSingleSet(history['validation_f1Score'], saveName, xlabel, ylabel, title, 'F1-Score validation')   
+
+
+def plotLossSingleSet(history, model):
+    xlabel = 'Number of epochs'
+    ylabel = 'loss'
+    title = 'Validation loss'
+    saveName = 'plotSingleLoss' + model
+    plotSingleSet(history['valid_loss'], saveName, xlabel, ylabel, title, '')   
+
+
 def plotAUC(fpr, tpr, roc_auc, model):
     fig = plt.figure()
     lw = 2
-    plt.plot(fpr, tpr, color='darkorange',
+    plt.plot(fpr, tpr, color='darkslategrey',
             lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
     plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
+    plt.xlabel('1 - Specificity')
+    plt.ylabel('Sensitivity')
     plt.title('Receiver Operating Characteristic')
     plt.legend(loc="lower right")
     plt.show()
@@ -99,6 +124,8 @@ def plotData(history, model):
     plotEspecificidade(history, model)
     plotF1Score(history, model)
     plotLosses(history, model)
+    plotF1ScoreSingleSet(history, model)
+    plotLossSingleSet(history, model)
 
 def plotTestingAcc(results, model):
     # Plot using seaborn
