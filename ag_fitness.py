@@ -9,6 +9,7 @@ import numpy as np
 import concurrent.futures
 from prepareDataDictionary import getCommonArgs
 import multiprocessing as mp
+from ag_verifyLayers import verifyNetworkLayers
 
 def saveGlobalVariables(aGeneration, aTrainLoader, aTestLoader, aValidationLoader, aCat_df, aBatch_size, aDevice, aCriterion, tp, acacheConfigClass, amax_epochs_stop, an_epochs):
     # global generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion
@@ -87,9 +88,20 @@ def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, vali
     history.to_csv('history_'+ resultsPlotName+ '.csv', index = False, header=True)
 
     allF1Score = history['validation_f1Score']
+    
+    # print('history', history)
     # the fitness is the f1-score of the validation set
     
     lastIndex = len(allF1Score) - 1
     agFitness = allF1Score[lastIndex]
+    # print('fitness original', agFitness)
+    
+    isReducingLayerSize = verifyNetworkLayers(individuo) 
+
+    if isReducingLayerSize == False:
+        agFitness = agFitness*0.7
+        # print('penalizada a rede', agFitness)
+    else:
+        # print('rede nao penalizada')
 
     return agFitness

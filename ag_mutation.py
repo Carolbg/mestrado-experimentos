@@ -85,8 +85,8 @@ def applyMutationInd(individuo, sequenceChild):
 def mutateGene(individuo, geneIndex, subGene):
     geneToMutate = individuo[geneIndex]
     print('@@@ original', geneToMutate, 'geneIndex', geneIndex)
-    if geneIndex >= 2:
-        newValue= mutateGeneLayers(geneToMutate, geneIndex, subGene)
+    if geneIndex >= 1:
+        newValue = mutateGeneLayers(geneToMutate, geneIndex, subGene)
         print('@@@ mutated', newValue)
         return newValue
     else:
