@@ -8,12 +8,12 @@ def initializePopulation(tp):
     return np.array(population)
 
 def initializeIndividual():
-    individual = [initializeGene(i) for i in range(12)]
-    # print('individual', len(individual))
+    individual = [initializeGene(i) for i in range(11)]
+    print('individual', len(individual))
     return np.array(individual)
 
 def initializeGene(i):
-    if i >= 2:
+    if i >= 1:
         return initializeGeneLayers(i)
     else:
         value = randomInt(1, 6)
@@ -37,13 +37,13 @@ def initializeGeneLayers(i):
     initialSeed = uniform(0, 5000)
     seed(initialSeed)
     # print('seed', initialSeed)
-    if i % 2 == 0:
+    if i % 2 != 0:
         denseLayer = initializeDenseLayers(i)
-        # print('denseLayer', denseLayer)
+        print('denseLayer', denseLayer)
         return denseLayer
     else:
         dropoutLayer = initializeDropoutLayers(i)
-        # print('dropoutLayer', dropoutLayer)
+        print('dropoutLayer', dropoutLayer)
         return dropoutLayer
 
 def initializeDenseLayers(i):

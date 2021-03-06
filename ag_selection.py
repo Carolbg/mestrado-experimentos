@@ -6,19 +6,22 @@ def selectParentsWithTorneio(population, populationFitness, tour):
     numberChildren = len(population)
     numberParents = int(numberChildren/2)
 
-    parents1 = np.zeros((numberParents, 12), dtype=object)
-    parents2 = np.zeros((numberParents, 12), dtype=object)
+    parents1 = np.zeros((numberParents, 11), dtype=object)
+    parents2 = np.zeros((numberParents, 11), dtype=object)
 
     sequence = [i for i in range(len(populationFitness))]
+    print('sequence', sequence)
     
     for i in range(numberParents):
         indexParent1 = torneio(populationFitness, tour, sequence)
         indexParent2 = torneio(populationFitness, tour, sequence)
+        print('indexParent1', indexParent1)
+        print('indexParent2', indexParent2)
 
         parents1[i] = population[indexParent1]
-        # print('parents1[i]', parents1[i])
+        print('parents1[i]', parents1[i])
         parents2[i] = population[indexParent2]
-        # print('parents2[i]', parents2[i])
+        print('parents2[i]', parents2[i])
         
     return parents1, parents2
 

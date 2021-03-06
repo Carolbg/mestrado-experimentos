@@ -51,7 +51,6 @@ def getFilesName():
     # txt_doentes_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu/1Doente/*.txt"))
     
     #GDRIVE RUNNING
-    # folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_frontalImages'
     folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_asCabıoglu_34each'
     print(folder)
     txt_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.txt"))

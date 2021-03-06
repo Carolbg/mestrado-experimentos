@@ -6,13 +6,11 @@ def convertAgToCNN(individuo, device):
     model = generateResnetModelFromAG(device, individuo)
     
     #LR
+    print('individuo[0]', individuo[0])
     lrIndex = individuo[0][0]
     optimizer = prepareOptimizer(model, lrIndex)
 
-    #epocas
-    epocas = (individuo[1][0])*10
-    
-    return model, optimizer, epocas
+    return model, optimizer
 
 def generateResnetModelFromAG(device, individuo):
     model = models.resnet50(pretrained=True)
@@ -26,7 +24,7 @@ def generateResnetModelFromAG(device, individuo):
 
     # Add on classifier
     model.fc = getFullyConnectedStructureFromAG(n_inputs, individuo)
-    # print('custom fc', model.fc)
+    print('custom fc', model.fc)
 
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
 
@@ -34,12 +32,12 @@ def generateResnetModelFromAG(device, individuo):
 
 def getFullyConnectedStructureFromAG(nInputs, individuo):
     individuoSize = len(individuo)
-    # print('individuoSize', individuoSize)
+    print('individuoSize', individuoSize)
     layersAsArray = []
-    for i in range(2, individuoSize, 2):
-        # print('i', i)
+    for i in range(1, individuoSize, 2):
+        print('i', i)
         geneLayer = individuo[i]
-        # print('geneLayer', geneLayer)
+        print('geneLayer', geneLayer)
         #tem a camada dessa layer?
         if geneLayer[0] == 1:
             geneDropout = individuo[i+1]
@@ -49,7 +47,7 @@ def getFullyConnectedStructureFromAG(nInputs, individuo):
     # addFinalLayer
     layersAsArray.extend(defineFinalLayer(nInputs))
 
-    # print('layersAsArray', layersAsArray)
+    print('layersAsArray', layersAsArray)
     layers = nn.Sequential(*layersAsArray)
     return layers
 
@@ -79,9 +77,9 @@ def defineSingleLayer(n_inputs, geneLayer, geneDropout):
 
 def prepareOptimizer(model, expoente):
     lr = pow(10, -expoente)
-    # print('Learning Rate', lr)
+    print('Learning Rate', lr)
     optimizer = optim.Adam(model.parameters(), lr)
 
-    # print('optimizer', optimizer)
+    print('optimizer', optimizer)
     return optimizer
 

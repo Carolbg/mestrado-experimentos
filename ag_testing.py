@@ -11,7 +11,7 @@ tp=4
 tour=3
 tr=80
 tm=50
-sequenceIndividual = [i for i in range(12)]
+sequenceIndividual = [i for i in range(11)]
 population = initializePopulation(tp)
 
 populationFitness = [6,8,10,4]#,5,9]
@@ -86,7 +86,7 @@ isNumpy=True
 
 trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion = prepareCNN(isNumpy)
 initCache()
-sequenceIndividual = [i for i in range(12)]
+sequenceIndividual = [i for i in range(11)]
 
 population = initializePopulation(tp)
 populationFitness = calcFitness(population, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)

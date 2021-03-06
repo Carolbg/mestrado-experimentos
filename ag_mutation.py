@@ -25,7 +25,7 @@ def applyMutationValue(individuo, sequenceChild):
     seed(initialSeed)
 
     # print('#### before individuo', individuo)
-    geneToMutate = randomInt(0, 11)
+    geneToMutate = randomInt(0, 10)
     # print('geneToMutate', geneToMutate)
     
     individuo[geneToMutate] = mutateGene(individuo, geneToMutate, 1)
@@ -40,7 +40,7 @@ def applyMutationPresentOrNot(individuo, sequenceChild):
     # print('#### before individuo', individuo)
     
     #0 e 1 nao tem presente ou nao, sempre eh presente
-    geneToMutate = randomInt(2, 11)
+    geneToMutate = randomInt(2, 10)
     # print('geneToMutate', geneToMutate)
     
     individuo[geneToMutate] = mutateGene(individuo, geneToMutate, 0)
@@ -66,7 +66,7 @@ def applyMutation(childPopulation, tm, tp):
 
 def applyMutationInd(individuo, sequenceChild):
     # print('#### before individuo', individuo)
-    geneToMutate = randomInt(0, 11)
+    geneToMutate = randomInt(0, 10)
     # print('geneToMutate', geneToMutate)
 
     subGenesIndex = randomInt(0, 1)
@@ -105,7 +105,7 @@ def mutateGene(individuo, geneIndex, subGene):
     
 def mutateGeneLayers(originalValue, index, subGene):
     # print('seed', initialSeed)
-    if index % 2 == 0:
+    if index % 2 != 0:
         return mutateDenseLayers(originalValue, index, subGene)
     else:
         return mutateDropoutLayers(originalValue, index, subGene)

@@ -19,5 +19,5 @@ def prepareCNN(isNumpy):
     #defino o criterio, CrossEntropyLoss para todo mundo tambem
     criterion = prepareTrainingLoss()
 
-    return trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion
+    return trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion,  max_epochs_stop, n_epochs
     
