@@ -10,7 +10,7 @@ def verifyNetworkLayers(individuo):
             if individuo[i][0] == 1:
                 # print('camada ', i, ' esta presente', flush=True)
                 numberNeurons.append(individuo[i][1])
-            else:
+            # else:
                 # print('camada ', i, ' NAO esta presente', flush=True)
 
     # print('numberNeurons', numberNeurons, flush=True)
