@@ -2,8 +2,14 @@ import torch.nn as nn
 from torchvision import models
 from torch import optim
 
-def convertAgToCNN(individuo, device):
-    model = generateResnetModelFromAG(device, individuo)
+def convertAgToCNN(individuo, device, cnnType):
+    #cnnType = 1 => resnet, cnnType = 2 => VGG, cnnType = 3 => Densenet
+    if cnnType == 1:
+        model = generateResnetModelFromAG(device, individuo)
+    elif cnnType == 2:
+        model = generateVGGModelFromAG(device, individuo)
+    else:
+        model = generateDensenetModelFromAG(device, individuo)
     
     #LR
     print('individuo[0]', individuo[0])
@@ -25,6 +31,42 @@ def generateResnetModelFromAG(device, individuo):
     # Add on classifier
     model.fc = getFullyConnectedStructureFromAG(n_inputs, individuo)
     print('custom fc', model.fc)
+
+    model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
+
+    return model.to(device)
+
+def generateVGGModelFromAG(device, individuo):
+    model = models.vgg16(pretrained=True)
+    # print('model', model.fc)
+
+    # Freeze early layers
+    for param in model.parameters():
+        param.requires_grad = False
+
+    n_inputs = model.classifier[0].in_features
+
+    # Add on classifier
+    model.classifier = getFullyConnectedStructureFromAG(n_inputs, individuo)
+    print('custom fc', model.classifier)
+
+    model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
+
+    return model.to(device)
+
+def generateDensenetModelFromAG(device, individuo):
+    model = models.densenet201(pretrained=True)
+    # print('model', model.fc)
+
+    # Freeze early layers
+    for param in model.parameters():
+        param.requires_grad = False
+
+    n_inputs = model.classifier.in_features
+
+    # Add on classifier
+    model.classifier = getFullyConnectedStructureFromAG(n_inputs, individuo)
+    print('custom fc', model.classifier)
 
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
 

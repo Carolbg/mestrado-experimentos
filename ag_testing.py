@@ -11,8 +11,10 @@ tp=4
 tour=3
 tr=80
 tm=50
+cnnType = 1
 sequenceIndividual = [i for i in range(11)]
 population = initializePopulation(tp)
+shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
 
 populationFitness = [6,8,10,4]#,5,9]
 selectedParents1, selectedParents2 = selectParentsWithTorneio(population, populationFitness, tour)
@@ -27,7 +29,7 @@ trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion
 # model, optimizer, epocas = convertAgToCNN(individuo, device)
 i=0
 individuo = population[i]
-model, optimizer, epocas = convertAgToCNN(individuo, device)
+model, optimizer = convertAgToCNN(individuo, device, cnnType)
 resultsPlotName = 'runAG_individuo_'+str(i)
 
 #treinamento

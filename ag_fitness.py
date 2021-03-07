@@ -11,7 +11,7 @@ from prepareDataDictionary import getCommonArgs
 import multiprocessing as mp
 from ag_verifyLayers import verifyNetworkLayers
 
-def saveGlobalVariables(aGeneration, aTrainLoader, aTestLoader, aValidationLoader, aCat_df, aBatch_size, aDevice, aCriterion, tp, acacheConfigClass, amax_epochs_stop, an_epochs):
+def saveGlobalVariables(aGeneration, aTrainLoader, aTestLoader, aValidationLoader, aCat_df, aBatch_size, aDevice, aCriterion, tp, acacheConfigClass, amax_epochs_stop, an_epochs, acnnType):
     # global generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion
     # generation = aGeneration
     # trainLoader = aTrainLoader
@@ -32,16 +32,17 @@ def saveGlobalVariables(aGeneration, aTrainLoader, aTestLoader, aValidationLoade
     cacheConfigClass = [copy.deepcopy(acacheConfigClass) for i in range(tp)]
     arrayMaxEpochsStop= [amax_epochs_stop for i in range(tp)]
     arrayNEpochs = [an_epochs for i in range(tp)]
+    arrayCnnType = [acnnType for i in range(tp)]
     print('na hora de montar cacheConfigClass', cacheConfigClass)
     # print('arrayGeneration, arrayCriterion', arrayGeneration, arrayCriterion)
-    return arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, cacheConfigClass, arrayMaxEpochsStop, arrayNEpochs
+    return arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, cacheConfigClass, arrayMaxEpochsStop, arrayNEpochs, arrayCnnType
 
-def calcFitness(generation, population, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs):
+def calcFitness(generation, population, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType):
     print('\n\n@@@@ Calculando fitness')
     tp = len(population)
     # print('calcFitness', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
-    arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayCacheConfigClass, arrayMaxEpochsStop, arrayNEpochs = saveGlobalVariables(generation, 
-        trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, tp, cacheConfigClass, max_epochs_stop, n_epochs)
+    arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayCacheConfigClass, arrayMaxEpochsStop, arrayNEpochs, arrayCnnType = saveGlobalVariables(generation, 
+        trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, tp, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
     
     startAll = timeit.default_timer()
     iterations = [i for i in range(tp)]
@@ -55,7 +56,7 @@ def calcFitness(generation, population, trainLoader, testLoader, validationLoade
     print('after error', max_epochs_stop, n_epochs)
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        for result in zip(iterations, executor.map(calcFitnessIndividuo, population, iterations, arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayCacheConfigClass,  arrayMaxEpochsStop, arrayNEpochs)):
+        for result in zip(iterations, executor.map(calcFitnessIndividuo, population, iterations, arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayCacheConfigClass,  arrayMaxEpochsStop, arrayNEpochs, arrayCnnType)):
             print('result', result)
             iteration, fitness = result
             fitnessArray.append(fitness)
@@ -66,7 +67,7 @@ def calcFitness(generation, population, trainLoader, testLoader, validationLoade
     # fitnessArray = [calcFitnessIndividuo(population[i], i, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion) for i in range(tp)]
     return np.array(fitnessArray)
         
-def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs):
+def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType):
     print('calcFitnessIndividuo = ', i, individuo, '\n')
     # print('\n pt1 ', i, trainLoader, testLoader, validationLoader)
     # print('\n pt2', cat_df, batch_size, device, criterion)
@@ -77,7 +78,7 @@ def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, vali
         print('\nachei cache', cacheValue, ' individuo = ', i, individuo, '\n fitness = ', cacheValue)
         return cacheValue
 
-    model, optimizer = convertAgToCNN(individuo, device)
+    model, optimizer = convertAgToCNN(individuo, device, cnnType)
     # print('epocas', epocas)
     resultsPlotName = 'runAG_geracao_' + str(generation) +'_individuo_'+str(i) 
     
