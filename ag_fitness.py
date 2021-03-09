@@ -57,8 +57,9 @@ def calcFitness(generation, population, trainLoader, testLoader, validationLoade
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
         for result in zip(iterations, executor.map(calcFitnessIndividuo, population, iterations, arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayCacheConfigClass,  arrayMaxEpochsStop, arrayNEpochs, arrayCnnType)):
-            print('result', result)
-            iteration, fitness = result
+            
+            iteration, (fitness, _) = result
+            print('result', iteration, fitness)
             fitnessArray.append(fitness)
 
     endAll = timeit.default_timer()
@@ -76,7 +77,7 @@ def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, vali
     cacheValue = cacheConfigClass.verifyEntry(individuo)
     if cacheValue != None:
         print('\nachei cache', cacheValue, ' individuo = ', i, individuo, '\n fitness = ', cacheValue)
-        return cacheValue
+        return cacheValue, None
 
     model, optimizer = convertAgToCNN(individuo, device, cnnType)
     # print('epocas', epocas)
@@ -105,4 +106,4 @@ def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, vali
     # else:
         # print('rede nao penalizada')
 
-    return agFitness
+    return agFitness,model

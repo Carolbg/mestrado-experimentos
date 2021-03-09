@@ -50,15 +50,17 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType
     bestParent, bestParentFitness = findBestIndividuo(population, populationFitness)
     print('bestParent, bestParentFitness', bestParent, bestParentFitness)
 
-    bestParentModel = testingBestIndividuo(cnnType, bestParent, testLoader, criterion, device)
+    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs)
 
     endAll = timeit.default_timer()
     timeAll = endAll-startAll
     print('timeAll = ', timeAll)
     return population, populationFitness, bestParentModel
 
-def testingBestIndividuo(cnnType, bestIndividuo, testLoader, criterion, device, resultsPlotName='testDataResult'):
-    model, _ = convertAgToCNN(bestIndividuo, device, cnnType)
+def testingBestIndividuo(cnnType, bestIndividuo, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, resultsPlotName='testDataResult'):
+    cacheConfigClass = CacheClass()
+    fitness, model = calcFitnessIndividuo(bestIndividuo, 'final', 'final', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
+    print('fitness', fitness)
     historyTest, cmTest = evaluate(model, testLoader, criterion, 2, resultsPlotName, device)
     print(cmTest)
     historyTest.to_csv('history_'+resultsPlotName+'.csv', index = False, header=True)
