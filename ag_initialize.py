@@ -9,7 +9,7 @@ def initializePopulation(tp):
 
 def initializeIndividual():
     individual = [initializeGene(i) for i in range(11)]
-    print('individual', len(individual))
+    # print('individual', len(individual))
     return np.array(individual)
 
 def initializeGene(i):
@@ -39,11 +39,11 @@ def initializeGeneLayers(i):
     # print('seed', initialSeed)
     if i % 2 != 0:
         denseLayer = initializeDenseLayers(i)
-        print('denseLayer', denseLayer)
+        # print('denseLayer', denseLayer)
         return denseLayer
     else:
         dropoutLayer = initializeDropoutLayers(i)
-        print('dropoutLayer', dropoutLayer)
+        # print('dropoutLayer', dropoutLayer)
         return dropoutLayer
 
 def initializeDenseLayers(i):

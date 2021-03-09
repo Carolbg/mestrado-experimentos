@@ -76,7 +76,7 @@ def crossover1point(parent1, parent2, tr, sequence):
 def applyCrossover(parents1, parents2, tr, sequence):
     
     numberChildren = len(parents1)
-    print('numberChildren', numberChildren)
+    # print('numberChildren', numberChildren)
     print('\n\n@@@@ Crossover 1 ponto')
     children1, children2 =  map(list,zip(*[crossover1point(parents1[i], parents2[i], tr, sequence) for i in range(numberChildren)]))
     

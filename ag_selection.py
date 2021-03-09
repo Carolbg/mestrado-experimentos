@@ -16,12 +16,12 @@ def selectParentsWithTorneio(population, populationFitness, tour):
         indexParent1 = torneio(populationFitness, tour, sequence)
         indexParent2 = torneio(populationFitness, tour, sequence)
         print('indexParent1', indexParent1)
-        print('indexParent2', indexParent2)
+        print('indexParent2', indexParent2, '\n')
 
         parents1[i] = population[indexParent1]
-        print('parents1[i]', parents1[i])
+        # print('parents1[i]', parents1[i])
         parents2[i] = population[indexParent2]
-        print('parents2[i]', parents2[i])
+        # print('parents2[i]', parents2[i])
         
     return parents1, parents2
 
