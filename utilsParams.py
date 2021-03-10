@@ -3,12 +3,12 @@ import torch
 from torch import optim, cuda
 from torch.optim import lr_scheduler
 
-def getCommonArgs():
+def getCommonArgs(nEpochs=30):
     shuffleSeed = 1
     print('shuffleSeed', shuffleSeed)
     batch_size = 10
     max_epochs_stop = 10
-    n_epochs = 30
+    n_epochs = nEpochs
     print('n_epochs', n_epochs, 'max_epochs_stop', max_epochs_stop)
     device = getDevice()
 

@@ -16,10 +16,10 @@ import cv2
 import gc
 import torch
 
-def mainPrepareDictionaryData(dataAugmentation):
+def mainPrepareDictionaryData(dataAugmentation, nEpochs):
     print('Lidando com txt data')
     
-    shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
+    shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs(nEpochs)
     saudaveisRawDictionaryData, doentesRawDictionaryData = mainReadData()
     
     # filteredSaudaveisDicData, filteredDoentesDicData, deltaT, min10mean = preprocessDictionaryDataset(saudaveisDictionaryData, doentesDictionaryData)
