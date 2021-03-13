@@ -16,7 +16,7 @@ class CacheClass:
 
     def addNewEntry(self, individuo, fitnessValue):
         individuoAsStr = parseIndividuoToKey(individuo)
-        print('key ', individuoAsStr, '\n')
+        # print('key ', individuoAsStr, '\n')
         self.cacheStore[individuoAsStr] = fitnessValue
         
 

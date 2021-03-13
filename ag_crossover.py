@@ -44,14 +44,14 @@ def crossover2points(parent1, parent2, tr, sequence):
 def crossover1point(parent1, parent2, tr, sequence):
     #tr = 80% entao vira 0.8
     print('\n\n CROSSOVER 1 ponto')
-    print('parent1', parent1)
-    print('\n parent2', parent2)
+    # print('parent1', parent1)
+    # print('\n parent2', parent2)
     # initialSeed = uniform(0, 5000)
     # seed(initialSeed)
 
     tr = tr/100
     randomNumber = uniform(0, 1)
-    print('randomNumber', randomNumber)
+    # print('randomNumber', randomNumber)
     if randomNumber > tr:
         # print('not changing individuals')
         return copy.deepcopy(parent1), copy.deepcopy(parent2)
@@ -69,7 +69,7 @@ def crossover1point(parent1, parent2, tr, sequence):
     child1[crossoverPoint:] = parent2[crossoverPoint:]
     child2[crossoverPoint:] = parent1[crossoverPoint:]
     
-    print('child1', child1, '\nchild2', child2)
+    # print('child1', child1, '\nchild2', child2)
 
     return child1, child2
 

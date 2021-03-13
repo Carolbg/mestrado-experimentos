@@ -10,7 +10,7 @@ def selectParentsWithTorneio(population, populationFitness, tour):
     parents2 = np.zeros((numberParents, 11), dtype=object)
 
     sequence = [i for i in range(len(populationFitness))]
-    print('sequence', sequence)
+    # print('sequence', sequence)
     
     for i in range(numberParents):
         indexParent1 = torneio(populationFitness, tour, sequence)

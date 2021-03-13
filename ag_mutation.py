@@ -116,9 +116,9 @@ def mutateDenseLayers(originalValue, index, subGene):
     if subGene == 0:
         newValue = 1 if originalValue[subGene] == 0 else 0
     else:
-        newValue = randomInt(3, 12)
+        newValue = randomInt(3, 10)
         if originalValue[subGene] == newValue:
-            newValue = randomInt(3, 12)
+            newValue = randomInt(3, 10)
 
         # if originalValue[subGene] == newValue:
         #     print('continua igual')

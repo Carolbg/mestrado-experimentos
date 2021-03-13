@@ -48,10 +48,7 @@ def initializeGeneLayers(i):
 
 def initializeDenseLayers(i):
     isPresent = randomInt(0, 1)
-    nroNeuronios = randomInt(3, 12)
-
-    isPresent = randomInt(0, 1)
-    nroNeuronios = randomInt(3, 12)
+    nroNeuronios = randomInt(3, 10)
 
     return [isPresent, nroNeuronios]
 

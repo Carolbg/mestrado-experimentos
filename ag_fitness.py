@@ -57,7 +57,6 @@ def calcFitness(generation, population, trainLoader, testLoader, validationLoade
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
         for result in zip(iterations, executor.map(calcFitnessIndividuo, population, iterations, arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayCacheConfigClass,  arrayMaxEpochsStop, arrayNEpochs, arrayCnnType)):
-            
             iteration, (fitness, _) = result
             print('result', iteration, fitness)
             fitnessArray.append(fitness)
@@ -106,4 +105,4 @@ def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, vali
     # else:
         # print('rede nao penalizada')
 
-    return agFitness,model
+    return agFitness, model

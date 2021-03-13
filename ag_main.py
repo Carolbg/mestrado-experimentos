@@ -10,9 +10,9 @@ from ag_readAllData import *
 
 from cacheClass import CacheClass
 
-def main(nEpochs=30, tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType=1):
+def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType=1, nEpochs=30):
     startAll = timeit.default_timer()
-
+    #cnnType = 1 => resnet, cnnType = 2 => VGG, cnnType = 3 => Densenet
     print('tp, tour, tr, numberIterations, tm, isNumpy', tp, tour, tr, numberIterations, tm, isNumpy)
     trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs = getData()
     # ag_cacheConfig.initCache()
@@ -51,6 +51,22 @@ def main(nEpochs=30, tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=T
     bestParent, bestParentFitness = findBestIndividuo(population, populationFitness)
     print('bestParent, bestParentFitness', bestParent, bestParentFitness)
 
+    print('Testando com epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
+    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs)
+
+    n_epochs = 30
+    max_epochs_stop = 30
+    print('Sem early stopping - epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
+    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs)
+
+    n_epochs = 50
+    max_epochs_stop = 10
+    print('Sem early stopping - epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
+    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs)
+
+    n_epochs = 50
+    max_epochs_stop = 50
+    print('Com com epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
     bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs)
 
     endAll = timeit.default_timer()
@@ -61,7 +77,7 @@ def main(nEpochs=30, tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=T
 def testingBestIndividuo(cnnType, bestIndividuo, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, resultsPlotName='testDataResult'):
     cacheConfigClass = CacheClass()
     fitness, model = calcFitnessIndividuo(bestIndividuo, 'final', 'final', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
-    print('fitness', fitness)
+    print('fitness novo treinamento', fitness)
     historyTest, cmTest = evaluate(model, testLoader, criterion, 2, resultsPlotName, device)
     print(cmTest)
     historyTest.to_csv('history_'+resultsPlotName+'.csv', index = False, header=True)
