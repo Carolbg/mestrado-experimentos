@@ -67,7 +67,7 @@ def calcFitness(generation, population, trainLoader, testLoader, validationLoade
     # fitnessArray = [calcFitnessIndividuo(population[i], i, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion) for i in range(tp)]
     return np.array(fitnessArray)
         
-def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType):
+def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType, fileName=None):
     print('calcFitnessIndividuo = ', i, individuo, '\n')
     # print('\n pt1 ', i, trainLoader, testLoader, validationLoader)
     # print('\n pt2', cat_df, batch_size, device, criterion)
@@ -80,7 +80,11 @@ def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, vali
 
     model, optimizer = convertAgToCNN(individuo, device, cnnType)
     # print('epocas', epocas)
-    resultsPlotName = 'runAG_geracao_' + str(generation) +'_individuo_'+str(i) 
+
+    if fileName != None:
+        resultsPlotName = fileName
+    else:
+        resultsPlotName = 'runAG_geracao_' + str(generation) +'_individuo_'+str(i) 
     
     #treinamento
     model, history, train_loss, valid_loss, train_acc, validation_acc, valid_best_acc, cmTrain, cmValidation = train(model, criterion,

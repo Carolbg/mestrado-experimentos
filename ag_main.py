@@ -52,33 +52,35 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType
     print('bestParent, bestParentFitness', bestParent, bestParentFitness)
 
     print('Testando com epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
-    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs)
+    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n30_max10')
 
     n_epochs = 30
     max_epochs_stop = 30
-    print('Sem early stopping - epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
-    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs)
+    print('\n\n Sem early stopping - epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
+    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n30_max30')
 
     n_epochs = 50
     max_epochs_stop = 10
-    print('Sem early stopping - epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
-    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs)
+    print('\n\Com early stopping - epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
+    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n50_max10')
 
     n_epochs = 50
     max_epochs_stop = 50
-    print('Com com epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
-    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs)
+    print('\n\n Sem early stopping com epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
+    bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n50_max50')
 
     endAll = timeit.default_timer()
     timeAll = endAll-startAll
     print('timeAll = ', timeAll)
     return population, populationFitness, bestParentModel
 
-def testingBestIndividuo(cnnType, bestIndividuo, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, resultsPlotName='testDataResult'):
+def testingBestIndividuo(cnnType, bestIndividuo, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, resultsPlotName):
     cacheConfigClass = CacheClass()
-    fitness, model = calcFitnessIndividuo(bestIndividuo, 'final', 'final', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
+    trainName = 'finalTrain'+resultsPlotName
+    fitness, model = calcFitnessIndividuo(bestIndividuo, 'final', 'final', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType, trainName)
     print('fitness novo treinamento', fitness)
-    historyTest, cmTest = evaluate(model, testLoader, criterion, 2, resultsPlotName, device)
+    testName = 'finalTest'+resultsPlotName
+    historyTest, cmTest = evaluate(model, testLoader, criterion, 2, testName, device)
     print(cmTest)
     historyTest.to_csv('history_'+resultsPlotName+'.csv', index = False, header=True)
     
