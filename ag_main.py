@@ -82,6 +82,9 @@ def testingBestIndividuo(cnnType, bestIndividuo, trainLoader, testLoader, valida
     testName = 'finalTest'+resultsPlotName
     historyTest, cmTest = evaluate(model, testLoader, criterion, 2, testName, device)
     print(cmTest)
+    historyTest.insert(0, 'New Fitness', fitness, True)
+    print(historyTest)
+    
     historyTest.to_csv('history_'+resultsPlotName+'.csv', index = False, header=True)
     
     return model
