@@ -104,7 +104,7 @@ def calcFitnessIndividuo(individuo, i, generation, trainLoader, testLoader, vali
     isReducingLayerSize = verifyNetworkLayers(individuo) 
 
     if isReducingLayerSize == False:
-        agFitness = agFitness*0.7
+        agFitness = agFitness*0.6
         # print('penalizada a rede', agFitness)
     # else:
         # print('rede nao penalizada')

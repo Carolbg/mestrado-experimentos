@@ -1,5 +1,6 @@
 import numpy as np
 from ag_cacheConfig import parseIndividuoToKey
+from ag_verifyLayers import verifyNetworkLayers
 
 def sortGenerationDecrescente(allPopulation, allFitness):
     # print('allFitness', allFitness)
@@ -48,9 +49,19 @@ def findBestIndividuo(population, populationFitness):
         print('\nmultiplos individiduos com maxValue = ',str(numberMax))
         #se tiver mais de um individuo com o maior valor, quero o que tem a menor cnn
         key = [parseIndividuoToKey(sortedPopulation[i]) for i in range(numberMax)]
-        indexMinStr = key.index(min(key, key=len))
+        print('key', key)
+        sortedKeyIndex = np.argsort([len(i) for i in key])
+        indexMinStr = sortedKeyIndex[0]
+        for i in sortedKeyIndex:
+            isReducingLayerSize = verifyNetworkLayers(sortedPopulation[i]) 
+            print('i', i, 'sortedPopulation[i]', sortedPopulation[i], 'isReducingLayerSize',isReducingLayerSize)
+            if isReducingLayerSize == True:
+                indexMinStr = i
+                break
+        
         bestIndividuo = sortedPopulation[indexMinStr]
         bestIndividuoFitness = sortedFitness[indexMinStr]
+        print('indexMinStr', indexMinStr, 'bestIndividuo', bestIndividuo, 'bestIndividuoFitness', bestIndividuoFitness)
         
     # print('bestIndividuo, bestIndividuoFitness', bestIndividuo, bestIndividuoFitness)
     return bestIndividuo, bestIndividuoFitness

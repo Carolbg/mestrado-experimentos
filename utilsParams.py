@@ -7,7 +7,7 @@ def getCommonArgs(nEpochs=30):
     shuffleSeed = 1
     print('shuffleSeed', shuffleSeed)
     batch_size = 10
-    max_epochs_stop = 10
+    max_epochs_stop = 30
     n_epochs = nEpochs
     print('n_epochs', n_epochs, 'max_epochs_stop', max_epochs_stop)
     device = getDevice()
