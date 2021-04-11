@@ -66,10 +66,11 @@ def evaluate(model, test_loader, criterion, n_classes, resultsPlotName, device):
 
     test_acc, test_especificidade, test_sensitividade, test_f1Score, cmTest, test_precision = calcMetrics(allTestingTarget, allTestingPredicted)
     
-    calcROC(allTestingTarget, allTestingPredicted, resultsPlotName)
+    roc_auc, fpr, tpr, thresholds = calcROC(allTestingTarget, allTestingPredicted, resultsPlotName)
     # calcROC(allTestingTarget, allPropPred, resultsPlotName+'_withProb')
 
     history = pd.DataFrame({
+        'roc_auc': [roc_auc],
         'test_acc': [test_acc], 'test_sensitividade': [test_sensitividade], 
         'test_especificidade': [test_especificidade], 'test_precision': [test_precision], 'test_f1Score': [test_f1Score]})
     print('\nTesting result\n', history)

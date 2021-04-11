@@ -16,9 +16,9 @@ from preprocessing import getMeanStdEntireBase, getMaxMinValueFromDataDic
 import gc
 import torch
 
-def mainPrepareDictionaryDataFromNumpy(dataAugmentation):
+def mainPrepareDictionaryDataFromNumpy(dataAugmentation, nEpochs):
     print('Lidando com numpy data')
-    shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs()
+    shuffleSeed, batch_size, max_epochs_stop, n_epochs, device = getCommonArgs(nEpochs)
     saudaveisDictionaryData, doentesDictionaryData = mainReadNumpyData()
     print('len(saudaveisDictionaryData)', len(saudaveisDictionaryData))
     print('len(doentesDictionaryData)', len(doentesDictionaryData))
@@ -74,7 +74,7 @@ def getFilesName():
     #GDRIVE RUNNING
     # Imagens_numpy_array_asCabıoglu_rgb_aumentoDados
     # Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu_DA
-    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu_DA'
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDados'
     print(folder)
     numpy_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.npy"))
     numpy_doentes_files = sorted(glob.glob(folder+"/1Doente/*.npy"))

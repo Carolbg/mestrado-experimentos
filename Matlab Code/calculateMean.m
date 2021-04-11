@@ -1,6 +1,6 @@
 %% Leitura imagens
 
-saudaveis = '../../Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu_DA/0Saudavel/';
+saudaveis = '../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu_34each/0Saudavel/';
 cd(saudaveis);
 files=dir('*.npy');
 cd('../../Experimentos github/Matlab Code')
@@ -22,7 +22,7 @@ for i = 1:sizeSaudaveis
     
 end
 
-doentes = '../../Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu_DA/1Doente/';
+doentes = '../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu_34each/1Doente/';
 cd(doentes);
 files=dir('*.npy');
 cd('../../Experimentos github/Matlab Code')

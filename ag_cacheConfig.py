@@ -10,12 +10,12 @@ def parseIndividuoToKey(individuo):
     i=0
     while i < tam:
         # print('i', i, 'individuo2[i]', individuo2[i])
-        if i < 2:
+        if i < 1:
             keyArray.append(individuo[i])
             # print('if 1')
             i = i+1
         else:
-            if i%2 == 0 and individuo[i][0] == 0:
+            if i%2 != 0 and individuo[i][0] == 0:
                 i = i+2
                 # print('if 2')
             elif individuo[i][0] == 0:
