@@ -51,6 +51,8 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType
     bestParent, bestParentFitness = findBestIndividuo(population, populationFitness)
     print('bestParent, bestParentFitness', bestParent, bestParentFitness)
 
+    n_epochs = 30
+    max_epochs_stop = 10
     print('Testando com epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
     bestParentModel = testingBestIndividuo(cnnType, bestParent, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n30_max10')
 
