@@ -128,4 +128,3 @@ def prepareOptimizer(model, expoente):
 
     # print('optimizer', optimizer)
     return optimizer
-

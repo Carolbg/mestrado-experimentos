@@ -1,4 +1,4 @@
-from ag_cnnInit import *
+from utils_cnnInit import *
 
 def readData(isNumpy, nEpochs):
     global trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion,  max_epochs_stop, n_epochs
