@@ -39,23 +39,38 @@ def bestNeighbourPosition(swarm, populationSize):
         swarm[i]['bestNeighbourPosition'] = bestSolution
     return swarm
 
-def termWithBeta(particle, numberVertex, beta):
-    # generates all swap operators to calculate (gbest - x(t-1))
-    tempVelocity = []
-    solution_gbest = particle['bestNeighbourPosition'].copy()
-    solution_particle = particle['position'].copy()
-    for i in range(numberVertex):
-        if solution_particle[i] != solution_gbest[i]:
-            swap_operator = (i, solution_gbest.index(solution_particle[i]), beta)
-            
-            # append swap operator in the list of velocity
-            tempVelocity.append(swap_operator)
+def calcDiffLayers(layerP1, layerP2):
+    if layerP1['layerType'] == 'LR':
+        return { 'layerType': 'LR',
+         'layerNumber': (layerP1['layerNumber']-layerP2['layerNumber']) 
+        }
 
-            # makes the swap
-            aux = solution_gbest[swap_operator[0]]
-            solution_gbest[swap_operator[0]] = solution_gbest[swap_operator[1]]
-            solution_gbest[swap_operator[1]] = aux
-    return (tempVelocity, solution_gbest)
+    if layerP1['layerType'] == layerP2['layerType']:
+        return { 'layerType': None }
+    return layerP1
+
+def calcDiffTwoParticles(particle1, particle2):
+    # calc diff particle1 - particle2
+    diff = []
+    sizeP1 = len(particle1['position'])
+    sizeP2 = len(particle2['position'])
+    maxSize = max(sizeP1, sizeP2)
+
+    for i in range(maxSize):
+        # print('i', i)
+        if i < sizeP1 and i < sizeP2:
+            diffLayer = calcDiffLayers(particle1['position'][i], particle2['position'][i])
+            # print('if1 diffLayer = ', diffLayer)
+            diff.append(diffLayer)
+        elif i < sizeP1:
+            # print('if2')
+            diff.append(particle1['position'][i])
+        else:
+            # print('else')
+            layer = { 'layerType': -1 }
+            diff.append(layer)
+
+    return diff
 
 def updateVelocity(particle, tempVelocityP,tempVelocityG):
     #print('1 - tempVelocityP', tempVelocityP)
