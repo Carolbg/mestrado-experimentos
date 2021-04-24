@@ -7,15 +7,15 @@ import random
 # initialPosition: Layer[]
 # initialPosition = arquitetura de cnn
 
-def createParticle(initialPosition, initialCost = None):
+def createParticle(initialPosition, initialCost = 0):
     particle = {
         'position': initialPosition,
         'positionFitness': initialCost,
         'velocity': [],
         'bestPosition': initialPosition,
         'bestFitness': initialCost,
-        'bestNeighbourPosition': [],
-        'bestNeighbourSolution': None
+        'bestNeighbourFitness': 0,
+        'bestNeighbourPosition': []
     }
     return particle
 
@@ -25,7 +25,7 @@ def initializeSwarm(populationSize):
         particlePosition = initSingleParticle()
         particle = createParticle(particlePosition)
         swarm.append(particle)
-    print(swarm)
+    # print(swarm)
     return swarm
 
 def initSingleLayerFC():

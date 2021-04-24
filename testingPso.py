@@ -5,7 +5,7 @@ from pso import *
 
 swarm = PSO(1, 5, 0.7, False,1, 2)
 
-populationSize=2
+populationSize=5
 Cg=0.7
 isNumpy=False
 cnnType=1
@@ -15,3 +15,7 @@ trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion
 swarm = initializeSwarm(populationSize)
 calcFitness(0, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType)
 print(swarm)
+
+for particle in swarm:
+    print('swarm no init', swarm)
+    updateBestSolutionParticle(particle)
