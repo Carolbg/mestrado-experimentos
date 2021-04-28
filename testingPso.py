@@ -19,3 +19,7 @@ print(swarm)
 for particle in swarm:
     print('swarm no init', swarm)
     updateBestSolutionParticle(particle)
+
+diffPBest = calcDiffTwoParticles(swarm[1]['position'], swarm[0]['position'])
+diffGBest = calcDiffTwoParticles(swarm[2]['position'], swarm[0]['position'])
+newVelocity = calcVelocity(Cg, diffPBest, diffGBest, swarm[1]['position'], swarm[2]['position'])

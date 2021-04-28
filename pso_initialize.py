@@ -14,8 +14,8 @@ def createParticle(initialPosition, initialCost = 0):
         'velocity': [],
         'bestPosition': initialPosition,
         'bestFitness': initialCost,
-        'bestNeighbourFitness': 0,
-        'bestNeighbourPosition': []
+        'bestGlobalFitness': 0,
+        'bestGlobalPosition': []
     }
     return particle
 
