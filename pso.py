@@ -5,14 +5,6 @@ from pso_initialize import *
 from pso_fitness import *
 from utils_readAllData import *
 
-def calculateSolutionDistance(permutation,numberVertex, graph):
-    distance = 0
-    for j in range(numberVertex):
-        pos1 = permutation[j]
-        pos2 = permutation[(j+1) % numberVertex]
-        distance = distance + graph[pos1, pos2]
-    return distance
-
 def printSwarm(swarm):
     for i in range(1, len(swarm)):
         print(swarm[i], '\n')
@@ -26,12 +18,14 @@ def updateBestSolutionParticle(particle):
 def bestNeighbourPosition(swarm, populationSize):
     bestSolutionCost = swarm[0]['bestFitness']
     bestSolution = swarm[0]['bestPosition']
+    print('troquei i = 0')
 
     #Encontrar a melhor solucao entre todos os vizinhos
     for i in range(1, populationSize):
         if swarm[i]['bestFitness'] > bestSolutionCost:
             bestSolutionCost = swarm[i]['bestFitness']
             bestSolution = swarm[i]['bestPosition']
+            print('troquei i = ', i)
     
     #Atualizar todo mundo com o melhor vizinho
     for i in range(0, populationSize):
@@ -77,63 +71,68 @@ def calcVelocity(Cg, diffPBest, diffGBest, pBest, gBest):
     velocity = []
     sizeDiffPBest = len(diffPBest)
     sizeDiffGBest = len(diffGBest)
-    print('sizeDiffPBest', sizeDiffPBest, 'sizeDiffGBest', sizeDiffGBest)
+    # print('sizeDiffPBest', sizeDiffPBest, 'sizeDiffGBest', sizeDiffGBest)
 
     maxSize = max(sizeDiffPBest, sizeDiffGBest)
 
     #verificando caso especial onde as diffs sao iguais a 0
-    if sizeDiffPBest and sizeDiffGBest:
+    if sizeDiffPBest == sizeDiffGBest:
         isNonePBest = [item['layerType'] == None for item in diffPBest]
         isNoneGBest = [item['layerType'] == None for item in diffGBest]
         if all(isNoneGBest) and all(isNonePBest):
-            print('using the actual values')
+            # print('using the actual values')
             diffPBest = pBest
             diffGBest = gBest
         else:
             print('same size has something different from Non')
 
-    
     for i in range(maxSize):
         randValue = random.random()
-        print('randValue', randValue)
+        # print('randValue', randValue)
         if randValue < Cg:
-            print('using gBest')
+            # print('using gBest')
             if i < sizeDiffGBest:
-                print('if gbest')
+                # print('if gbest')
                 velocity.append(diffGBest[i])
             else:
-                print('else gbest')
+                # print('else gbest')
                 velocity.append( { 'layerType': None })
         else:
-            print('using pBest')
+            # print('using pBest')
             if i < sizeDiffPBest:
-                print('if pBest')
+                # print('if pBest')
                 velocity.append(diffPBest[i])
             else:
-                print('else pBest')
+                # print('else pBest')
                 velocity.append( { 'layerType': None })
-        print('\n')
-    print('velocity', velocity)
+        # print('\n')
+    # print('velocity', velocity)
     return velocity
 
-def updateVelocity(particle, tempVelocityP,tempVelocityG):
-    #print('1 - tempVelocityP', tempVelocityP)
-    tempVelocityP.extend(tempVelocityG)
-    #print('2 - tempVelocityP', tempVelocityP)
-    particle['velocity'] = tempVelocityP
-    return particle
+def updateParticlePosition(particle, newVelocity):
+    sizeParticle = len(particle)
+    sizeVelocity = len(newVelocity)
+    # print('sizeParticle', sizeParticle, 'sizeVelocity', sizeVelocity)
+    maxSize = max(sizeParticle, sizeVelocity)
+    # print('maxSize', maxSize)
+    
+    newPosition = []
+    
+    for i in range(sizeVelocity):
+        # print('i', i, "newVelocity[i]['layerType']", newVelocity[i]['layerType'])
+        if newVelocity[i]['layerType'] == None and i < sizeParticle:
+            # print('if 1')
+            newPosition.append(particle[i])
+            # print('newPosition', newPosition)
+        elif newVelocity[i]['layerType'] == 'FC' or newVelocity[i]['layerType'] == 'Dropout' or newVelocity[i]['layerType'] == 'LR':
+            # print('if 2')
+            newPosition.append(newVelocity[i])
+            # print('newPosition', newPosition)
+        # else:
+        #     print('no else')
+        # print('\n')
 
-def calculateNewPosition(particle, tempVelocity, numberVertex, graph):
-    # generates new solution for particle
-    solution_particle = particle['position'].copy()
-    for swap_operator in tempVelocity:
-        if random.random() <= swap_operator[2]:
-            # makes the swap
-            aux = solution_particle[swap_operator[0]]
-            solution_particle[swap_operator[0]] = solution_particle[swap_operator[1]]
-            solution_particle[swap_operator[1]] = aux
-    particle['position'] = solution_particle
-    particle['positionFitness'] = calculateSolutionDistance(solution_particle, numberVertex, graph)
+    return newPosition
 
 def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpochs=30):
     # If running on colab keep the next line commented
@@ -155,37 +154,21 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
         for particle in swarm:
             # Cac diff pBest - p
             diffPBest = calcDiffTwoParticles(particle['bestPosition'], particle['position'])
-            print("particle['bestPosition']", particle['bestPosition'])
-            print("\n  particle['position']", particle['position'])
-            print("\n diffPBest", diffPBest)
-            
+        
             # Cac diff gBest - p
             diffGBest = calcDiffTwoParticles(particle['bestGlobalPosition'], particle['position'])
 
-            print("\n\n particle['bestGlobalPosition']", particle['bestGlobalPosition'])
-            print("\n  particle['position']", particle['position'])
-            print("\n diffGBest", diffGBest)
-            input('stopping after diff')
-
+            #Calc velocity
             newVelocity = calcVelocity(Cg, diffPBest, diffGBest, particle['bestPosition'], particle['bestGlobalPosition'])
-            input('stopping afterVelocity diff')
-    #         (tempVelocityP, solution_pbest) = termWithAlpha(particle, numberVertex, alpha)
-    #         (tempVelocityG, solution_gbest) = termWithBeta(particle, numberVertex, beta)
-    #         updateVelocity(particle, tempVelocityP, tempVelocityG)
-    #         tempVelocity = particle['velocity']
-    #         calculateNewPosition(particle, tempVelocity, numberVertex, graph)
+            
+            # print("particle['position']", particle['position'])
+            # print('newVelocity', newVelocity)
+            particle['position'] = updateParticlePosition(particle['position'], newVelocity)
+            # print("particle['position']", particle['position'])
+            # print('\n')
+    #         updateParticleFitness(particle)        
     #         updateBestSolutionParticle(particle)
     #     #printSwarm(swarm)
     #     #print(swarm[0])
     # swarm = bestNeighbourPosition(swarm, populationSize)
     return swarm 
-
-def findBest(swarm, citiesName):
-    bestCost = swarm[0]['bestGlobalFitness']
-    bestPermutation = swarm[0]['bestGlobalPosition']
-    cities = []
-    for i in range (len(bestPermutation)):
-        cities.append(citiesName[bestPermutation[i]])
-    print('\n\nMenor caminho encontrado tem custo', bestCost )
-    print('Caminho = ', cities )
-    return (bestCost, bestPermutation, cities)
