@@ -85,7 +85,7 @@ def calcVelocity(Cg, diffPBest, diffGBest, pBest, gBest):
     if sizeDiffPBest and sizeDiffGBest:
         isNonePBest = [item['layerType'] == None for item in diffPBest]
         isNoneGBest = [item['layerType'] == None for item in diffGBest]
-        if isNoneGBest and isNonePBest == 0:
+        if all(isNoneGBest) and all(isNonePBest):
             print('using the actual values')
             diffPBest = pBest
             diffGBest = gBest

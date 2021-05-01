@@ -65,6 +65,9 @@ def initFCLayers():
     layers = []
     layersIndex = 0
     for i in range(5):
+        initialSeed = random.uniform(0, 5000)
+        random.seed(initialSeed)
+        
         # print('\n\ni', i, 'layersIndex', layersIndex)
         fc = initSingleLayerFC()
         dropout = initSingleLayerDropout()
@@ -89,6 +92,9 @@ def initFCLayers():
     return layers
 
 def initSingleParticle():
+    initialSeed = random.uniform(0, 5000)
+    random.seed(initialSeed)
+
     particle = []
 
     #Init first position with LR
