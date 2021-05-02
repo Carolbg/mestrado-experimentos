@@ -49,7 +49,7 @@ def calcFitness(generation, swarm, trainLoader, testLoader, validationLoader, ca
             iteration, (fitness, _) = result
             print('result', iteration, fitness)
             swarm[iteration]['positionFitness'] = fitness
-            print('swarm[iteration]',swarm[iteration])
+            # print('swarm[iteration]',swarm[iteration])
             # fitnessArray.append(fitness)
 
     endAll = timeit.default_timer()
@@ -109,13 +109,13 @@ def calculateParticleFitness(particle, i, generation, trainLoader, testLoader, v
     
     lastIndex = len(allF1Score) - 1
     fitness = allF1Score[lastIndex]
-    print('fitness original', fitness)
+    # print('fitness original', fitness)
     
     isReducingLayerSize = verifyNetworkLayersParticle(particlePosition) 
 
     if isReducingLayerSize == False:
         fitness = fitness*0.6
-    print('fitness final', fitness)
+    # print('fitness final', fitness)
 
     
     return fitness, model
