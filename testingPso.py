@@ -6,7 +6,7 @@ populationSize=5
 Cg=0.7
 
 
-swarm = PSO(1, 5, 0.7, False,1, 2)
+swarm = PSO(5, 5, 0.7, False,1, 2)
 
 isNumpy=False
 cnnType=1

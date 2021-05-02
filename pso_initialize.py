@@ -83,11 +83,14 @@ def initFCLayers():
             layersIndex = layersIndex + 1
             layers.append(dropout)
 
-    layer = {
-        'layerType': 'FC',
-        'layerNumber': 1
-    }
-    layers.append(layer)
+    #this layer will be placed only when transforming the pso into cnn
+    #in order to simplify the position update
+    # layer = {
+    #     'layerType': 'FC',
+    #     'layerNumber': 1
+    # }
+    # layers.append(layer)
+
     # print('layers', layers)
     return layers
 

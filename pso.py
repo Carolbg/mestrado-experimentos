@@ -134,6 +134,24 @@ def updateParticlePosition(particle, newVelocity):
 
     return newPosition
 
+def validateParticle(particle):
+    validParticle = []
+    validParticle.append(particle[0])
+    particleSize = len(particle)
+    i = 1
+    while i < particleSize:
+        validParticle.append(particle[i])
+        if i+1 < particleSize:
+            if particle[i]['layerType'] == 'Dropout' and particle[i+1]['layerType'] == 'Dropout':
+                i = i+2
+            else:
+                i = i+1
+        else:
+            i = i+1
+    # print('particle', particle)
+    # print('validParticle', validParticle)
+    return validParticle
+
 def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpochs=30):
     # If running on colab keep the next line commented
     readData(isNumpy, nEpochs)
@@ -164,11 +182,14 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
             # print("particle['position']", particle['position'])
             # print('newVelocity', newVelocity)
             particle['position'] = updateParticlePosition(particle['position'], newVelocity)
+            particle['position'] = validateParticle(particle['position'])
             # print("particle['position']", particle['position'])
             # print('\n')
-    #         updateParticleFitness(particle)        
-    #         updateBestSolutionParticle(particle)
-    #     #printSwarm(swarm)
-    #     #print(swarm[0])
-    # swarm = bestNeighbourPosition(swarm, populationSize)
+        
+        #calc das redes novas geradas com o update das posicoes
+        calcFitness(0, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType)
+        for particle in swarm:
+            updateBestSolutionParticle(particle)
+        swarm = bestNeighbourPosition(swarm, populationSize)
+    
     return swarm 

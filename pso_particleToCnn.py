@@ -1,18 +1,27 @@
 import torch.nn as nn
 from torchvision import models
 from torch import optim
+import copy
 
 def convertParticleToCNN(particle, device, cnnType):
     #cnnType = 1 => resnet, cnnType = 2 => VGG, cnnType = 3 => Densenet
+
+    layer = {
+        'layerType': 'FC',
+        'layerNumber': 1
+    }
+    particleCopy = copy.deepcopy(particle)
+    particleCopy.append(layer)
+
     if cnnType == 1:
-        model = generateResnetModelFromAG(device, particle)
+        model = generateResnetModelFromAG(device, particleCopy)
     elif cnnType == 2:
-        model = generateVGGModelFromAG(device, particle)
+        model = generateVGGModelFromAG(device, particleCopy)
     else:
-        model = generateDensenetModelFromAG(device, particle)
+        model = generateDensenetModelFromAG(device, particleCopy)
     
     # LR
-    lrIndex = particle[0]['layerNumber']
+    lrIndex = particleCopy[0]['layerNumber']
     # print('particle[0]', particle[0], 'lrIndex', lrIndex)
     optimizer = prepareOptimizer(model, lrIndex)
 
@@ -27,6 +36,7 @@ def generateResnetModelFromAG(device, particle):
         param.requires_grad = False
 
     n_inputs = model.fc.in_features
+    # print('n_inputs', n_inputs)
 
     # Add on classifier
     model.fc = getFullyConnectedStructureFromParticle(n_inputs, particle)
@@ -105,7 +115,9 @@ def getFullyConnectedStructureFromParticle(nInputs, particle):
     return layers
 
 def defineSingleLayer(n_inputs, geneLayer, geneDropout):
+    # print('n_inputs, geneLayer, geneDropout', n_inputs, geneLayer, geneDropout)
     numeroNeurons = pow(2, geneLayer)
+    # print('numeroNeurons', numeroNeurons)
 
     if geneDropout == None:
         layer = nn.Sequential(
