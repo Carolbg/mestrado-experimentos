@@ -18,14 +18,14 @@ def updateBestSolutionParticle(particle):
 def bestNeighbourPosition(swarm, populationSize):
     bestSolutionCost = swarm[0]['bestFitness']
     bestSolution = swarm[0]['bestPosition']
-    print('troquei i = 0')
+    # print('troquei i = 0')
 
     #Encontrar a melhor solucao entre todos os vizinhos
     for i in range(1, populationSize):
         if swarm[i]['bestFitness'] > bestSolutionCost:
             bestSolutionCost = swarm[i]['bestFitness']
             bestSolution = swarm[i]['bestPosition']
-            print('troquei i = ', i)
+            # print('troquei i = ', i)
     
     #Atualizar todo mundo com o melhor vizinho
     for i in range(0, populationSize):
@@ -83,8 +83,8 @@ def calcVelocity(Cg, diffPBest, diffGBest, pBest, gBest):
             # print('using the actual values')
             diffPBest = pBest
             diffGBest = gBest
-        else:
-            print('same size has something different from Non')
+        # else:
+        #     print('same size has something different from Non')
 
     for i in range(maxSize):
         randValue = random.random()
@@ -139,17 +139,23 @@ def validateParticle(particle):
     validParticle.append(particle[0])
     particleSize = len(particle)
     i = 1
+    j = i+1
     while i < particleSize:
-        validParticle.append(particle[i])
-        if i+1 < particleSize:
-            if particle[i]['layerType'] == 'Dropout' and particle[i+1]['layerType'] == 'Dropout':
-                i = i+2
+        if j < particleSize:
+            if particle[i]['layerType'] == 'Dropout' and particle[j]['layerType'] == 'Dropout':
+                j = j+1
             else:
-                i = i+1
+                validParticle.append(particle[i])
+                i = j 
+                j = j+1
         else:
-            i = i+1
-    # print('particle', particle)
-    # print('validParticle', validParticle)
+            if i+1 < j:
+                validParticle.append(particle[i])
+                break
+            else:
+                validParticle.append(particle[i])
+                i = i+1
+    
     return validParticle
 
 def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpochs=30):
@@ -162,13 +168,17 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
     calcFitness(0, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType)
     for particle in swarm:
         updateBestSolutionParticle(particle)
-        
+        validateParticle(particle['position'])
+    
+    swarm = bestNeighbourPosition(swarm, populationSize)
+    # print('swarm', swarm)
+    # print('\n')
     # #printSwarm(swarm)
     for iteration in range(iterations):
-        print('\n****** iteration', iteration, '******')
+        print('\n****** iteration', iteration, '******\n')
+        
         # updates gbest (best particle of the population)
-        swarm = bestNeighbourPosition(swarm, populationSize)
-    #     #printSwarm(swarm)
+        # printSwarm(swarm)
         for particle in swarm:
             # Cac diff pBest - p
             diffPBest = calcDiffTwoParticles(particle['bestPosition'], particle['position'])
@@ -182,14 +192,20 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
             # print("particle['position']", particle['position'])
             # print('newVelocity', newVelocity)
             particle['position'] = updateParticlePosition(particle['position'], newVelocity)
+            # print("BEFORE: particle['position']", particle['position'])
             particle['position'] = validateParticle(particle['position'])
-            # print("particle['position']", particle['position'])
+            # print("AFTER: particle['position']", particle['position'])
             # print('\n')
+        
+        # print('swarm', swarm)
+        # print('\n')
         
         #calc das redes novas geradas com o update das posicoes
         calcFitness(0, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType)
+        # print('finish fitness')
         for particle in swarm:
             updateBestSolutionParticle(particle)
         swarm = bestNeighbourPosition(swarm, populationSize)
+        print('\n')
     
     return swarm 
