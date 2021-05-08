@@ -11,7 +11,13 @@ def convertParticleToCNN(particle, device, cnnType):
         'layerNumber': 1
     }
     particleCopy = copy.deepcopy(particle)
-    particleCopy.append(layer)
+    if len(particle) == 2 and particle[1]['layerType'] == 'Dropout':
+        particleCopy[1] = layer
+        # print('-----> NO IF convertParticleToCNN')
+        # print('particleCopy', particleCopy)
+    else:
+        particleCopy.append(layer)
+    
 
     if cnnType == 1:
         model = generateResnetModelFromAG(device, particleCopy)
@@ -40,7 +46,7 @@ def generateResnetModelFromAG(device, particle):
 
     # Add on classifier
     model.fc = getFullyConnectedStructureFromParticle(n_inputs, particle)
-    print('custom fc', model.fc)
+    # print('custom fc', model.fc)
 
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
 

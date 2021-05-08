@@ -108,5 +108,5 @@ def initSingleParticle():
     layers = initFCLayers() 
 
     particle.extend(layers)
-    print('particle', particle)
+    # print('particle', particle)
     return particle

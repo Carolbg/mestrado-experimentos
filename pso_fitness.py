@@ -77,10 +77,10 @@ def verifyNetworkLayersParticle(particle):
     return isReducingLayerSize
 
 def calculateParticleFitness(particle, i, generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, fileName=None):
-    print('calculateParticleFitness = ', i, particle, '\n')
+    # print('calculateParticleFitness = ', i, particle, '\n')
     # print('\n pt1 ', i, trainLoader, testLoader, validationLoader)
     # print('\n pt2', cat_df, batch_size, device, criterion)
-    print('device', device, 'maxepoch', max_epochs_stop)
+    # print('device', device, 'maxepoch', max_epochs_stop)
 
     # print('cacheConfigClass', cacheConfigClass)
     # cacheValue = cacheConfigClass.verifyEntry(particlePosition)

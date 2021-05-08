@@ -160,7 +160,7 @@ def validateParticle(particle):
 
 def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpochs=30):
     # If running on colab keep the next line commented
-    readData(isNumpy, nEpochs)
+    # readData(isNumpy, nEpochs)
 
     trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs = getData()
 
