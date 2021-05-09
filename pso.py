@@ -5,6 +5,7 @@ from pso_initialize import *
 from pso_fitness import *
 from utils_readAllData import *
 from psoCacheClass import PSOCacheClass
+import json
 
 def printSwarm(swarm):
     for i in range(1, len(swarm)):
@@ -178,6 +179,9 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
         validateParticle(particle['position'])
     
     swarm = bestNeighbourPosition(swarm, populationSize)
+    
+    saveSwarmToFile(swarm, 'initial')
+    
     # print('swarm', swarm)
     # print('\n')
     # #printSwarm(swarm)
@@ -213,36 +217,46 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
         for particle in swarm:
             updateBestSolutionParticle(particle)
         swarm = bestNeighbourPosition(swarm, populationSize)
+
+        saveSwarmToFile(swarm, iteration)
+
         print('\n')
     
+    bestParticle =  swarm[0]['bestGlobalPosition']
     print('swarm best cnn', swarm[0]['bestGlobalPosition'])
     print('swarm best cnn fitness', swarm[0]['bestGlobalFitness'])
 
     n_epochs = 30
     max_epochs_stop = 10
     print('Testando com epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
-    bestParentModel = testingBestIndividuo(cnnType, swarm['bestGlobalPosition'], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n30_max10')
+    bestParentModel = testingBestIndividuo(cnnType, bestParticle, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n30_max10')
 
     n_epochs = 30
     max_epochs_stop = 30
     print('\n\n Sem early stopping - epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
-    bestParentModel = testingBestIndividuo(cnnType, swarm['bestGlobalPosition'], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n30_max30')
+    bestParentModel = testingBestIndividuo(cnnType, bestParticle, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n30_max30')
 
     n_epochs = 50
     max_epochs_stop = 10
     print('\n\Com early stopping - epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
-    bestParentModel = testingBestIndividuo(cnnType, swarm['bestGlobalPosition'], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n50_max10')
+    bestParentModel = testingBestIndividuo(cnnType, bestParticle, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n50_max10')
 
     n_epochs = 50
     max_epochs_stop = 50
     print('\n\n Sem early stopping com epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
-    bestParentModel = testingBestIndividuo(cnnType, swarm['bestGlobalPosition'], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n50_max50')
+    bestParentModel = testingBestIndividuo(cnnType, bestParticle, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n50_max50')
 
     endAll = timeit.default_timer()
     timeAll = endAll - startAll
     print('timeAll = ', timeAll)
     
     return swarm 
+
+def saveSwarmToFile(swarm, iteration):
+    fileName = 'swarm' + str(iteration) + '.txt'
+
+    with open(fileName, "w") as txt_file:
+        json.dump(swarm, txt_file)
 
 def testingBestIndividuo(cnnType, particle, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, resultsPlotName):
     cacheConfigClass = PSOCacheClass()
