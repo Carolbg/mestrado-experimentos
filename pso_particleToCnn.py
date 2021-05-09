@@ -46,7 +46,7 @@ def generateResnetModelFromAG(device, particle):
 
     # Add on classifier
     model.fc = getFullyConnectedStructureFromParticle(n_inputs, particle)
-    # print('custom fc', model.fc)
+    print('modelFC', model.fc)
 
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
 

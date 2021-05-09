@@ -4,6 +4,7 @@ import random
 from pso_initialize import *
 from pso_fitness import *
 from utils_readAllData import *
+from psoCacheClass import PSOCacheClass
 
 def printSwarm(swarm):
     for i in range(1, len(swarm)):
@@ -162,10 +163,16 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
     # If running on colab keep the next line commented
     # readData(isNumpy, nEpochs)
 
+    startAll = timeit.default_timer()
     trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs = getData()
 
     swarm = initializeSwarm(populationSize)
-    calcFitness(0, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType)
+    
+    cacheConfigClass = PSOCacheClass()
+    calcFitness(0, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass)
+    
+    cacheConfigClass.savePopulationToCache(swarm)
+
     for particle in swarm:
         updateBestSolutionParticle(particle)
         validateParticle(particle['position'])
@@ -201,11 +208,66 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
         # print('\n')
         
         #calc das redes novas geradas com o update das posicoes
-        calcFitness(0, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType)
+        calcFitness(iteration, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass)
         # print('finish fitness')
         for particle in swarm:
             updateBestSolutionParticle(particle)
         swarm = bestNeighbourPosition(swarm, populationSize)
         print('\n')
     
+    print('swarm best cnn', swarm[0]['bestGlobalPosition'])
+    print('swarm best cnn fitness', swarm[0]['bestGlobalFitness'])
+
+    n_epochs = 30
+    max_epochs_stop = 10
+    print('Testando com epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
+    bestParentModel = testingBestIndividuo(cnnType, swarm['bestGlobalPosition'], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n30_max10')
+
+    n_epochs = 30
+    max_epochs_stop = 30
+    print('\n\n Sem early stopping - epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
+    bestParentModel = testingBestIndividuo(cnnType, swarm['bestGlobalPosition'], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n30_max30')
+
+    n_epochs = 50
+    max_epochs_stop = 10
+    print('\n\Com early stopping - epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
+    bestParentModel = testingBestIndividuo(cnnType, swarm['bestGlobalPosition'], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n50_max10')
+
+    n_epochs = 50
+    max_epochs_stop = 50
+    print('\n\n Sem early stopping com epocas ', n_epochs,' e maxEpocas', max_epochs_stop )
+    bestParentModel = testingBestIndividuo(cnnType, swarm['bestGlobalPosition'], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, 'DataResult_n50_max50')
+
+    endAll = timeit.default_timer()
+    timeAll = endAll - startAll
+    print('timeAll = ', timeAll)
+    
     return swarm 
+
+def testingBestIndividuo(cnnType, particle, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, resultsPlotName):
+    cacheConfigClass = PSOCacheClass()
+
+    trainName = 'finalTrain' + resultsPlotName
+    
+    fitness, model = calculateParticleFitness(particle, 'final', 'final', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass, trainName)
+    imprimeFCModel(model, cnnType)
+
+    # fitness, model = calcFitnessIndividuo(bestIndividuo, 'final', 'final', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType, trainName)
+    print('fitness novo treinamento', fitness)
+    testName = 'finalTest' + resultsPlotName
+    historyTest, cmTest = evaluate(model, testLoader, criterion, 2, testName, device)
+    print(cmTest)
+    historyTest.insert(0, 'New Fitness', fitness, True)
+    print(historyTest)
+    
+    historyTest.to_csv('history_' + resultsPlotName + '.csv', index = False, header=True)
+    
+    return model
+
+def imprimeFCModel(model, cnnType):
+    if cnnType == 1:
+        print('modelFC', model.fc)
+    elif cnnType == 2:
+        print('custom fc', model.classifier)
+    else:
+        print('custom fc', model.classifier)

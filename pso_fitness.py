@@ -8,7 +8,7 @@ from training import train
 from testing import evaluate
 from pso_particleToCnn import *
 
-def convertVariablesToArray(aGeneration, aTrainLoader, aTestLoader, aValidationLoader, aCat_df, aBatch_size, aDevice, aCriterion, tp, amax_epochs_stop, an_epochs, acnnType):
+def convertVariablesToArray(aGeneration, aTrainLoader, aTestLoader, aValidationLoader, aCat_df, aBatch_size, aDevice, aCriterion, tp, amax_epochs_stop, an_epochs, acnnType, acacheConfigClass):
     arrayGeneration = [aGeneration for i in range(tp)]
     arrayTrainLoader = [aTrainLoader for i in range(tp)]
     arrayTestLoader = [aTestLoader for i in range(tp)]
@@ -17,21 +17,21 @@ def convertVariablesToArray(aGeneration, aTrainLoader, aTestLoader, aValidationL
     arrayBatch_size = [aBatch_size for i in range(tp)]
     arrayDevice = [aDevice for i in range(tp)]
     arrayCriterion = [aCriterion for i in range(tp)]
-    # cacheConfigClass = [copy.deepcopy(acacheConfigClass) for i in range(tp)]
+    arrayCacheConfigClass = [copy.deepcopy(acacheConfigClass) for i in range(tp)]
     arrayMaxEpochsStop= [amax_epochs_stop for i in range(tp)]
     arrayNEpochs = [an_epochs for i in range(tp)]
     arrayCnnType = [acnnType for i in range(tp)]
     # print('na hora de montar cacheConfigClass', cacheConfigClass)
 
     # print('arrayGeneration, arrayCriterion', arrayGeneration, arrayCriterion)
-    return arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayMaxEpochsStop, arrayNEpochs, arrayCnnType
+    return arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayMaxEpochsStop, arrayNEpochs, arrayCnnType, arrayCacheConfigClass
 
-def calcFitness(generation, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType):
+def calcFitness(generation, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass):
     print('\n\n@@@@ Calculando fitness')
     tp = len(swarm)
     # print('calcFitness', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion)
-    arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayMaxEpochsStop, arrayNEpochs, arrayCnnType = convertVariablesToArray(generation, 
-        trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, tp, max_epochs_stop, n_epochs, cnnType)
+    arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayMaxEpochsStop, arrayNEpochs, arrayCnnType, arrayCacheConfigClass = convertVariablesToArray(generation, 
+        trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, tp, max_epochs_stop, n_epochs, cnnType, cacheConfigClass)
     
     startAll = timeit.default_timer()
     iterations = [i for i in range(tp)]
@@ -45,7 +45,7 @@ def calcFitness(generation, swarm, trainLoader, testLoader, validationLoader, ca
     # print('after error', max_epochs_stop, n_epochs)
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        for result in zip(iterations, executor.map(calculateParticleFitness, swarm, iterations, arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayMaxEpochsStop, arrayNEpochs, arrayCnnType)):
+        for result in zip(iterations, executor.map(calculateParticleFitness, swarm, iterations, arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayMaxEpochsStop, arrayNEpochs, arrayCnnType, arrayCacheConfigClass)):
             iteration, (fitness, _) = result
             print('result', iteration, fitness)
             swarm[iteration]['positionFitness'] = fitness
@@ -76,18 +76,19 @@ def verifyNetworkLayersParticle(particle):
     
     return isReducingLayerSize
 
-def calculateParticleFitness(particle, i, generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, fileName=None):
+def calculateParticleFitness(particle, i, generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass, fileName=None):
     # print('calculateParticleFitness = ', i, particle, '\n')
     # print('\n pt1 ', i, trainLoader, testLoader, validationLoader)
     # print('\n pt2', cat_df, batch_size, device, criterion)
     # print('device', device, 'maxepoch', max_epochs_stop)
 
-    # print('cacheConfigClass', cacheConfigClass)
-    # cacheValue = cacheConfigClass.verifyEntry(particlePosition)
-    # if cacheValue != None:
-    #     print('\nachei cache', cacheValue, ' individuo = ', i, particlePosition, '\n fitness = ', cacheValue)
-    #     return cacheValue, None
     particlePosition = particle['position']
+
+    cacheValue = cacheConfigClass.verifyEntry(particlePosition)
+    if cacheValue != None:
+        print('\n achei cache', cacheValue, ' individuo = ', i, particlePosition, '\n fitness = ', cacheValue)
+        return cacheValue, None
+
     model, optimizer = convertParticleToCNN(particlePosition, device, cnnType)
     # print('epocas', epocas)
 
