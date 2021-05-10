@@ -90,7 +90,7 @@ def calculateParticleFitness(particle, i, generation, trainLoader, testLoader, v
         return cacheValue, None
 
     model, optimizer = convertParticleToCNN(particlePosition, device, cnnType)
-    # print('epocas', epocas)
+    print('optimizer', optimizer)
 
     if fileName != None:
         resultsPlotName = fileName

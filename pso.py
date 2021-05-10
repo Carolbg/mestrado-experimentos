@@ -147,7 +147,8 @@ def validateParticle(particle):
             if particle[i]['layerType'] == 'Dropout' and particle[j]['layerType'] == 'Dropout':
                 j = j+1
             else:
-                validParticle.append(particle[i])
+                if i != 1 or (i == 1 and particle[i]['layerType'] != 'Dropout'):
+                    validParticle.append(particle[i])
                 i = j 
                 j = j+1
         else:
@@ -168,7 +169,9 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
     trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs = getData()
 
     swarm = initializeSwarm(populationSize)
-    
+    # Printing should happen before calculating the fitness in order to debug
+    saveSwarmToFile(swarm, 'initial')
+
     cacheConfigClass = PSOCacheClass()
     calcFitness(0, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass)
     
@@ -179,8 +182,6 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
         validateParticle(particle['position'])
     
     swarm = bestNeighbourPosition(swarm, populationSize)
-    
-    saveSwarmToFile(swarm, 'initial')
     
     # print('swarm', swarm)
     # print('\n')
@@ -210,6 +211,8 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
         
         # print('swarm', swarm)
         # print('\n')
+        # Printing should happen before calculating the fitness in order to debug
+        saveSwarmToFile(swarm, iteration)
         
         #calc das redes novas geradas com o update das posicoes
         calcFitness(iteration, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass)
@@ -217,8 +220,6 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpo
         for particle in swarm:
             updateBestSolutionParticle(particle)
         swarm = bestNeighbourPosition(swarm, populationSize)
-
-        saveSwarmToFile(swarm, iteration)
 
         print('\n')
     
@@ -258,10 +259,14 @@ def saveSwarmToFile(swarm, iteration):
     with open(fileName, "w") as txt_file:
         json.dump(swarm, txt_file)
 
-def testingBestIndividuo(cnnType, particle, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, resultsPlotName):
+def testingBestIndividuo(cnnType, bestPosition, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, resultsPlotName):
     cacheConfigClass = PSOCacheClass()
 
     trainName = 'finalTrain' + resultsPlotName
+
+    particle = {
+        'position': bestPosition
+    }
     
     fitness, model = calculateParticleFitness(particle, 'final', 'final', trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass, trainName)
     imprimeFCModel(model, cnnType)

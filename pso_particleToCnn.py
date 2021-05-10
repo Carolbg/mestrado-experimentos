@@ -11,12 +11,8 @@ def convertParticleToCNN(particle, device, cnnType):
         'layerNumber': 1
     }
     particleCopy = copy.deepcopy(particle)
-    if len(particle) == 2 and particle[1]['layerType'] == 'Dropout':
-        particleCopy[1] = layer
-        # print('-----> NO IF convertParticleToCNN')
-        # print('particleCopy', particleCopy)
-    else:
-        particleCopy.append(layer)
+    print('posicao 1 = ', particle[1]['layerType'] == 'Dropout')
+    particleCopy.append(layer)
     
 
     if cnnType == 1:
