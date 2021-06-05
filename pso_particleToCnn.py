@@ -11,9 +11,9 @@ def convertParticleToCNN(particle, device, cnnType):
         'layerNumber': 1
     }
     particleCopy = copy.deepcopy(particle)
-    print('posicao 1 = ', particle[1]['layerType'] == 'Dropout')
-    particleCopy.append(layer)
+    len(particle) > 1 and print('posicao 1 = ', particle[1]['layerType'] == 'Dropout')
     
+    particleCopy.append(layer)
 
     if cnnType == 1:
         model = generateResnetModelFromAG(device, particleCopy)

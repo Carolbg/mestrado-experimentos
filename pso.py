@@ -153,10 +153,12 @@ def validateParticle(particle):
                 j = j+1
         else:
             if i+1 < j:
-                validParticle.append(particle[i])
+                if i != 1 or (i == 1 and particle[i]['layerType'] != 'Dropout'):
+                    validParticle.append(particle[i])
                 break
             else:
-                validParticle.append(particle[i])
+                if i != 1 or (i == 1 and particle[i]['layerType'] != 'Dropout'):
+                    validParticle.append(particle[i])
                 i = i+1
     
     return validParticle
