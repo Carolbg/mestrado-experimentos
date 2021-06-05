@@ -2,10 +2,10 @@ from ag_initialize import *
 from ag_selection import *
 from ag_crossover import *
 from ag_mutation import *
-from ag_cnnInit import *
+from utils_cnnInit import *
 from ag_fitness import *
 from ag_reinsercao import *
-from ag_readAllData import *
+from utils_readAllData import *
 # import ag_cacheConfig
 
 from cacheClass import CacheClass

@@ -190,12 +190,12 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
         
     # Record overall time and print out stats
     total_time = timer() - overall_start
-    print(
-        f'\nBest epoch: {best_epoch} with loss: {valid_loss_min:.2f} and acc: {100 * validation_acc:.2f}%'
-    )
-    print(
-        f'{total_time:.2f} total seconds elapsed. {total_time / (epoch+1):.2f} seconds per epoch.'
-    )
+    # print(
+    #     f'\nBest epoch: {best_epoch} with loss: {valid_loss_min:.2f} and acc: {100 * validation_acc:.2f}%'
+    # )
+    # print(
+    #     f'{total_time:.2f} total seconds elapsed. {total_time / (epoch+1):.2f} seconds per epoch.'
+    # )
     # Format history
     history = pd.DataFrame(history, columns=[
                             'train_acc', 'train_sensitividade', 'train_especificidade', 
@@ -203,7 +203,7 @@ def train(model, criterion, optimizer, trainLoader, validLoader, resultsPlotName
                             'validation_acc', 'validation_sensitividade', 'validation_especificidade', 
                             'validation_precision', 'validation_f1Score', 'valid_loss'])
     
-    print('\nHistorico treinamento e validação \n', history)
+    # print('\nHistorico treinamento e validação \n', history)
 
     # history.to_csv('history_trainValidation_'+resultsPlotName+'.csv', index = False, header=True)
 

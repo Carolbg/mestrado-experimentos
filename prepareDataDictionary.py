@@ -45,14 +45,14 @@ def mainReadData():
 def getFilesName():
     print('getFilesName')
 
-    # folder = 'Imagens_TXT_Estaticas_Balanceadas_asCabıoglu'
-    # print('folder = Imagens_TXT_Estaticas_Balanceadas_asCabıoglu')
-    # txt_saudaveis_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu/0Saudavel/*.txt"))
-    # txt_doentes_files = sorted(glob.glob("../../../Imagens_TXT_Estaticas_Balanceadas_asCabıoglu/1Doente/*.txt"))
+    folder = 'Imagens_TXT_Estaticas_Balanceadas_frontalImages'
+    print('folder = ', folder)
+    # txt_saudaveis_files = sorted(glob.glob("../"+folder+"/0Saudavel/*.txt"))
+    # txt_doentes_files = sorted(glob.glob("../"+folder+"/1Doente/*.txt"))
     
     #GDRIVE RUNNING
     folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_frontalImages'
-    print(folder)
+    # print(folder)
     txt_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.txt"))
     txt_doentes_files = sorted(glob.glob(folder+"/1Doente/*.txt"))
 
