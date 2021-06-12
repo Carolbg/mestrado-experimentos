@@ -13,15 +13,15 @@ import torch
 
 def mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True):
     print('\n\nTESTES COM RESNET\n\n')
-
+    nEpochs = 30
     resultsPlotName = resultsPlotName + '_resnet'
     #DATASET STEPS:
     print('isNumpy', isNumpy)
     print('Load dataset')
     if isNumpy:
-        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation)
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation, nEpochs)
     else:
-        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryData(dataAugmentation)
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryData(dataAugmentation, nEpochs)
     
     gc.collect()
     torch.cuda.empty_cache()

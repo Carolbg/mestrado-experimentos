@@ -48,7 +48,6 @@ def prepareResnetModelWithTXT(experimentType, device):
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
     return model.to(device)
 
-
 def prepareDensenetModelWithTXT(experimentType, device):
     model = models.densenet201(pretrained=True)
     print('model', model.classifier)
@@ -71,4 +70,3 @@ def prepareDensenetModelWithTXT(experimentType, device):
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
     
     return model.to(device)
-
