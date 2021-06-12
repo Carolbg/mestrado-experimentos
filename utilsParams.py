@@ -22,6 +22,13 @@ def getDevice():
 
     return device
 
+def init_weights(m):
+    print('type(m)', type(m))
+    if type(m) == nn.Linear:
+        # nn.init.xavier_normal_(w)
+        torch.nn.init.xavier_uniform_(m.weight, gain=nn.init.calculate_gain('relu'))
+        torch.nn.init.zeros_(m.bias)
+
 def getFullyConnectedStructure(n_inputs, n_classes, experimentType):
     #nn.Sequential(nn.Linear(n_inputs, 256), nn.ReLU(), nn.Dropout(0.2), nn.Linear(256, n_classes))
     if experimentType == 1:
@@ -58,6 +65,7 @@ def getFullyConnectedStructure(n_inputs, n_classes, experimentType):
         )
 
     print('lastLayer', lastLayer)
+    lastLayer.apply(init_weights)
     return lastLayer
 
 def prepareTrainingLoss():
