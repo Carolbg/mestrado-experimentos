@@ -36,6 +36,8 @@ def plotAcc(history, model):
     title = 'Acurácia treinamento e validação'
 
     saveName = 'plotAcc_'+model
+    # print('saveName', saveName)
+
     labels = {
         'train_acc': 'Acurácia treinamento', 
         'validation_acc': 'Acurácia validação'
@@ -119,6 +121,7 @@ def plotAUC(fpr, tpr, roc_auc, model):
 
 
 def plotData(history, model):
+    # print('model', model)
     plotAcc(history, model)
     plotSensitividade(history, model)
     plotEspecificidade(history, model)

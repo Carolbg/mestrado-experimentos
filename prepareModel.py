@@ -27,6 +27,7 @@ def prepareVGG16ModelWithTXT(experimentType, device, keepOriginalStructure=False
     return model.to(device)
 
 def prepareResnetModelWithTXT(experimentType, device):
+    #TODO in future: treinamento completo a partir do zero aqui
     model = models.resnet50(pretrained=True)
     print('model', model.fc)
 

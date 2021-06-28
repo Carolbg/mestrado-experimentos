@@ -9,7 +9,7 @@ import torch
 # experimentType = 1
 # typeLR = 2
 # dataAugmentation = False
-def main(resultsPlotName, experimentType, typeLR=1,isNumpy=False, dataAugmentation=False):
+def main(resultsPlotName, experimentType, typeLR=1, isNumpy=False, dataAugmentation=False):
 
     print('Config: ', resultsPlotName)
     print('experimentType', experimentType, ' dataAugmentation ',dataAugmentation, ' typeLR ', typeLR)

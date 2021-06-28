@@ -40,6 +40,9 @@ function [pSaudaveisRatio, pSaudaveisAugmentedRatio, pDoentesRatio, pDoentesAugm
     if hasDataAugment
         pSaudaveisAugmentedRatio = preprocessAndSaveAugmentedImages(pAugmentedSaudaveis, minBase, maxBase, filesSaudaveis, toFolderName, folderClassSaudaveis, allSaudaveisFileNames, numberAugmentedHealthImages);
         pDoentesAugmentedRatio = preprocessAndSaveAugmentedImages(pAugmentedDoentes, minBase, maxBase, filesDoentes, toFolderName, folderClassDoentes, allDoentesFileNames, numberAugmentedSickImages);
+    else
+        pSaudaveisAugmentedRatio = [];
+        pDoentesAugmentedRatio = [];
     end
     
 
@@ -98,11 +101,11 @@ function [imagedPreProcessed, numpyImg] = preprocessImage(img, minValue, maxValu
     
     figure;
     subplot(1,2,1)
-    imagesc(imgRatio);
+    imagesc(imagedPreProcessed);
     title(fileName)
 
     subplot(1,2,2)
-    histogram(imgRatio);
+    histogram(imagedPreProcessed);
 
     folderSaveData = strcat('imagesVerify/', fileName, '.png');
     saveas(gcf, folderSaveData)
@@ -110,12 +113,12 @@ function [imagedPreProcessed, numpyImg] = preprocessImage(img, minValue, maxValu
     figure;
     
     subplot(1,2,1)
-    imagesc(imgRatio);
+    imagesc(imagedPreProcessed);
     title(fileName)
 
     subplot(1,2,2)
-    histogram(imgRatio);
-    numpyImg = py.numpy.array(imgRatio);
+    histogram(imagedPreProcessed);
+    numpyImg = py.numpy.array(imagedPreProcessed);
 end
 
 function pData = preprocessAndSaveImages(data, minValue, maxValue, files, toFolderName, folderClass, fileNames)
@@ -137,7 +140,6 @@ function pData = preprocessAndSaveImages(data, minValue, maxValue, files, toFold
         close all
     end
 end
-
 
 
 function pData = preprocessAndSaveAugmentedImages(data, minValue, maxValue, files, toFolderName, folderClass, fileNames, numberAugmentedImages)
