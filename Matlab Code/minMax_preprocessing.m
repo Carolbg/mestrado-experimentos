@@ -527,7 +527,7 @@ for i = 1:sizeSaudaveis
     %Saving original image
     numpyMinMax = py.numpy.array(minMaxImg);
     folderSaudaveis = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax/0Saudaveis/', nomeSaudaveis(i, :));
-    py.numpy.save(folderSaudaveis, numpyMinMax);
+%     py.numpy.save(folderSaudaveis, numpyMinMax);
     
 %     dataAugment2DImage(minMaxImg, nomeSaudaveis, i, 2, 'saudaveis/', '0Saudaveis','Imagens_numpy_array_allData_entireDatabase_MinMax')
     close all
@@ -544,9 +544,9 @@ for i = 1:sizeDoentes
     
     numpyMinMax = py.numpy.array(minMaxImg);
     folderDoentes = strcat('../../Imagens_numpy_array_allData_entireDatabase_MinMax_double/1Doentes/', nomeDoentes(i, :));
-    py.numpy.save(folderDoentes, numpyMinMax);
+%     py.numpy.save(folderDoentes, numpyMinMax);
     
-    dataAugment2DImage(minMaxImg, nomeDoentes, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_entireDatabase_MinMax_double')
+%     dataAugment2DImage(minMaxImg, nomeDoentes, i, 2, 'doentes/', '1Doentes', 'Imagens_numpy_array_allData_entireDatabase_MinMax_double')
     
     close all
 end

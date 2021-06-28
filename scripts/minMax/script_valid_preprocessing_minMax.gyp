@@ -13,7 +13,7 @@ experimentType = 1
 dataAugmentation = False
 typeLR = 2
 
-trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryData(dataAugmentation)
+trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryData(dataAugmentation,30 )
 
 
 # try:

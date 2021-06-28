@@ -27,6 +27,7 @@ def prepareVGG16ModelWithTXT(experimentType, device, keepOriginalStructure=False
     return model.to(device)
 
 def prepareResnetModelWithTXT(experimentType, device):
+    #TODO in future: treinamento completo a partir do zero aqui
     model = models.resnet50(pretrained=True)
     print('model', model.fc)
 
@@ -47,7 +48,6 @@ def prepareResnetModelWithTXT(experimentType, device):
     print('total_params', total_params, 'total_trainable_params', total_trainable_params)
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
     return model.to(device)
-
 
 def prepareDensenetModelWithTXT(experimentType, device):
     model = models.densenet201(pretrained=True)
@@ -71,4 +71,3 @@ def prepareDensenetModelWithTXT(experimentType, device):
     model.idx_to_class = {0: 'Saudavel', 1: 'Doente'}
     
     return model.to(device)
-
