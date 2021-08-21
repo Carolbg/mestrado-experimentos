@@ -91,8 +91,9 @@ population, populationFitness, model = main(10, 2, 80, 10, 40, True, 1)
 from pso import *
 
 #read the data only once to use in all experiments
+# readData(isNumpy=False, nEpochs=30)
 readData(False, 30)
 
-#PSO(iterations=10, populationSize=10, Cg=0.5, isNumpy=False, cnnType=1, nEpochs=30)
-swarm = PSO(10, 10, 0.5, False, 1, 30)
+#PSO(iterations=10, populationSize=10, Cg=0.5, cnnType=1)
+swarm = PSO(10, 10, 0.6, 3)
 ```
