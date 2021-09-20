@@ -8,7 +8,7 @@ def singleIteration(swarm, populationSize, Cg):
     swarm = bestNeighbourPosition(swarm, populationSize)
     #     #printSwarm(swarm)
     for particle in swarm:
-        # Cac diff pBest - p
+        # Calc diff pBest - p
         diffPBest = calcDiffTwoParticles(particle['bestPosition'], particle['position'])
 
         # Cac diff gBest - p
