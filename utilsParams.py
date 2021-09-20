@@ -7,7 +7,7 @@ def getCommonArgs(nEpochs=30):
     shuffleSeed = 1
     print('shuffleSeed', shuffleSeed)
     batch_size = 10
-    max_epochs_stop = 30
+    max_epochs_stop = 10
     n_epochs = nEpochs
     print('n_epochs', n_epochs, 'max_epochs_stop', max_epochs_stop)
     device = getDevice()
@@ -62,6 +62,37 @@ def getFullyConnectedStructure(n_inputs, n_classes, experimentType):
             nn.Linear(4096, 4096), nn.ReLU(), nn.Dropout(0.5),
             nn.Linear(4096, 1024), nn.ReLU(), nn.Dropout(0.5),
             nn.Linear(1024, n_classes)
+        )
+
+    # Best config of PSO Densenet Frontal
+    elif experimentType == 10:
+        lastLayer = nn.Sequential(
+            nn.Linear(n_inputs, 64), nn.ReLU(), nn.Dropout(0.07977606125630654), 
+            nn.Linear(64, 32), nn.ReLU(), 
+            nn.Linear(32, 16), nn.ReLU(), 
+            nn.Linear(16, n_classes)
+        )
+    # Best config of AG Densenet Frontal
+    elif experimentType == 11:
+        lastLayer = nn.Sequential(
+            nn.Linear(n_inputs, 1024), nn.ReLU(), nn.Dropout(0.06673564902817675), 
+            nn.Linear(1024, 8), nn.ReLU(),
+            nn.Linear(8, n_classes)
+        )
+    
+    # Best config of PSO Densenet Cabioglu
+    elif experimentType == 12:
+        lastLayer = nn.Sequential(
+            nn.Linear(n_inputs, 64), nn.ReLU(), nn.Dropout(0.2950256631398443), 
+            nn.Linear(64, 32), nn.ReLU(), 
+            nn.Linear(32, n_classes)
+        )
+    # Best config of AG Densenet Cabioglu
+    elif experimentType == 13:
+        lastLayer = nn.Sequential(
+            nn.Linear(n_inputs, 1024), nn.ReLU(),
+            nn.Linear(1024, 256), nn.ReLU(), nn.Dropout(0.34015512129585607),
+            nn.Linear(256, n_classes)
         )
 
     print('lastLayer', lastLayer)
