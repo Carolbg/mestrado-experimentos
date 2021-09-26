@@ -9,18 +9,24 @@ from readMatlabNumpyData import mainPrepareDictionaryDataFromNumpy
 import gc
 import torch
 
-def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True):
+def mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True, nEpochs=30, maxEpochs=None):
     print('\n\nTESTES COM DENSENET\n\n')
-    nEpochs = 30
     resultsPlotName = resultsPlotName + '_densenet'
     print('isNumpy', isNumpy)
     
     #DATASET STEPS:
     print('Load dataset')
     if isNumpy:
-        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation, nEpochs)
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, defaultMaxEpochs, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation, nEpochs)
     else:
-        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryData(dataAugmentation, nEpochs)
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, defaultMaxEpochs, n_epochs, device = mainPrepareDictionaryData(dataAugmentation, nEpochs)
+
+    max_epochs_stop = maxEpochs if maxEpochs != None else defaultMaxEpochs
+    n_epochs = nEpochs
+
+    print('\n\nReal n_epochs', n_epochs)
+    print('\n\nReal max_epochs_stop', max_epochs_stop)
+
     gc.collect()
     torch.cuda.empty_cache()
 

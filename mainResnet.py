@@ -11,20 +11,24 @@ import gc
 import torch
 
 
-def mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True):
+def mainResnet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True, nEpochs=30, maxEpochs=None):
     print('\n\nTESTES COM RESNET\n\n')
-    nEpochs = 30
     resultsPlotName = resultsPlotName + '_resnet'
     #DATASET STEPS:
     print('isNumpy', isNumpy)
     print('Load dataset')
     if isNumpy:
-        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation, nEpochs)
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, defaultMaxEpochs, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation, nEpochs)
     else:
-        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryData(dataAugmentation, nEpochs)
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, defaultMaxEpochs, n_epochs, device = mainPrepareDictionaryData(dataAugmentation, nEpochs)
     
     gc.collect()
     torch.cuda.empty_cache()
+
+    max_epochs_stop = maxEpochs if maxEpochs != None else defaultMaxEpochs
+
+    print('\n\nReal n_epochs', n_epochs)
+    print('\n\nReal max_epochs_stop', max_epochs_stop)
 
     #PREPARE MODEL STEPS:
     print('\nPrepare model')

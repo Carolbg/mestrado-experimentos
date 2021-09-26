@@ -15,6 +15,7 @@ from prepareDataDictionary import prepareNumpyDatasetBalancedData, splitData, pr
 from preprocessing import getMeanStdEntireBase, getMaxMinValueFromDataDic
 import gc
 import torch
+from cnn_visualization import *
 
 def mainPrepareDictionaryDataFromNumpy(dataAugmentation, nEpochs):
     print('Lidando com numpy data')
@@ -32,6 +33,8 @@ def mainPrepareDictionaryDataFromNumpy(dataAugmentation, nEpochs):
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
     gc.collect()
     torch.cuda.empty_cache()
+
+    setInfoData(trainData, trainTarget, testData, testTarget, validationData, validationTarget)
 
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation, mean, std)
     

@@ -94,7 +94,27 @@ def getFullyConnectedStructure(n_inputs, n_classes, experimentType):
             nn.Linear(1024, 256), nn.ReLU(), nn.Dropout(0.34015512129585607),
             nn.Linear(256, n_classes)
         )
-
+    # Best AG Resnet 0.90
+    elif experimentType == 14:
+        lastLayer = nn.Sequential(
+            nn.Linear(n_inputs, 128),
+            nn.ReLU(),
+            nn.Dropout(0.4267150503559332),
+            nn.Linear(128, 32),
+            nn.ReLU(),
+            nn.Linear(32, 2)
+        )
+    # Best AG VGG 0.92
+    elif experimentType == 15:
+        lastLayer = nn.Sequential(
+            nn.Linear(n_inputs, 32),
+            nn.ReLU(),
+            nn.Dropout(0.3065990603705573),
+            nn.Linear(32, 8),
+            nn.ReLU(),
+            nn.Dropout(0.3153523843591079),
+            nn.Linear(8, 2)
+        )
     print('lastLayer', lastLayer)
     lastLayer.apply(init_weights)
     return lastLayer
@@ -110,8 +130,17 @@ def prepareTrainingOptimizer(model, typeLR):
         lr = 0.0001
         print('Learning Rate', lr)
         optimizer = optim.Adam(model.parameters(), lr)
-    else:
+    elif typeLR == 2:
         optimizer = optim.Adam(model.parameters())
+    elif typeLR == 4: # Best AG Resnet 0.90
+        lr = 0.00001 
+        print('Learning Rate', lr)
+        optimizer = optim.Adam(model.parameters(), lr)
+    elif typeLR == 5:
+        lr = 0.00000001 # Best AG VGG 0.92
+        print('Learning Rate', lr)
+        optimizer = optim.Adam(model.parameters(), lr)
+
 
     print('optimizer', optimizer)
     return optimizer

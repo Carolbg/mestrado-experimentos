@@ -12,7 +12,7 @@ from preprocessing import preprocessDictionaryDataset, getMeanStdEntireBase, get
 from utilsParams import getCommonArgs
 from skimage import transform
 import cv2
-
+from cnn_visualization import *
 import gc
 import torch
 
@@ -30,6 +30,8 @@ def mainPrepareDictionaryData(dataAugmentation, nEpochs):
 
     trainData, trainTarget, testData, testTarget, validationData, validationTarget = splitData(shuffleSeed, saudaveisDictionaryData, doentesDictionaryData)
     
+    setInfoData(trainData, trainTarget, testData, testTarget, validationData, validationTarget)
+
     # trainData, testData, validationData = minMaxNormalization(trainData, testData, validationData, deltaT, min10mean)
     
     trainLoader, testLoader, validationLoader, n_classes, cat_df = prepareNumpyDatasetBalancedData(trainData, trainTarget, testData, testTarget, validationData, validationTarget, batch_size, dataAugmentation, mean, std )
