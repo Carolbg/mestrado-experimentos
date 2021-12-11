@@ -115,7 +115,7 @@ def calculateParticleFitness(particle, i, generation, trainLoader, testLoader, v
     isReducingLayerSize = verifyNetworkLayersParticle(particlePosition) 
 
     if isReducingLayerSize == False:
-        fitness = fitness*0.6
+        fitness = fitness*0.7
     # print('fitness final', fitness)
 
     
