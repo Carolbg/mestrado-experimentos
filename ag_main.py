@@ -12,6 +12,7 @@ from cacheClass import CacheClass
 
 def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType=1):
     startAll = timeit.default_timer()
+    print('cnnType', cnnType)
     #cnnType = 1 => resnet, cnnType = 2 => VGG, cnnType = 3 => Densenet
     print('tp, tour, tr, numberIterations, tm, isNumpy', tp, tour, tr, numberIterations, tm, isNumpy)
     print('fitness penalization = 0.7')
