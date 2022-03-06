@@ -9,7 +9,7 @@ from readMatlabNumpyData import mainPrepareDictionaryDataFromNumpy
 import gc
 import torch
 
-def mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True, keepOriginalStructure=False):
+def mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True, keepOriginalStructure=False, nEpochs=30, maxEpochs=None):
     print('\n\nTESTES COM VGG\n\n')
     nEpochs = 30
     resultsPlotName = resultsPlotName + '_vgg'
@@ -17,12 +17,17 @@ def mainVGG(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=T
     print('isNumpy', isNumpy)
     print('Load dataset')
     if isNumpy:
-        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation, nEpochs)
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, defaultMaxEpochs, n_epochs, device = mainPrepareDictionaryDataFromNumpy(dataAugmentation, nEpochs)
     else:
-        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, max_epochs_stop, n_epochs, device = mainPrepareDictionaryData(dataAugmentation, nEpochs)
+        trainLoader, testLoader, validationLoader, n_classes, cat_df, batch_size, defaultMaxEpochs, n_epochs, device = mainPrepareDictionaryData(dataAugmentation, nEpochs)
     
+    max_epochs_stop = maxEpochs if maxEpochs != None else defaultMaxEpochs
+
     gc.collect()
     torch.cuda.empty_cache()
+    
+    print('\n\nReal n_epochs', n_epochs)
+    print('\n\nReal max_epochs_stop', max_epochs_stop)
 
     #PREPARE MODEL STEPS:
     print('\nPrepare model')
