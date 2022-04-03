@@ -7,12 +7,15 @@ from ag_fitness import *
 from ag_reinsercao import *
 from utils_readAllData import *
 # import ag_cacheConfig
-
+from surrogate_main import *
 from cacheClass import CacheClass
+from surrogate_fitness import calcSurrogateFitness
+import math
 
-def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType=1):
+def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType=1, useSurrogate=False):
     startAll = timeit.default_timer()
     print('cnnType', cnnType)
+    print('useSurrogate?', useSurrogate)
     #cnnType = 1 => resnet, cnnType = 2 => VGG, cnnType = 3 => Densenet
     print('tp, tour, tr, numberIterations, tm, isNumpy', tp, tour, tr, numberIterations, tm, isNumpy)
     print('fitness penalization = 0.7')
@@ -22,11 +25,18 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType
     sequenceIndividual = [i for i in range(11)]
     print('sequenceIndividual', sequenceIndividual)
     
+    halfPopulation = tp / 10
+    halfPopulation = math.floor(halfPopulation)
+    print('halfPopulation', halfPopulation)
+    
     population = initializePopulation(tp)
     populationFitness = calcFitness(0, population, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
     cacheConfigClass.savePopulationToCache(population, populationFitness)
     # print('\ncacheStore = ', ag_cacheConfig.cacheStore)
-
+    allSurrogateTrainData = population
+    allSurrogateTrainFitness = populationFitness
+    randomForestModel = None
+    
     for i in range(numberIterations):
         print('\n\n $$$$$$$$ Geração ', i)
         print('population = ', population)
@@ -38,13 +48,29 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType
 
         newPopulation = applyMutation(newPopulation, tm, tp)
         # newPopulation = applyMutationPercentageForEachField(newPopulation, tm, tp)
-        newPopulationFitness = calcFitness(i+1, newPopulation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
-        
+        print('i = ', i, 'i <= 1', i <= 1, 'useSurrogate', useSurrogate)
+        if useSurrogate == False or i <= 1: 
+            print('fitness apenas cnn')
+            newPopulationFitness = calcFitness(i+1, newPopulation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
+        else:
+            #Real fitness
+            newPopulationRealFitness = calcFitness(i+1, newPopulation[:halfPopulation], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
+            print('vou calcular fitness com surrogate')
+            newPopulationSurrogateFitness = calcSurrogateFitness(randomForestModel, i+1, newPopulation[halfPopulation:], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
+            newPopulationFitness = np.concatenate((newPopulationRealFitness, newPopulationSurrogateFitness))
+
         # print('\n\n Saving new generated items of geração ', i)
         cacheConfigClass.savePopulationToCache(newPopulation, newPopulationFitness)
 
         population, populationFitness = selectNewGenerationDecrescente(bestParent, bestParentFitness, newPopulation, newPopulationFitness)
         
+        if useSurrogate and i == 1:
+            allSurrogateTrainData = np.concatenate((allSurrogateTrainData, population))
+            allSurrogateTrainFitness = np.concatenate((allSurrogateTrainFitness, populationFitness))
+            print('vou treinar a random forest')
+            randomForestModel = mainSurrogate(population, populationFitness)
+            print('randomForestModel treinado', randomForestModel)
+
         # print('\ncacheStore = ', ag_cacheConfig.cacheStore)
     
     print('\nFinal population\n')
