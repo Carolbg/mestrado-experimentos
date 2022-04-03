@@ -9,12 +9,12 @@ def createRandomForest(numberTree=10):
     return model
 
 def trainModel(model, xTrain, yTrain):
-    print('no train model xTrain = ', xTrain)
+    # print('no train model xTrain = ', xTrain)
     # Fitting the Random Forest Regression model to the data
     return model.fit(xTrain, yTrain)
 
 def testModel(model, xTest):
-    print('no testModel xTest = ', xTest)
+    # print('no testModel xTest = ', xTest)
     # Predicting the target values of the test set
     yPred = model.predict(xTest)
     return yPred

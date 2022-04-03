@@ -30,13 +30,15 @@ def calcSurrogateFitness(randomTreeModel, generation, population, trainLoader, t
     for individual in population:
         cacheValue = cacheConfigClass.verifyEntry(individual)
         if cacheValue != None:
-            print('\nachei cache', cacheValue, ' individual = ', individual, '\n fitness = ', cacheValue)
+            # print('\nachei cache', cacheValue, ' individual = ', individual, '\n fitness = ', cacheValue)
             fitnessArray.append(cacheValue)
         else:
             encodedIndividual = encodeAGIndividual(individual)
-            print('encodedIndividual', encodedIndividual)
-            fitnessIndividual = testModel(randomTreeModel, encodedIndividual)
-            print('resultado rf', fitnessIndividual)
+            npData = np.array(encodedIndividual)
+            flattenIndividual = npData.flatten()
+            # print('flattenIndividual', flattenIndividual)
+            fitnessIndividual = testModel(randomTreeModel, [flattenIndividual])
+            # print('resultado rf', fitnessIndividual)
             fitnessArray.append(fitnessIndividual)
     
     print('fitnessArray', fitnessArray)
