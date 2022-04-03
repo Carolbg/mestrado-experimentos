@@ -32,6 +32,7 @@ def calcSurrogateFitness(randomTreeModel, generation, population, trainLoader, t
         if cacheValue != None:
             # print('\nachei cache', cacheValue, ' individual = ', individual, '\n fitness = ', cacheValue)
             fitnessArray.append(cacheValue)
+            # print('cacheValue', cacheValue)
         else:
             encodedIndividual = encodeAGIndividual(individual)
             npData = np.array(encodedIndividual)
@@ -39,9 +40,9 @@ def calcSurrogateFitness(randomTreeModel, generation, population, trainLoader, t
             # print('flattenIndividual', flattenIndividual)
             fitnessIndividual = testModel(randomTreeModel, [flattenIndividual])
             # print('resultado rf', fitnessIndividual)
-            fitnessArray.append(fitnessIndividual)
+            fitnessArray.append(fitnessIndividual[0])
     
-    print('fitnessArray', fitnessArray)
+    # print('fitnessArray', fitnessArray)
     # with concurrent.futures.ProcessPoolExecutor() as executor:
     #     for result in zip(iterations, executor.map(calcFitnessIndividuo, population, iterations, arrayGeneration, arrayTrainLoader, arrayTestLoader, arrayValidationLoader, arrayCat_df, arrayBatch_size, arrayDevice, arrayCriterion, arrayCacheConfigClass,  arrayMaxEpochsStop, arrayNEpochs, arrayCnnType)):
     #         iteration, (fitness, _) = result
@@ -53,7 +54,7 @@ def calcSurrogateFitness(randomTreeModel, generation, population, trainLoader, t
     return np.array(fitnessArray)
 
 def calcRandomForestFitnessIndividuo(randomTreeModel, individuo, i, generation, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType, fileName=None):
-    print('calcFitnessIndividuo = ', i, individuo, '\n')
+    print('calcRandomForestFitnessIndividuo = ', i, individuo, '\n')
     # print('\n pt1 ', i, trainLoader, testLoader, validationLoader)
     # print('\n pt2', cat_df, batch_size, device, criterion)
     print('cacheConfigClass', cacheConfigClass)
