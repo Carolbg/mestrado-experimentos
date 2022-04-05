@@ -25,7 +25,7 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType
     sequenceIndividual = [i for i in range(11)]
     print('sequenceIndividual', sequenceIndividual)
     
-    halfPopulation = tp / 10
+    halfPopulation = tp / 2
     halfPopulation = math.floor(halfPopulation)
     print('halfPopulation', halfPopulation)
     
@@ -55,6 +55,13 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType
         else:
             #Real fitness
             newPopulationRealFitness = calcFitness(i+1, newPopulation[:halfPopulation], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
+            allSurrogateTrainData = np.concatenate((allSurrogateTrainData, newPopulation[:halfPopulation]))
+            allSurrogateTrainFitness = np.concatenate((allSurrogateTrainFitness, newPopulationRealFitness))
+            
+            print('vou treinar a random forest with the new train data')
+            randomForestModel = mainSurrogate(allSurrogateTrainData, allSurrogateTrainFitness)
+            # print('randomForestModel treinado', randomForestModel)
+
             print('vou calcular fitness com surrogate')
             newPopulationSurrogateFitness = calcSurrogateFitness(randomForestModel, i+1, newPopulation[halfPopulation:], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, cacheConfigClass, max_epochs_stop, n_epochs, cnnType)
             newPopulationFitness = np.concatenate((newPopulationRealFitness, newPopulationSurrogateFitness))
@@ -68,8 +75,8 @@ def main(tp=10, tour=2, tr=80, numberIterations=10, tm=40, isNumpy=True, cnnType
             allSurrogateTrainData = np.concatenate((allSurrogateTrainData, population))
             allSurrogateTrainFitness = np.concatenate((allSurrogateTrainFitness, populationFitness))
             print('vou treinar a random forest')
-            randomForestModel = mainSurrogate(population, populationFitness)
-            print('randomForestModel treinado', randomForestModel)
+            randomForestModel = mainSurrogate(allSurrogateTrainData, allSurrogateTrainFitness)
+            # print('randomForestModel treinado', randomForestModel)
 
         # print('\ncacheStore = ', ag_cacheConfig.cacheStore)
     

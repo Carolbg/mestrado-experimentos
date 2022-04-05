@@ -15,10 +15,10 @@ def mainSurrogate(population, populationFitness):
         
         flattenIndividual = npData.flatten()
         # print('flattenIndividual', flattenIndividual)
-        print('flattenIndividual', flattenIndividual.shape)
+        # print('flattenIndividual', flattenIndividual.shape)
         encodedPopulation.append(flattenIndividual)
 
-    print('encodedPopulation', encodedPopulation)
+    # print('encodedPopulation', encodedPopulation)
 
     randomForestModel = trainModel(randomForestModel, encodedPopulation, populationFitness)
     return randomForestModel

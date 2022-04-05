@@ -75,7 +75,7 @@ def encodeAGIndividual(agIndividual):
     # size = len(parsedEncodedIndividual)
     # for i in range(size, size*2):
     #     parsedEncodedIndividual.append([0,0])
-    print('len(encodedIndividual)', len(encodedIndividual))
-    print('encodedIndividual', encodedIndividual)
+    # print('len(encodedIndividual)', len(encodedIndividual))
+    # print('encodedIndividual', encodedIndividual)
     
     return encodedIndividual

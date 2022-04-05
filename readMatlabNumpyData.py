@@ -77,18 +77,18 @@ def getFilesName():
     #GDRIVE RUNNING
     # Imagens_numpy_array_asCabıoglu_rgb_aumentoDados
     # Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu_DA
-    # folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDados'
+    folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDados'
     
-    folder='/content/gdrive/My Drive/MestradoCodes/ImagensROI_Adib'
-    # folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDadosDoentes'
+    # folder='/content/gdrive/My Drive/MestradoCodes/ImagensROI_Adib'
+    # # folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDadosDoentes'
     # folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_frontalImages_Ratio_Matlab'
     print(folder)
-    numpy_saudaveis_files = sorted(glob.glob(folder+"/0SaudavelNPY/*.npy"))
-    numpy_doentes_files = sorted(glob.glob(folder+"/1DoenteNPY/*.npy"))
+    # numpy_saudaveis_files = sorted(glob.glob(folder+"/0SaudavelNPY/*.npy"))
+    # numpy_doentes_files = sorted(glob.glob(folder+"/1DoenteNPY/*.npy"))
 
     #If not reading from the script
-    # numpy_saudaveis_files = glob.glob("../Imagens_numpy_array/0Saudaveis/*.npy")
-    # numpy_doentes_files = glob.glob("../Imagens_numpy_array/1Doentes/*.npy")
+    numpy_saudaveis_files = glob.glob("../Imagens_numpy_array/0Saudaveis/*.npy")
+    numpy_doentes_files = glob.glob("../Imagens_numpy_array/1Doentes/*.npy")
     
     return numpy_saudaveis_files, numpy_doentes_files
 
