@@ -8,9 +8,9 @@ def getCommonArgs(nEpochs=30):
     print('shuffleSeed', shuffleSeed)
     batch_size = 10
     # As cabioglu
-    # max_epochs_stop = nEpochs
+    max_epochs_stop = nEpochs
     # frontais
-    max_epochs_stop = 10
+    # max_epochs_stop = 10
 
     n_epochs = nEpochs
     print('n_epochs', n_epochs, 'max_epochs_stop', max_epochs_stop)

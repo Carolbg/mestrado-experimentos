@@ -61,9 +61,55 @@ def encodeAGIndividual(agIndividual):
                 i+=1
         encodedIndividual.append(rfPart)
     
-    encodedIndividual.append([2, 2]) #adding the final layer
+    encodedIndividual.append([2, 1]) #adding the final layer
     # print('len(encodedIndividual)', len(encodedIndividual))
     # print('encodedIndividual', encodedIndividual)  
+
+    #In order to make all the the individual with the same size
+    if len(encodedIndividual) < 12:
+        for i in range(len(encodedIndividual), 12):
+            encodedIndividual.append([0,0])
+
+    # making the rule of the size*2 as shown in the article
+    # parsedEncodedIndividual = copy.deepcopy(encodedIndividual)
+    # size = len(parsedEncodedIndividual)
+    # for i in range(size, size*2):
+    #     parsedEncodedIndividual.append([0,0])
+    # print('len(encodedIndividual)', len(encodedIndividual))
+    # print('encodedIndividual', encodedIndividual)
+    
+    return encodedIndividual
+
+
+def encodeParticle(individual):
+    
+    encodedIndividual = []
+    #The encoded individual will be [type, value], where type is 1 for LR
+    # 2 for FC and 3 for D
+
+    size = len(individual)
+
+    if size == 0:
+        return []
+    
+    i = 0
+    while i < size:
+        fragment = individual[i]
+        # print('fragment', fragment)
+        if fragment['layerType'] == 'LR': #LR cromossome
+            rfPart = [1, fragment['layerNumber']]
+            i+=1
+        else:
+            if fragment['layerType'] == 'FC':  # FC cromossome
+                rfPart = [2, fragment['layerNumber']]
+                i+=1
+            else: #Dropout cromossome
+                rfPart = [3, fragment['layerNumber']]
+                i+=1
+        encodedIndividual.append(rfPart)
+    
+    # print('rf', encodedIndividual)
+    encodedIndividual.append([2, 1]) #adding the final layer
 
     #In order to make all the the individual with the same size
     if len(encodedIndividual) < 12:
