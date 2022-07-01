@@ -9,7 +9,7 @@ def getCommonArgs(nEpochs=30):
     batch_size = 10
     # As cabioglu
     max_epochs_stop = nEpochs
-    # frontais
+    # frontais e cabioglu doentes
     # max_epochs_stop = 10
 
     n_epochs = nEpochs

@@ -169,10 +169,11 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, cnnType=1, useSurrogate=False)
     # If running on colab keep the next line commented
     # readData(isNumpy, nEpochs)
     print('cnnType', cnnType)
-
+    print('fitness penalization = 0.7')
+    
     halfPopulation = populationSize / 2
     halfPopulation = math.floor(halfPopulation)
-    print('halfPopulation', halfPopulation)
+    print('halfPopulation', halfPopulation, 'useSurrogate', useSurrogate)
 
     startAll = timeit.default_timer()
     trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs = getData()
@@ -245,6 +246,8 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, cnnType=1, useSurrogate=False)
             updateBestSolutionParticle(particle)
         swarm = bestNeighbourPosition(swarm, populationSize)
 
+        # print('\n\n Saving new generated items of iteração ',iteration)
+        # cacheConfigClass.savePopulationToCache(swarm)
 
         if useSurrogate and iteration == 1:
             allSurrogateTrainData = np.concatenate((allSurrogateTrainData, swarm))

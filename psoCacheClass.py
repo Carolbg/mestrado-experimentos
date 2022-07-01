@@ -21,6 +21,6 @@ class PSOCacheClass:
         self.cacheStore[individuoAsStr] = fitnessValue
         
     def savePopulationToCache(self, swarm):
-        print('fitness = ', self.cacheStore)
+        print('saving swarm to cache = ', self.cacheStore)
         [self.addNewEntry(swarm[i]['position'], swarm[i]['positionFitness']) for i in range(len(swarm))]
-        print('savePopulationToCache = cacheStore', self.cacheStore)
+        print('cacheStore', self.cacheStore)

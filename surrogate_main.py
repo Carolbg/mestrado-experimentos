@@ -47,10 +47,10 @@ def mainPSOSurrogate(swarm):
         npBestData = np.array(encodedBestParticle)
         flattenBestParticle = npBestData.flatten()
         if (flattenBestParticle == flattenIndividual).all():
-            print('equals', flattenBestParticle, '\n', 'flattenIndividual', flattenIndividual)
+            # print('equals', flattenBestParticle, '\n', 'flattenIndividual', flattenIndividual)
             continue
         else:
-            print('NOT equals', flattenBestParticle, '\n', 'flattenIndividual', flattenIndividual)
+            # print('NOT equals', flattenBestParticle, '\n', 'flattenIndividual', flattenIndividual)
 
             if len(flattenBestParticle) > 0:
                 encodedPopulation.append(flattenBestParticle)

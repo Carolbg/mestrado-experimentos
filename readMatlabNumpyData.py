@@ -77,10 +77,15 @@ def getFilesName():
     #GDRIVE RUNNING
     # Imagens_numpy_array_asCabıoglu_rgb_aumentoDados
     # Imagens_TXT_Estaticas_Balanceadas_allData_asCabıoglu_DA
+    
+    #dados para cabioglu aumentando so doentes - grupo 2
     folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDados'
     
     # folder='/content/gdrive/My Drive/MestradoCodes/ImagensROI_Adib'
-    # # folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDadosDoentes'
+    
+    #dados para cabioglu aumentando so doentes - grupo 3
+    # folder='/content/gdrive/My Drive/MestradoCodes/Imagens_numpy_array_asCabıoglu_rgb_aumentoDadosDoentes'
+    
     # folder='/content/gdrive/My Drive/MestradoCodes/Imagens_TXT_Estaticas_Balanceadas_frontalImages_Ratio_Matlab'
     print(folder)
     numpy_saudaveis_files = sorted(glob.glob(folder+"/0Saudavel/*.npy"))
