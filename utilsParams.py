@@ -119,6 +119,14 @@ def getFullyConnectedStructure(n_inputs, n_classes, experimentType):
             nn.Dropout(0.3153523843591079),
             nn.Linear(8, 2)
         )
+    
+    # Best AG Densenet 1
+    elif experimentType == 20:
+        lastLayer = nn.Sequential(
+            nn.Linear(n_inputs, 8),
+            nn.ReLU(),
+            nn.Linear(8, 2)
+        )
     print('lastLayer', lastLayer)
     lastLayer.apply(init_weights)
     return lastLayer
@@ -142,6 +150,10 @@ def prepareTrainingOptimizer(model, typeLR):
         optimizer = optim.Adam(model.parameters(), lr)
     elif typeLR == 5:
         lr = 0.00000001 # Best AG VGG 0.92
+        print('Learning Rate', lr)
+        optimizer = optim.Adam(model.parameters(), lr)
+    elif typeLR == 20:
+        lr = 0.0001 # Best AG Densenet 1
         print('Learning Rate', lr)
         optimizer = optim.Adam(model.parameters(), lr)
 
