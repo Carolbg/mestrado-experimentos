@@ -84,10 +84,10 @@ def applyMutationInd(individuo, sequenceChild):
 #o subGene eh pra saber se aplico no presente ou ausente ou no range
 def mutateGene(individuo, geneIndex, subGene):
     geneToMutate = individuo[geneIndex]
-    print('@@@ original', geneToMutate, 'geneIndex', geneIndex)
+    # print('@@@ original', geneToMutate, 'geneIndex', geneIndex)
     if geneIndex >= 1:
         newValue = mutateGeneLayers(geneToMutate, geneIndex, subGene)
-        print('@@@ mutated', newValue)
+        # print('@@@ mutated', newValue)
         return newValue
     else:
         newValue = randomInt(1, 6)
@@ -99,7 +99,7 @@ def mutateGene(individuo, geneIndex, subGene):
             # print('continua igual')
         newValue = [newValue]
 
-    print('@@@ mutated', newValue)
+    # print('@@@ mutated', newValue)
 
     return newValue
     

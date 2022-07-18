@@ -5,8 +5,8 @@ import copy
 
 def crossover2points(parent1, parent2, tr, sequence):
     #tr = 80% entao vira 0.8
-    print('parent1', parent1)
-    print('\n parent2', parent2)
+    # print('parent1', parent1)
+    # print('\n parent2', parent2)
     # initialSeed = uniform(0, 5000)
     # seed(initialSeed)
 
@@ -18,7 +18,7 @@ def crossover2points(parent1, parent2, tr, sequence):
         return copy.deepcopy(parent1), copy.deepcopy(parent2)
     
     crossoverPoints = sample(sequence, 2)
-    print('crossoverPoints', crossoverPoints)
+    # print('crossoverPoints', crossoverPoints)
 
     if crossoverPoints[0] > crossoverPoints[1]:
         startPoint = crossoverPoints[1] 
@@ -27,8 +27,8 @@ def crossover2points(parent1, parent2, tr, sequence):
         startPoint = crossoverPoints[0] 
         endPoint = crossoverPoints[1] 
 
-    print('parent1', parent1, '\parent2', parent2)
-    print('startPoint', startPoint, 'endPoint', endPoint)
+    # print('parent1', parent1, '\parent2', parent2)
+    # print('startPoint', startPoint, 'endPoint', endPoint)
 
     # child1 = parent1.copy()
     # child2 = parent2.copy()
@@ -43,7 +43,7 @@ def crossover2points(parent1, parent2, tr, sequence):
 
 def crossover1point(parent1, parent2, tr, sequence):
     #tr = 80% entao vira 0.8
-    print('\n\n CROSSOVER 1 ponto')
+    # print('\n\n CROSSOVER 1 ponto')
     # print('parent1', parent1)
     # print('\n parent2', parent2)
     # initialSeed = uniform(0, 5000)
@@ -58,7 +58,7 @@ def crossover1point(parent1, parent2, tr, sequence):
     
     crossoverPoint = randomInt(1, 9)
     
-    print('crossoverPoint', crossoverPoint)
+    # print('crossoverPoint', crossoverPoint)
 
     # child1 = parent1.copy()
     # child2 = parent2.copy()

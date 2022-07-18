@@ -3,9 +3,11 @@ import math
 import random
 from pso_initialize import *
 from pso_fitness import *
+from surrogate_main import mainPSOSurrogate
 from utils_readAllData import *
 from psoCacheClass import PSOCacheClass
 import json
+from surrogate_fitness import calcSurrogatePSOFitness
 
 def printSwarm(swarm):
     for i in range(1, len(swarm)):
@@ -163,11 +165,16 @@ def validateParticle(particle):
     
     return validParticle
 
-def PSO(iterations=10, populationSize=10, Cg=0.5, cnnType=1):
+def PSO(iterations=10, populationSize=10, Cg=0.5, cnnType=1, useSurrogate=False):
     # If running on colab keep the next line commented
     # readData(isNumpy, nEpochs)
     print('cnnType', cnnType)
+    print('fitness penalization = 0.7')
     
+    halfPopulation = populationSize / 2
+    halfPopulation = math.floor(halfPopulation)
+    print('halfPopulation', halfPopulation, 'useSurrogate', useSurrogate)
+
     startAll = timeit.default_timer()
     trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs = getData()
 
@@ -186,6 +193,9 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, cnnType=1):
     
     swarm = bestNeighbourPosition(swarm, populationSize)
     
+    allSurrogateTrainData = swarm
+    randomForestModel = None
+
     # print('swarm', swarm)
     # print('\n')
     # #printSwarm(swarm)
@@ -218,11 +228,32 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, cnnType=1):
         saveSwarmToFile(swarm, iteration)
         
         #calc das redes novas geradas com o update das posicoes
-        calcFitness(iteration, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass)
+        if useSurrogate == False or iteration <= 1: 
+            print('fitness apenas cnn')
+            calcFitness(iteration, swarm, trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass)
+        else:
+            #Real fitness
+            calcFitness(iteration, swarm[:halfPopulation], trainLoader, testLoader, validationLoader, cat_df, batch_size, device, criterion, max_epochs_stop, n_epochs, cnnType, cacheConfigClass)
+            print('vou treinar a random forest with the new train data')
+
+            allSurrogateTrainData = np.concatenate((allSurrogateTrainData, swarm[:halfPopulation]))
+            randomForestModel = mainPSOSurrogate(allSurrogateTrainData)
+            calcSurrogatePSOFitness(randomForestModel, swarm, cacheConfigClass, max_epochs_stop, n_epochs, halfPopulation)
+
+
         # print('finish fitness')
         for particle in swarm:
             updateBestSolutionParticle(particle)
         swarm = bestNeighbourPosition(swarm, populationSize)
+
+        # print('\n\n Saving new generated items of iteração ',iteration)
+        # cacheConfigClass.savePopulationToCache(swarm)
+
+        if useSurrogate and iteration == 1:
+            allSurrogateTrainData = np.concatenate((allSurrogateTrainData, swarm))
+            print('vou treinar a random forest')
+            randomForestModel = mainPSOSurrogate(allSurrogateTrainData)
+            # print('randomForestModel treinado', randomForestModel)
 
         print('\n')
     
@@ -254,7 +285,7 @@ def PSO(iterations=10, populationSize=10, Cg=0.5, cnnType=1):
     timeAll = endAll - startAll
     print('timeAll = ', timeAll)
     
-    return swarm 
+    return swarm
 
 def saveSwarmToFile(swarm, iteration):
     fileName = 'swarm' + str(iteration) + '.txt'
