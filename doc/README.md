@@ -19,7 +19,10 @@ Para definir qual a base de dados a ser utilizada, o caminho das pastas está de
 A definição de qual dos dois nomes de pastas será utilizado é definida pelo parâmetro isNumpy que é um argumento em todas as funções principais.
 Atenção ao caminho do colab, que espera que haja uma pasta chamada `MestradoCodes` dentro da pasta do `Meu Drive`.
 
-### Rodar experimentos manuais no Google Colab:
+## Pre processamento 
+
+Mais detalhes sobre o pre processamento podem ser encontrados [aqui](Pre%20processamento.md)
+## Rodar experimentos manuais no Google Colab:
 
 ```python
 from mainDensenet import *
@@ -34,6 +37,6 @@ model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoa
 
 ### Exemplos
 
-Para mais detalhes do AG e do PSO consulte [aqui](AG e PSO.md)
+Para mais detalhes do AG e do PSO consulte [aqui](AG%20e%20PSO.md)
 
-A pasta [Colab file example](Colab file example/Exemplos.md) contém um exemplo de arquivo .ipynb para cada um dos fluxos.
+A pasta [Colab file example](Colab%20file%20example/Exemplos.md) contém um exemplo de arquivo .ipynb para cada um dos fluxos.
