@@ -12,7 +12,7 @@ O repositorio conta com:
 - implementação de um AG e de um PSO para otimização de uma boa arquitetura de CNN para a parte densamente conectada das redes 
 - implementação de um modelo surrogate baseado em random forest para 
 
-Na pasta doc existem detalhes de como executar o código e arquivos .ipynb com exemplos de como executar cada etapa do trabalho utilizando a plataforma do google colab.
+Na pasta [doc](doc/README.md) existem detalhes de como executar o código e arquivos .ipynb com exemplos de como executar cada etapa do trabalho utilizando a plataforma do google colab.
 
 ## Publicações:
 

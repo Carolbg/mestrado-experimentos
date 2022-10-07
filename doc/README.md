@@ -31,3 +31,9 @@ typeLR = 2
 # mainDensenet(resultsPlotName, experimentType, dataAugmentation, typeLR, isNumpy=True, nEpochs=30, maxEpochs=None)
 model, history, historyTest, cmTrain, cmValidation, cmTest, trainLoader, testLoader, validationLoader, n_classes, cat_df = mainDensenet(resultsPlotName, experimentType, False, typeLR, False)
 ```
+
+### Exemplos
+
+Para mais detalhes do AG e do PSO consulte [aqui](AG e PSO.md)
+
+A pasta [Colab file example](Colab file example/Exemplos.md) contém um exemplo de arquivo .ipynb para cada um dos fluxos.
